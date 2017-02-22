@@ -8,11 +8,15 @@ class InputWithLabel extends React.Component {
   }
 
   render() {
-    const { labelName, style, ...otherProps } = this.props;
+    const { labelName, style, error, errorMsg, ...otherProps } = this.props;
     return (
       <div className="input-item" style={style}>
         <div className="input-label">{labelName}</div>
-        <input className="input" {...otherProps} />
+        <input className={error ? 'input error' : 'input'} {...otherProps} />
+        {error ?
+          <div className="input-error">{errorMsg}</div> :
+          null
+        }
       </div>
     );
   }
@@ -21,6 +25,8 @@ class InputWithLabel extends React.Component {
 InputWithLabel.propTypes = {
   labelName: React.PropTypes.string,
   style: React.PropTypes.object,
+  error: React.PropTypes.bool,
+  errorMsg: React.PropTypes.string,
 };
 
 export default InputWithLabel;

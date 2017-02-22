@@ -18,6 +18,7 @@ const app = dva({
 app.use(createLoading());
 
 // 3. Model
+app.model(require('./models/organRnGlobal'));
 app.model(require('./models/organRnInfo'));
 app.model(require('./models/organRnBank'));
 

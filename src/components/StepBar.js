@@ -34,7 +34,7 @@ const StepBar = (props) => {
         <div className={styles.arrow} />
         <div className={styles.step_item}>
           <div className={step3Cls} />
-          <div className={step3TitleCls} >签署密码设置</div>
+          <div className={step3TitleCls} >实名完成</div>
         </div>
       </div>
     </div>

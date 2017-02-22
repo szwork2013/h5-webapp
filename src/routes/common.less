@@ -73,6 +73,7 @@
   .content {
     text-align: center;
     background-color: #fcfcfc;
+    min-height: 400px;
   }
   .flex-yaxis-center {
     height: 60px;
@@ -139,6 +140,13 @@
       border-radius: 2px;
       background-color: #fff;
       padding: 0 10px;
+      &.error {
+        border: 1px solid #f04134;
+      }
+    }
+    & .input-error {
+      font-size: 13px;
+      color: #f04134;
     }
   }
 }

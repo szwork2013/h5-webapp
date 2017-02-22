@@ -14,17 +14,16 @@ function OrganRnInfo(props) {
     e.stopPropagation();
     form.validateFields({ force: true }, (error) => {
       if (error) {
-        alert('校验失败');
+        return null;
       } else {
+        dispatch({
+          type: 'organRnGlobal/setRnStatus',
+          rnStatus: '4',
+        });
         dispatch(routerRedux.push('/organRnBank'));
       }
     });
   };
-  const test = { ...getFieldProps('name', {
-    rules: [
-      { required: true, message: '请输入企业名称' },
-    ],
-  }) };
   return (
     <MainLayout
       headerName="实名认证"
@@ -38,11 +37,40 @@ function OrganRnInfo(props) {
               { required: true, message: '请输入企业名称' },
             ],
           })}
+          error={!!getFieldError('name')}
+          errorMsg={!getFieldError('name') ? '' : getFieldError('name').join('、')}
         />
-        <InputWithLabel labelName="组织机构代码/统一社会信用代码" />
+        <InputWithLabel
+          labelName="组织机构代码/统一社会信用代码"
+          {...getFieldProps('codeORG', {
+            rules: [
+              { required: true, message: '请输入组织机构代码' },
+            ],
+          })}
+          error={!!getFieldError('codeORG')}
+          errorMsg={!getFieldError('codeORG') ? '' : getFieldError('codeORG').join('、')}
+        />
         <InputWithLabel labelName="营业期限至" />
-        <InputWithLabel labelName="法人姓名" />
-        <InputWithLabel labelName="法人身份证号" />
+        <InputWithLabel
+          labelName="法人姓名"
+          {...getFieldProps('legalName', {
+            rules: [
+              { required: true, message: '请输入法人姓名' },
+            ],
+          })}
+          error={!!getFieldError('legalName')}
+          errorMsg={!getFieldError('legalName') ? '' : getFieldError('legalName').join('、')}
+        />
+        <InputWithLabel
+          labelName="法人身份证号"
+          {...getFieldProps('legalIdno', {
+            rules: [
+              { required: true, message: '请输入法人身份证号' },
+            ],
+          })}
+          error={!!getFieldError('legalIdno')}
+          errorMsg={!getFieldError('legalIdno') ? '' : getFieldError('legalIdno').join('、')}
+        />
         <button className="btn primary" style={{ marginTop: '20px', marginBottom: '60px' }} onClick={onSubmit} >下一步</button>
       </div>
     </MainLayout>
