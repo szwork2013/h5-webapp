@@ -1,17 +1,25 @@
 import dva from 'dva';
+import createLoading from 'dva-loading';
 import { browserHistory } from 'dva/router';
-import './index.less';
 
 // 1. Initialize
+// error约定格式：{
+//   success: false,
+//   msg: '',
+// }
 const app = dva({
   history: browserHistory,
+  onError(e) {
+    alert(e.msg);
+  },
 });
 
 // 2. Plugins
-// app.use({});
+app.use(createLoading());
 
 // 3. Model
-// app.model(require('./models/example'));
+app.model(require('./models/organRnInfo'));
+app.model(require('./models/organRnBank'));
 
 // 4. Router
 app.router(require('./router'));

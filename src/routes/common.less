@@ -1,0 +1,144 @@
+@import "./color/colors.less";
+
+@default-color: #ffffff;
+@default-border-color: #cccccc;
+@default-hover-color: #f5f5f5;
+@default-hover-border-color: #d2d2d2;
+@default-tap-color: #dddddd;
+@default-tap-border-color: #d0d0d0;
+@primary-color: @main-6;
+@primary-border-color: @main-7;
+@primary-hover-color: @main-5;
+@primary-hover-border-color: @main-6;
+@primary-tap-color: @main-7;
+@primary-tap-border-color: @main-8;
+
+:global {
+  body {
+    margin: 0;
+    #root {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
+  input, button, select, textarea {
+   outline:none;
+  }
+  .header {
+    height: 60px;
+    background-color: #fff;
+    color: #101014;
+    font-size: 18px;
+    border-bottom: 1px solid #e1e1e1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    line-height: 60px;
+    z-index: 100;
+    position: relative;
+  }
+  .header-title {
+    height: 30px;
+    line-height: 30px;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid #dbdbdb;
+  }
+  .footer {
+    height: 60px;
+    background-color: #fff;
+    color: #777;
+    width: 100%;
+    z-index: 1000;
+    border-top: 1px solid #f4f4f4;
+  }
+  .container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    @media (min-width: 768px) {
+      width: 750px;
+    }
+    @media (min-width: 992px) {
+      width: 970px;
+    }
+    @media (min-width: 1200px) {
+      width: 1170px;
+    }
+  }
+  .content {
+    text-align: center;
+    background-color: #fcfcfc;
+  }
+  .flex-yaxis-center {
+    height: 60px;
+    display: flex;
+    align-items: center;
+  }
+  .flex-xaxis-center {
+    justify-content: center;
+  }
+  // 按钮样式
+  .btn {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    height: 40px;
+    min-width: 100px;
+    padding: 0 30px;
+    font-size: 15px;
+    font-weight: bold;
+    &.default {
+      background-color: @default-color;
+      border-color: @default-border-color;
+      color: #555;
+      &:hover {
+        background-color: @default-hover-color;
+        border-color: @default-hover-border-color
+      }
+      &:active {
+        background-color: @default-tap-color;
+        border-color: @default-tap-border-color;
+      }
+    }
+    &.primary {
+      background-color: @primary-color;
+      border-color: @primary-border-color;
+      color: #fff;
+      &:hover {
+        background-color: @primary-hover-color;
+        border-color: @primary-hover-border-color;
+      }
+      &:active {
+        background-color: @primary-tap-color;
+        border-color: @primary-tap-border-color;
+      }
+    }
+  }
+  // 输入框样式
+  .input-item {
+    text-align: left;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    & .input-label {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #323232;
+    }
+    & .input {
+      height: 40px;
+      font-size: 16px;
+      width: 300px;
+      border: 1px solid #dbdbdb;
+      border-radius: 2px;
+      background-color: #fff;
+      padding: 0 10px;
+    }
+  }
+}

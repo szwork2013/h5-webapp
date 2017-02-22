@@ -9,7 +9,9 @@ function checkStatus(response) {
     return response;
   }
 
-  const error = new Error(response.statusText);
+  const error = new Error();
+  error.success = false;
+  error.msg = response.statusText;
   error.response = response;
   throw error;
 }
@@ -25,6 +27,6 @@ export default function request(url, options) {
   return fetch(url, options)
     .then(checkStatus)
     .then(parseJSON)
-    .then(data => ({ data }))
-    .catch(err => ({ err }));
+    .then(data => ({ data }));
+    // .catch(err => ({ err }));
 }
