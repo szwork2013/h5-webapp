@@ -11,19 +11,34 @@ function SealCreate() {
       headerName="创建模板印章"
     >
       <div className={`container ${styles.seal_create}`}>
-        <div className={styles.seal_preview}>印章预览</div>
-        <div className={styles.seal_customize}>
-          <div className={styles.seal_type}>
-            <div className={styles.seal_type_item}>
-              <div className={styles.seal_type_item_round} />
+        <div>
+          <div className={styles.seal_create_label}>您的印章</div>
+          <div className={styles.seal_preview}>印章预览</div>
+        </div>
+        <div>
+          <div className={styles.seal_create_label} style={{ marginLeft: '30px' }}>选择模板样式</div>
+          <div className={styles.seal_customize}>
+            <div className={styles.seal_type}>
+              <div className={styles.seal_type_item}>
+                <div className={styles.seal_type_item_round} />
+              </div>
+              <div className={styles.seal_type_item}>
+                <div className={styles.seal_type_item_oval} />
+              </div>
             </div>
-            <div className={styles.seal_type_item}>
-              <div className={styles.seal_type_item_oval} />
+            <div>
+              <div className={styles.seal_create_label} style={{ marginLeft: '30px', marginTop: '40px' }}>选择颜色</div>
+              <div className={styles.seal_color}>选择颜色</div>
+            </div>
+            <div>
+              <div className={styles.seal_create_label} style={{ marginLeft: '30px', marginTop: '40px' }}>横向文</div>
+              <div className={styles.seal_crosswise}>横向文</div>
+            </div>
+            <div>
+              <div className={styles.seal_create_label} style={{ marginLeft: '30px', marginTop: '40px' }}>下弦文</div>
+              <div className={styles.seal_gibbous}>下弦文</div>
             </div>
           </div>
-          <div className={styles.seal_color}>选择颜色</div>
-          <div className={styles.seal_crosswise}>横向文</div>
-          <div className={styles.seal_gibbous}>下弦文</div>
         </div>
       </div>
     </MainLayout>
