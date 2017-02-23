@@ -18,9 +18,12 @@ const app = dva({
 app.use(createLoading());
 
 // 3. Model
-app.model(require('./models/organRnGlobal'));
+
+app.model(require('./models/global'));
 app.model(require('./models/organRnInfo'));
 app.model(require('./models/organRnBank'));
+
+app.model(require('./models/personRnInfo'));
 
 // 4. Router
 app.router(require('./router'));

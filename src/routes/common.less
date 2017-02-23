@@ -13,6 +13,8 @@
 @primary-tap-color: @main-7;
 @primary-tap-border-color: @main-8;
 
+@content-back-color: #fcfcfc;
+
 :global {
   body {
     margin: 0;
@@ -23,6 +25,9 @@
       bottom: 0;
       right: 0;
     }
+  }
+  html, body, #root {
+    height: 100%;
   }
   input, button, select, textarea {
    outline:none;
@@ -72,8 +77,9 @@
   }
   .content {
     text-align: center;
-    background-color: #fcfcfc;
+    background-color: @content-back-color;
     min-height: 400px;
+    padding-bottom: 40px;
   }
   .flex-yaxis-center {
     height: 60px;

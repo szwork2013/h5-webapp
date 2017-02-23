@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import MainLayout from '../components/Layout/MainLayout';
 import StepBar from '../components/StepBar';
 import InputWithLabel from '../components/InputWithLabel';
-import './mixins.less';
+import styles from './mixins.less';
 
 function OrganRnBank(props) {
   const { rnStatus } = props;
@@ -25,7 +25,11 @@ function OrganRnBank(props) {
       element = () => {
         return (
           <div>
-            <div>正在打款</div>
+            <div className={styles.waiting} />
+            <div className={styles.waiting_desc}>
+              <div>您的资料已通过审核</div>
+              <div>正在安排银行打款</div>
+            </div>
           </div>
         );
       };
@@ -34,7 +38,18 @@ function OrganRnBank(props) {
       element = (() => {
         return (
           <div>
-            <div>请输入金额验证</div>
+            <div className={styles.waited_desc}>
+              <div>已向您的对公账号打入一笔钱</div>
+              <div>请输入收到的金额并验证</div>
+              <div className={styles.waited_input}>
+                <input defaultValue="0." maxLength="1" />
+                <input maxLength="1" />
+                <input maxLength="1" />
+              </div>
+              <div className={styles.waited_btn}>
+                <button className="btn primary">验证</button>
+              </div>
+            </div>
           </div>
         );
       });
@@ -56,7 +71,7 @@ function OrganRnBank(props) {
       headerName="实名认证"
     >
       <div>
-        <StepBar current="2" />
+        <StepBar current="2" nameStep1="企业基本信息" nameStep2="企业认证" nameStep3="实名完成" />
         {element()}
       </div>
     </MainLayout>
@@ -64,7 +79,7 @@ function OrganRnBank(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.organRnGlobal, ...state.organRnBank };
+  return { ...state.global, ...state.organRnBank };
 }
 
 export default connect(mapStateToProps)(OrganRnBank);

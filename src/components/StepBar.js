@@ -24,17 +24,17 @@ const StepBar = (props) => {
       <div className={`container ${styles.step}`}>
         <div className={styles.step_item}>
           <div className={styles.step1_checked} />
-          <div className={styles.step1_checked_title} >企业基本信息</div>
+          <div className={styles.step1_checked_title} >{props.nameStep1}</div>
         </div>
         <div className={styles.arrow} />
         <div className={styles.step_item}>
           <div className={step2Cls} />
-          <div className={step2TitleCls} >企业认证</div>
+          <div className={step2TitleCls} >{props.nameStep2}</div>
         </div>
         <div className={styles.arrow} />
         <div className={styles.step_item}>
           <div className={step3Cls} />
-          <div className={step3TitleCls} >实名完成</div>
+          <div className={step3TitleCls} >{props.nameStep3}</div>
         </div>
       </div>
     </div>
@@ -43,6 +43,9 @@ const StepBar = (props) => {
 
 StepBar.propTypes = {
   current: React.PropTypes.string.isRequired,
+  nameStep1: React.PropTypes.string.isRequired,
+  nameStep2: React.PropTypes.string.isRequired,
+  nameStep3: React.PropTypes.string.isRequired,
 };
 
 export default StepBar;

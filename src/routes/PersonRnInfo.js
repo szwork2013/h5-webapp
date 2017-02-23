@@ -7,7 +7,7 @@ import StepBar from '../components/StepBar';
 import InputWithLabel from '../components/InputWithLabel';
 import './mixins.less';
 
-function OrganRnInfo(props) {
+function PersonRnInfo(props) {
   const { dispatch, form } = props;
   const { getFieldProps, getFieldError } = form;
   const onSubmit = (e) => {
@@ -78,7 +78,7 @@ function OrganRnInfo(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.organRnInfo };
+  return { ...state.personRnInfo };
 }
 
 const formOpts = {
@@ -93,10 +93,10 @@ const formOpts = {
       fields[value.name].errors = value.errors;
     }
     dispatch({
-      type: 'organRnInfo/fieldsChange',
+      type: 'personRnInfo/fieldsChange',
       fields,
     });
   },
 };
 
-export default connect(mapStateToProps)(createForm(formOpts)(OrganRnInfo));
+export default connect(mapStateToProps)(createForm(formOpts)(PersonRnInfo));
