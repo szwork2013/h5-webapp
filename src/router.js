@@ -3,7 +3,10 @@ import { Router, Route } from 'dva/router';
 import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
 import OrganRnFinish from './routes/OrganRnFinish';
-import OrganSignPwd from './routes/OrganSignPwd';
+import SignPwd from './routes/SignPwd';
+import PersonRnInfo from './routes/PersonRnInfo';
+import PersonRnBank from './routes/PersonRnBank';
+import PersonRnFinish from './routes/PersonRnFinish';
 
 function RouterConfig({ history, app }) {
   const validateOrganStatus = (nextState, replace) => {
@@ -36,9 +39,12 @@ function RouterConfig({ history, app }) {
       <Route path="/organRnFinish" component={OrganRnFinish} onEnter={validateOrganStatus} />
 
       {/* 签署密码 */}
-      <Route path="/organSignPwd" component={OrganSignPwd} />
+      <Route path="/signPwd" component={SignPwd} />
 
       {/* 个人实名 */}
+      <Route path="/personRnInfo" component={PersonRnInfo} />
+      <Route path="/personRnBank" component={PersonRnBank} />
+      <Route path="/personFinish" component={PersonRnFinish} />
     </Router>
   );
 }

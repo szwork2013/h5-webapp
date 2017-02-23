@@ -1,77 +1,35 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import MainLayout from '../components/Layout/MainLayout';
 import StepBar from '../components/StepBar';
-import InputWithLabel from '../components/InputWithLabel';
-import './mixins.less';
+import styles from './mixins.less';
 
-function PersonRnInfo(props) {
-  const { dispatch, form } = props;
-  const { getFieldProps, getFieldError } = form;
-  const onSubmit = (e) => {
-    e.stopPropagation();
-    form.validateFields({ force: true }, (error) => {
-      if (error) {
-        return null;
-      } else {
-        dispatch({
-          type: 'global/setRnStatus',
-          rnStatus: '4',
-        });
-        dispatch(routerRedux.push('/organRnBank'));
-      }
-    });
-  };
+function PersonRnInfo() {
   return (
     <MainLayout
       headerName="实名认证"
     >
       <div>
-        <StepBar current="1" nameStep1="企业基本信息" nameStep2="企业认证" nameStep3="实名完成" />
-        <InputWithLabel
-          labelName="企业全称" style={{ marginTop: '40px' }}
-          {...getFieldProps('name', {
-            rules: [
-              { required: true, message: '请输入企业名称' },
-            ],
-          })}
-          error={!!getFieldError('name')}
-          errorMsg={!getFieldError('name') ? '' : getFieldError('name').join('、')}
-        />
-        <InputWithLabel
-          labelName="组织机构代码/统一社会信用代码"
-          {...getFieldProps('codeORG', {
-            rules: [
-              { required: true, message: '请输入组织机构代码' },
-            ],
-          })}
-          error={!!getFieldError('codeORG')}
-          errorMsg={!getFieldError('codeORG') ? '' : getFieldError('codeORG').join('、')}
-        />
-        <InputWithLabel labelName="营业期限至" />
-        <InputWithLabel
-          labelName="法人姓名"
-          {...getFieldProps('legalName', {
-            rules: [
-              { required: true, message: '请输入法人姓名' },
-            ],
-          })}
-          error={!!getFieldError('legalName')}
-          errorMsg={!getFieldError('legalName') ? '' : getFieldError('legalName').join('、')}
-        />
-        <InputWithLabel
-          labelName="法人身份证号"
-          {...getFieldProps('legalIdno', {
-            rules: [
-              { required: true, message: '请输入法人身份证号' },
-            ],
-          })}
-          error={!!getFieldError('legalIdno')}
-          errorMsg={!getFieldError('legalIdno') ? '' : getFieldError('legalIdno').join('、')}
-        />
-        <button className="btn primary" style={{ marginTop: '20px', marginBottom: '60px' }} onClick={onSubmit} >下一步</button>
+        <StepBar current="1" nameStep1="身份证验证" nameStep2="银行卡验证" nameStep3="签署密码设置" />
+        <div className={styles.up_warning}>请上传身份证的正面照和手持身份证照片，保证五官清晰可见，照片内容真实有效。</div>
+        <div className={styles.upload}>
+          <div className={styles.upload_local}>
+            <div className={styles.upload_local_desc}>身份证件照</div>
+            <div className={`${styles.upload_local_img} ${styles.img1}`} />
+            <button className="btn cutout">本地上传</button>
+            <div className={styles.upload_local_desc}>手持身份证照</div>
+            <div className={`${styles.upload_local_img} ${styles.img2}`} />
+            <button className="btn cutout">本地上传</button>
+          </div>
+          <div className={styles.upload_divide}><span>或</span></div>
+          <div className={styles.upload_phone}>
+            <div className={styles.upload_phone_img} />
+            <div>手机扫一扫拍照上传</div>
+          </div>
+        </div>
+        <button className="btn primary" style={{ marginTop: '40px', marginBottom: '60px' }}>下一步</button>
       </div>
     </MainLayout>
   );

@@ -125,11 +125,49 @@
         border-color: @primary-tap-border-color;
       }
     }
+    &.cutout {
+      height: 36px;
+      min-width: 90px;
+      width: 90px;
+      padding: 0;
+      font-size: 14px;
+      font-weight: normal;
+      background-color: #fcfcfc;
+      border-color: @primary-color;
+      color: @primary-color;
+      &:hover {
+        background-color: #fefefe;
+        border-color: @primary-color;
+      }
+      &:active {
+        background-color: #efefef;
+        border-color: @primary-color;
+      }
+    }
+    &.send {
+      min-width: 120px;
+      width: 120px;
+      padding: 0;
+      font-size: 14px;
+      font-weight: normal;
+      background-color: #67666e;
+      border-color: #67666e;
+      color: #fff;
+      margin-left: 20px;
+      &:hover {
+        background-color: #76757d;
+        border-color: #76757d;
+      }
+      &:active {
+        background-color: #5d5c63;
+        border-color: #5d5c63;
+      }
+    }
   }
   // 输入框样式
   .input-item {
     text-align: left;
-    width: 300px;
+    width: 302px;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 20px;
@@ -141,13 +179,16 @@
     & .input {
       height: 40px;
       font-size: 16px;
-      width: 300px;
+      width: 280px;
       border: 1px solid #dbdbdb;
       border-radius: 2px;
       background-color: #fff;
       padding: 0 10px;
       &.error {
         border: 1px solid #f04134;
+      }
+      &::placeholder {
+        font-size: 14px;
       }
     }
     & .input-error {
