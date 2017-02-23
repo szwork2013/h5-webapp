@@ -7,6 +7,8 @@ import SignPwd from './routes/SignPwd';
 import PersonRnInfo from './routes/PersonRnInfo';
 import PersonRnBank from './routes/PersonRnBank';
 import PersonRnFinish from './routes/PersonRnFinish';
+import SealManage from './routes/SealManage';
+import SealCreate from './routes/SealCreate';
 
 function RouterConfig({ history, app }) {
   const validateOrganStatus = (nextState, replace) => {
@@ -45,6 +47,10 @@ function RouterConfig({ history, app }) {
       <Route path="/personRnInfo" component={PersonRnInfo} />
       <Route path="/personRnBank" component={PersonRnBank} />
       <Route path="/personFinish" component={PersonRnFinish} />
+
+      {/* 印章管理 */}
+      <Route path="/sealManage" component={SealManage} />
+      <Route path="/sealCreate" component={SealCreate} />
     </Router>
   );
 }
