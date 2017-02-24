@@ -18,13 +18,7 @@
 :global {
   body {
     margin: 0;
-    #root {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right: 0;
-    }
+    background-color: @content-back-color;
   }
   html, body, #root {
     height: 100%;
@@ -59,6 +53,8 @@
     width: 100%;
     z-index: 1000;
     border-top: 1px solid #f4f4f4;
+    position: absolute;
+    bottom: 0;
   }
   .container {
     padding-right: 15px;
@@ -78,8 +74,9 @@
   .content {
     text-align: center;
     background-color: @content-back-color;
-    min-height: 700px;
-    padding-bottom: 40px;
+    padding-bottom: 100px;
+    min-height: 100%;
+    height: 100%;
   }
   .flex-yaxis-center {
     height: 60px;
@@ -99,6 +96,7 @@
     padding: 0 30px;
     font-size: 15px;
     font-weight: bold;
+    cursor: pointer;
     &.default {
       background-color: @default-color;
       border-color: @default-border-color;
@@ -165,6 +163,22 @@
     }
   }
   // 输入框样式
+  .input {
+    height: 40px;
+    font-size: 16px;
+    width: 280px;
+    border: 1px solid #dbdbdb;
+    border-radius: 2px;
+    background-color: #fff;
+    padding: 0 10px;
+    &.error {
+      border: 1px solid #f04134;
+    }
+    &::placeholder {
+      font-size: 14px;
+      color: #999;
+    }
+  }
   .input-item {
     text-align: left;
     width: 302px;
@@ -177,19 +191,7 @@
       color: #323232;
     }
     & .input {
-      height: 40px;
-      font-size: 16px;
-      width: 280px;
-      border: 1px solid #dbdbdb;
-      border-radius: 2px;
-      background-color: #fff;
-      padding: 0 10px;
-      &.error {
-        border: 1px solid #f04134;
-      }
-      &::placeholder {
-        font-size: 14px;
-      }
+      .input;
     }
     & .input-error {
       font-size: 13px;

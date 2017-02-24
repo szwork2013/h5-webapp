@@ -9,6 +9,7 @@ import PersonRnBank from './routes/PersonRnBank';
 import PersonRnFinish from './routes/PersonRnFinish';
 import SealManage from './routes/SealManage';
 import SealCreate from './routes/SealCreate';
+import SignDoc from './routes/SignDoc';
 
 function RouterConfig({ history, app }) {
   const validateOrganStatus = (nextState, replace) => {
@@ -51,6 +52,9 @@ function RouterConfig({ history, app }) {
       {/* 印章管理 */}
       <Route path="/sealManage" component={SealManage} />
       <Route path="/sealCreate" component={SealCreate} />
+
+      {/* 签署文档 */}
+      <Route path="/signDoc" component={SignDoc} />
     </Router>
   );
 }

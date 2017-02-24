@@ -17,15 +17,18 @@
     height: 420px;
     border: 1px solid #dfdfdf;
     background-color: #fff;
+    & img {
+      width: 200px;
+    }
   }
   .seal_customize {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between;
     height: 420px;
     .seal_type {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       margin-left: 30px;
       .seal_type_item {
         width: 160px;
@@ -35,10 +38,24 @@
         align-items: center;
         border: 1px solid #dfdfdf;
         background-color: #fff;
+        cursor: pointer;
+        position: relative;
+        &.select {
+          border: 1px solid #3598dc;
+          &::before {
+            content: '';
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            top: 80%;
+            left: 80%;
+            background-image: url(../assets/checked2.png);
+          }
+        }
         &:first-child {
           margin-right: 20px;
         }
-        .seal_type_item_round {
+        .seal_type_item_star {
           background-image: url(../assets/round.png);
           width: 140px;
           height: 140px;
@@ -55,7 +72,77 @@
       }
     }
     .seal_color {
-
+      text-align: left;
+      margin-left: 30px;
+      display: flex;
+      align-items: center;
+      .seal_color_item {
+        display: inline-block;
+        width: 26px;
+        height: 26px;
+        margin-right: 20px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+      .select {
+        width: 36px;
+        height: 36px;
+        position: relative;
+        &::before {
+          pointer-events: none;
+          position: absolute;
+          content: '';
+          top: 100%;
+          left: 5%;
+          height: 10px;
+          width: 90%;
+          background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.35) 0%, transparent 80%);
+          transition-duration: 0.3s;
+          transition-property: transform, opacity;
+        }
+      }
+      .seal_color_item_red {
+        .seal_color_item;
+        background-color: #fe0000;
+        &.select {
+          .select;
+        }
+      }
+      .seal_color_item_blue {
+        .seal_color_item;
+        background-color: #0e0eff;
+        &.select {
+          .select;
+        }
+      }
+      .seal_color_item_black {
+        .seal_color_item;
+        background-color: #000000;
+        &.select {
+          .select;
+        }
+      }
     }
+    .seal_crosswise {
+      text-align: left;
+      margin-left: 30px;
+      input {
+        width: 330px;
+      }
+    }
+    .seal_gibbous {
+      text-align: left;
+      margin-left: 30px;
+      input {
+        width: 330px;
+      }
+    }
+  }
+}
+
+.seal_btn_group {
+  margin-top: 50px;
+  & :first-child {
+    margin-right: 20px;
   }
 }

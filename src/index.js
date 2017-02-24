@@ -26,6 +26,8 @@ app.model(require('./models/organRnBank'));
 app.model(require('./models/personRnInfo'));
 app.model(require('./models/personRnBank'));
 
+app.model(require('./models/sealCreate'));
+
 // 4. Router
 app.router(require('./router'));
 
