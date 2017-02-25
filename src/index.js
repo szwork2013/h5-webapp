@@ -28,6 +28,8 @@ app.model(require('./models/personRnBank'));
 
 app.model(require('./models/sealCreate'));
 
+app.model(require('./models/signDoc'));
+
 // 4. Router
 app.router(require('./router'));
 

@@ -6,16 +6,9 @@ import MainLayout from '../components/Layout/MainLayout';
 import SealItem from '../components/SealItem';
 import styles from './mixins.less';
 import sealEx1 from '../assets/seal-ex1.png';
-import docEx1 from '../assets/doc_1.png';
 
-function SignDoc() {
-  const page = {
-    position: 'relative',
-    height: '100%',
-    // background: `url(${docEx1}) 0px 0px / 100% 100% no-repeat scroll rgba(0, 0, 0, 0)`,
-    backgroundImage: `url(${docEx1})`,
-    backgroundRepeat: 'no-repeat',
-  };
+function SignDoc(props) {
+  const { page } = props;
   return (
     <MainLayout
       headerName="签署文档"
@@ -26,6 +19,21 @@ function SignDoc() {
           <div style={page} />
         </div>
         <div className={styles.seal_list}>
+          <SealItem style={{ margin: 'auto' }}>
+            <img role="presentation" src={sealEx1} />
+          </SealItem>
+          <SealItem style={{ margin: 'auto' }}>
+            <img role="presentation" src={sealEx1} />
+          </SealItem>
+          <SealItem style={{ margin: 'auto' }}>
+            <img role="presentation" src={sealEx1} />
+          </SealItem>
+          <SealItem style={{ margin: 'auto' }}>
+            <img role="presentation" src={sealEx1} />
+          </SealItem>
+          <SealItem style={{ margin: 'auto' }}>
+            <img role="presentation" src={sealEx1} />
+          </SealItem>
           <SealItem style={{ margin: 'auto' }}>
             <img role="presentation" src={sealEx1} />
           </SealItem>
