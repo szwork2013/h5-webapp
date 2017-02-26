@@ -4,11 +4,15 @@ import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
 import OrganRnFinish from './routes/OrganRnFinish';
 import SignPwd from './routes/SignPwd';
+import SignPwdReset from './routes/SignPwdReset';
+import SignPwdResetBySQ from './routes/SignPwdResetBySQ';
 import PersonRnInfo from './routes/PersonRnInfo';
 import PersonRnBank from './routes/PersonRnBank';
 import PersonRnFinish from './routes/PersonRnFinish';
 import SealManage from './routes/SealManage';
 import SealCreate from './routes/SealCreate';
+import SealCreateHand from './routes/SealCreateHand';
+import SealHandPreview from './routes/SealHandPreview';
 import SignDoc from './routes/SignDoc';
 
 function RouterConfig({ history, app }) {
@@ -43,6 +47,8 @@ function RouterConfig({ history, app }) {
 
       {/* 签署密码 */}
       <Route path="/signPwd" component={SignPwd} />
+      <Route path="/signPwdReset" component={SignPwdReset} />
+      <Route path="/signPwdResetBySQ" component={SignPwdResetBySQ} />
 
       {/* 个人实名 */}
       <Route path="/personRnInfo" component={PersonRnInfo} />
@@ -52,6 +58,8 @@ function RouterConfig({ history, app }) {
       {/* 印章管理 */}
       <Route path="/sealManage" component={SealManage} />
       <Route path="/sealCreate" component={SealCreate} />
+      <Route path="/sealCreateHand" component={SealCreateHand} />
+      <Route path="/sealHandPreview" component={SealHandPreview} />
 
       {/* 签署文档 */}
       <Route path="/signDoc" component={SignDoc} />
