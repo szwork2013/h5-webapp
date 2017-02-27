@@ -3,8 +3,12 @@ import { connect } from 'dva';
 // import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Modal } from 'antd';
+import { DragDropContextProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 import MainLayout from '../components/Layout/MainLayout';
 import SealItem from '../components/SealItem';
+import SignDocPage from '../components/SignDocPage';
+import SignDocSeal from '../components/SignDocSeal';
 import styles from './mixins.less';
 import sealEx1 from '../assets/seal-ex1.png';
 
@@ -30,31 +34,21 @@ function SignDoc(props) {
       loading={loading}
       noFooter
     >
-      <div className={styles.sign_panel}>
-        <div className={styles.doc}>
-          <div style={page} />
+      <DragDropContextProvider backend={HTML5Backend}>
+        <div className={styles.sign_panel}>
+          <div className={styles.doc}>
+            <SignDocPage page={page} />
+          </div>
+          <div className={styles.seal_list}>
+            <SealItem style={{ margin: 'auto' }}>
+              <SignDocSeal name="Glass" seal={sealEx1} />
+            </SealItem>
+            <SealItem style={{ margin: 'auto' }}>
+              <SignDocSeal name="Banana" seal={sealEx1} />
+            </SealItem>
+          </div>
         </div>
-        <div className={styles.seal_list}>
-          <SealItem style={{ margin: 'auto' }}>
-            <img role="presentation" src={sealEx1} />
-          </SealItem>
-          <SealItem style={{ margin: 'auto' }}>
-            <img role="presentation" src={sealEx1} />
-          </SealItem>
-          <SealItem style={{ margin: 'auto' }}>
-            <img role="presentation" src={sealEx1} />
-          </SealItem>
-          <SealItem style={{ margin: 'auto' }}>
-            <img role="presentation" src={sealEx1} />
-          </SealItem>
-          <SealItem style={{ margin: 'auto' }}>
-            <img role="presentation" src={sealEx1} />
-          </SealItem>
-          <SealItem style={{ margin: 'auto' }}>
-            <img role="presentation" src={sealEx1} />
-          </SealItem>
-        </div>
-      </div>
+      </DragDropContextProvider>
       <div className={styles.sign_action}>
         <button className="btn primary" onClick={sign}>确认签署</button>
       </div>
