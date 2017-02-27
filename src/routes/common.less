@@ -49,6 +49,7 @@
   .footer {
     height: 60px;
     background-color: #fff;
+    font-size: 14px;
     color: #777;
     width: 100%;
     z-index: 1000;
@@ -196,6 +197,24 @@
     & .input-error {
       font-size: 13px;
       color: #f04134;
+    }
+  }
+
+  .modal {
+    &.title {
+      font-size: 20px;
+      color: #323232;
+      font-weight: bold;
+    }
+    &.text {
+      font-size: 14px;
+      margin-top: 20px;
+      &.warning {
+        color: #dc8e30;
+      }
+    }
+    &.input {
+      width: 100%;
     }
   }
 }

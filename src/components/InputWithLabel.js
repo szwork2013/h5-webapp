@@ -8,14 +8,20 @@ class InputWithLabel extends React.Component {
   }
 
   render() {
-    const { labelName, inputWidth, style, error, errorMsg, children, ...otherProps } = this.props;
+    const { hideInput, labelName, inputWidth, style, error, errorMsg, children, ...otherProps } = this.props;
     return (
       <div className="input-item" style={style}>
-        <div className="input-label">{labelName}</div>
-        <div>
-          <input className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }} />
-          {children}
-        </div>
+        { hideInput ?
+          null :
+          <div className="input-label">{labelName}</div>
+        }
+        { hideInput ?
+          null :
+          <div>
+            <input className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }} />
+            {children}
+          </div>
+        }
         {error ?
           <div className="input-error">{errorMsg}</div> :
           null

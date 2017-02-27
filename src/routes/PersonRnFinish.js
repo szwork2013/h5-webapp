@@ -4,10 +4,12 @@ import MainLayout from '../components/Layout/MainLayout';
 import StepBar from '../components/StepBar';
 import styles from './mixins.less';
 
-function PersonRnFinish() {
+function PersonRnFinish(props) {
+  const { loading } = props;
   return (
     <MainLayout
       headerName="实名认证"
+      loading={loading}
     >
       <div>
         <StepBar current="3" nameStep1="身份证验证" nameStep2="银行卡验证" nameStep3="实名完成" />
@@ -18,7 +20,7 @@ function PersonRnFinish() {
 }
 
 function mapStateToProps(state) {
-  return { ...state.global };
+  return { ...state.global, loading: state.loading.global };
 }
 
 export default connect(mapStateToProps)(PersonRnFinish);

@@ -1,0 +1,53 @@
+@import './common';
+
+:global {
+  .ant-confirm-body-wrapper {
+    text-align: center;
+  }
+  .ant-confirm-body .ant-confirm-content {
+    margin-left: 0;
+  }
+  .ant-confirm .ant-modal-body {
+    padding: 30px;
+  }
+  .ant-message-notice-content {
+    font-size: 13px;
+    color: #dc8e30;
+  }
+
+  .ant-btn {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    height: 36px;
+    min-width: 90px;
+    padding: 0 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: @default-color;
+    border-color: @default-border-color;
+    color: #555;
+    &:hover {
+      background-color: @default-hover-color;
+      border-color: @default-hover-border-color
+    }
+    &:active {
+      background-color: @default-tap-color;
+      border-color: @default-tap-border-color;
+    }
+    &.ant-btn-primary {
+      background-color: @primary-color;
+      border-color: @primary-border-color;
+      color: #fff;
+      &:hover {
+        background-color: @primary-hover-color;
+        border-color: @primary-hover-border-color;
+      }
+      &:active {
+        background-color: @primary-tap-color;
+        border-color: @primary-tap-border-color;
+      }
+    }
+  }
+}

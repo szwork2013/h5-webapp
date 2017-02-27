@@ -3,9 +3,10 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Modal } from 'antd';
+import './antdCustomization.less';
 import MainLayout from '../components/Layout/MainLayout';
 import InputWithLabel from '../components/InputWithLabel';
-import styles from './mixins.less';
+import './mixins.less';
 
 function SignPwdResetBySQ(props) {
   const { dispatch, form } = props;
@@ -14,12 +15,13 @@ function SignPwdResetBySQ(props) {
     e.stopPropagation();
     Modal.success({
       title: (
-        <div className={styles.msg_title}>签署密码重置成功</div>
+        <div className="modal title">签署密码重置成功</div>
       ),
       content: (
-        <div className={styles.msg_text}>签署密码非常重要，请您牢记新密码并做好保密工作。</div>
+        <div className="modal text warning">签署密码非常重要，请您牢记新密码并做好保密工作。</div>
       ),
       iconType: null,
+      okText: '完成',
     });
     form.validateFields({ force: true }, (error) => {
       if (error) {

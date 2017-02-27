@@ -8,7 +8,7 @@ import InputWithLabel from '../components/InputWithLabel';
 import './mixins.less';
 
 function PersonRnBank(props) {
-  const { dispatch, form } = props;
+  const { dispatch, form, loading } = props;
   const { getFieldProps, getFieldError } = form;
   const onSubmit = (e) => {
     e.stopPropagation();
@@ -17,8 +17,7 @@ function PersonRnBank(props) {
         return null;
       } else {
         dispatch({
-          type: 'global/setRnStatusPerson',
-          rnStatusPerson: '4',
+          type: 'personRnBank/authAuth',
         });
       }
     });
@@ -30,8 +29,7 @@ function PersonRnBank(props) {
         return null;
       } else {
         dispatch({
-          type: 'global/setRnStatusPerson',
-          rnStatusPerson: '4',
+          type: 'personRnBank/authApply',
         });
       }
     });
@@ -39,6 +37,7 @@ function PersonRnBank(props) {
   return (
     <MainLayout
       headerName="实名认证"
+      loading={loading}
     >
       <div>
         <StepBar current="2" nameStep1="身份证验证" nameStep2="银行卡验证" nameStep3="实名完成" />
@@ -102,7 +101,7 @@ function PersonRnBank(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.personRnBank };
+  return { ...state.personRnBank, loading: state.loading.global };
 }
 
 const formOpts = {

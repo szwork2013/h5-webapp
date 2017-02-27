@@ -53,7 +53,7 @@ function RouterConfig({ history, app }) {
       {/* 个人实名 */}
       <Route path="/personRnInfo" component={PersonRnInfo} />
       <Route path="/personRnBank" component={PersonRnBank} />
-      <Route path="/personFinish" component={PersonRnFinish} />
+      <Route path="/personRnFinish" component={PersonRnFinish} />
 
       {/* 印章管理 */}
       <Route path="/sealManage" component={SealManage} />

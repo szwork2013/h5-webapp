@@ -2,6 +2,7 @@ const webpack = require('webpack');
 
 export default {
   entry: "src/index.js",
+  publicPath: "/ic/static/",
   env: {
     "development": {
       "extraBabelPlugins": [

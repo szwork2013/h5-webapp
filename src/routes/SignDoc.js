@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 // import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
+import { Modal } from 'antd';
 import MainLayout from '../components/Layout/MainLayout';
 import SealItem from '../components/SealItem';
 import styles from './mixins.less';
@@ -9,6 +10,20 @@ import sealEx1 from '../assets/seal-ex1.png';
 
 function SignDoc(props) {
   const { page } = props;
+  const sign = () => {
+    Modal.confirm({
+      title: (
+        <div className="modal title">签署密码</div>
+      ),
+      content: (
+        <div className="modal text">
+          <input className="modal input" />
+        </div>
+      ),
+      iconType: null,
+      okText: '完成',
+    });
+  };
   return (
     <MainLayout
       headerName="签署文档"
@@ -40,7 +55,7 @@ function SignDoc(props) {
         </div>
       </div>
       <div className={styles.sign_action}>
-        <button className="btn primary">确认签署</button>
+        <button className="btn primary" onClick={sign}>确认签署</button>
       </div>
     </MainLayout>
   );
