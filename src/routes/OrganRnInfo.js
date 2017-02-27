@@ -8,7 +8,7 @@ import InputWithLabel from '../components/InputWithLabel';
 import './mixins.less';
 
 function OrganRnInfo(props) {
-  const { dispatch, form } = props;
+  const { dispatch, form, loading } = props;
   const { getFieldProps, getFieldError } = form;
   const onSubmit = (e) => {
     e.stopPropagation();
@@ -27,6 +27,7 @@ function OrganRnInfo(props) {
   return (
     <MainLayout
       headerName="实名认证"
+      loading={loading}
     >
       <div>
         <StepBar current="1" nameStep1="企业基本信息" nameStep2="企业认证" nameStep3="实名完成" />
@@ -78,7 +79,7 @@ function OrganRnInfo(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.organRnInfo };
+  return { ...state.organRnInfo, loading: state.loading.global };
 }
 
 const formOpts = {

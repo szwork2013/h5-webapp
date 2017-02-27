@@ -9,7 +9,7 @@ import styles from './mixins.less';
 import sealEx1 from '../assets/seal-ex1.png';
 
 function SignDoc(props) {
-  const { page } = props;
+  const { page, loading } = props;
   const sign = () => {
     Modal.confirm({
       title: (
@@ -27,6 +27,7 @@ function SignDoc(props) {
   return (
     <MainLayout
       headerName="签署文档"
+      loading={loading}
       noFooter
     >
       <div className={styles.sign_panel}>
@@ -62,7 +63,7 @@ function SignDoc(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.signDoc };
+  return { ...state.signDoc, loading: state.loading.global };
 }
 
 const formOpts = {

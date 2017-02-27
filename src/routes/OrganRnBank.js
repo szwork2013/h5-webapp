@@ -6,7 +6,7 @@ import InputWithLabel from '../components/InputWithLabel';
 import styles from './mixins.less';
 
 function OrganRnBank(props) {
-  const { rnStatus } = props;
+  const { rnStatus, loading } = props;
   let element;
   switch (rnStatus) {
     case '1':
@@ -69,6 +69,7 @@ function OrganRnBank(props) {
   return (
     <MainLayout
       headerName="实名认证"
+      loading={loading}
     >
       <div>
         <StepBar current="2" nameStep1="企业基本信息" nameStep2="企业认证" nameStep3="实名完成" />
@@ -79,7 +80,7 @@ function OrganRnBank(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.global, ...state.organRnBank };
+  return { ...state.global, ...state.organRnBank, loading: state.loading.global };
 }
 
 export default connect(mapStateToProps)(OrganRnBank);

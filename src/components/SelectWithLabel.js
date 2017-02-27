@@ -1,4 +1,7 @@
 import React from 'react';
+import { Select } from 'antd';
+
+const Option = Select.Option;
 
 class SelectWithLabel extends React.Component {
   constructor(props) {
@@ -8,7 +11,21 @@ class SelectWithLabel extends React.Component {
   }
 
   render() {
-    const { hideInput, labelName, inputWidth, style, error, errorMsg, children, ...otherProps } = this.props;
+    const { hideInput, options, labelName, inputWidth, style, error, errorMsg, children, ...otherProps } = this.props;
+    const select = (
+      <Select size="large" className={error ? 'select error' : 'select'} style={{ width: `${inputWidth}` }} {...otherProps} >
+        {options.map((option) => {
+          return (
+            <Option
+              key={option.value}
+              value={option.value}
+            >
+              {option.label}
+            </Option>
+          );
+        })}
+      </Select>
+      );
     return (
       <div className="input-item" style={style}>
         { hideInput ?
@@ -18,11 +35,7 @@ class SelectWithLabel extends React.Component {
         { hideInput ?
           null :
           <div>
-            <select className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }}>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-            </select>
+            {select}
             {children}
           </div>
         }
@@ -42,6 +55,7 @@ SelectWithLabel.propTypes = {
   error: React.PropTypes.bool,
   errorMsg: React.PropTypes.string,
   children: React.PropTypes.node,
+  options: React.PropTypes.array,
 };
 
 export default SelectWithLabel;

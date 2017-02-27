@@ -76,7 +76,7 @@ export default {
       const response = yield call(updateAccountInfo, param);
       console.log('updateAccount response: ', response);
       if (response.data.success) {
-        yield put(routerRedux.push('/personFinish'));
+        yield put(routerRedux.push('/personRnFinish'));
       } else {
         message.error(response.data.msg);
       }

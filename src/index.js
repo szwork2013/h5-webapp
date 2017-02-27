@@ -41,6 +41,7 @@ app.model(require('./models/sealHandPreview'));
 
 app.model(require('./models/signDoc'));
 
+app.model(require('./models/signPwd'));
 app.model(require('./models/signPwdResetBySQ'));
 
 // 4. Router
