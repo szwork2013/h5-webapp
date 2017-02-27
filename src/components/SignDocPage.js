@@ -1,6 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 
+const style = {
+  marginTop: '17px',
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  border: '#bdbdbd 1px solid',
+  position: 'relative',
+};
+
 const boxTarget = {
   drop() {
     return { name: 'SignDocPage' };
@@ -26,7 +34,7 @@ class SignDocPage extends Component {
     const isActive = canDrop && isOver;
 
     return connectDropTarget(
-      <div style={page} />,
+      <div style={{ ...style, ...page }} />,
     );
   }
 }
