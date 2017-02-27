@@ -38,12 +38,16 @@ export default {
   },
 
   subscriptions: {
-    setup({ dispatch }) {
-      // 监听窗口改变事件
-      dispatch({ type: 'calcPageCls' });
-      window.onresize = () => {
-        dispatch({ type: 'calcPageCls' });
-      };
+    setup({ dispatch, history }) {
+      history.listen(({ pathname }) => {
+        if (pathname === '/signDoc') {
+          // 监听窗口改变事件
+          dispatch({ type: 'calcPageCls' });
+          window.onresize = () => {
+            dispatch({ type: 'calcPageCls' });
+          };
+        }
+      });
     },
   },
 

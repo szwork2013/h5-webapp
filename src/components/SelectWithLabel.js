@@ -1,6 +1,6 @@
 import React from 'react';
 
-class InputWithLabel extends React.Component {
+class SelectWithLabel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,7 +18,11 @@ class InputWithLabel extends React.Component {
         { hideInput ?
           null :
           <div>
-            <input autoComplete="off" className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }} />
+            <select className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }}>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+            </select>
             {children}
           </div>
         }
@@ -31,7 +35,7 @@ class InputWithLabel extends React.Component {
   }
 }
 
-InputWithLabel.propTypes = {
+SelectWithLabel.propTypes = {
   labelName: React.PropTypes.string,
   inputWidth: React.PropTypes.string,
   style: React.PropTypes.object,
@@ -40,4 +44,4 @@ InputWithLabel.propTypes = {
   children: React.PropTypes.node,
 };
 
-export default InputWithLabel;
+export default SelectWithLabel;

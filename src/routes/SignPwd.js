@@ -2,12 +2,15 @@ import React from 'react';
 import { connect } from 'dva';
 import MainLayout from '../components/Layout/MainLayout';
 import InputWithLabel from '../components/InputWithLabel';
+import SelectWithLabel from '../components/SelectWithLabel';
 import './mixins.less';
 
-function SignPwd() {
+function SignPwd(props) {
+  const { loading } = props;
   return (
     <MainLayout
       headerName="签署密码"
+      loading={loading}
     >
       <div>
         <InputWithLabel
@@ -15,7 +18,7 @@ function SignPwd() {
           labelName="签署密码" style={{ paddingTop: '40px' }}
           placeholder="6-15个英文字母、数字或符号的组合"
         />
-        <InputWithLabel
+        <SelectWithLabel
           labelName="安全问题1"
         />
         <InputWithLabel
@@ -36,7 +39,7 @@ function SignPwd() {
 }
 
 function mapStateToProps(state) {
-  return { ...state.global };
+  return { ...state.global, loading: state.loading.global };
 }
 
 export default connect(mapStateToProps)(SignPwd);

@@ -38,7 +38,7 @@ function PersonRnInfo(props) {
       loading={loading}
     >
       <div>
-        <StepBar current="1" nameStep1="身份证验证" nameStep2="银行卡验证" nameStep3="签署密码设置" />
+        <StepBar current="1" nameStep1="身份证验证" nameStep2="银行卡验证" nameStep3="实名完成" />
         <div className={styles.up_warning}>请上传身份证的正面照和手持身份证照片，保证五官清晰可见，照片内容真实有效。</div>
         <div className={styles.upload}>
           <div className={styles.upload_local}>
