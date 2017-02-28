@@ -12,6 +12,11 @@ const boxSource = {
     const item = monitor.getItem();
     const dropResult = monitor.getDropResult();
 
+    console.log('source getInitialClientOffset: ', monitor.getInitialClientOffset());
+    console.log('source getInitialSourceClientOffset: ', monitor.getInitialSourceClientOffset());
+    console.log('source source getClientOffset: ', monitor.getClientOffset());
+    console.log('source getDifferenceFromInitialOffset: ', monitor.getDifferenceFromInitialOffset());
+    console.log('source getSourceClientOffset: ', monitor.getSourceClientOffset());
     if (dropResult) {
       window.alert( // eslint-disable-line no-alert
         `You dropped ${item.name} into ${dropResult.name}!`,

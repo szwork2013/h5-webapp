@@ -19,6 +19,7 @@ const collect = (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
   canDrop: monitor.canDrop(),
+  monitor,
 });
 
 class SignDocPage extends Component {
@@ -30,7 +31,13 @@ class SignDocPage extends Component {
   };
 
   render() {
-    const { canDrop, isOver, connectDropTarget, page } = this.props;
+    const { canDrop, isOver, connectDropTarget, page, monitor } = this.props;
+    console.log('isOver: ', isOver);
+    console.log('target getInitialClientOffset: ', monitor.getInitialClientOffset());
+    console.log('target getInitialSourceClientOffset: ', monitor.getInitialSourceClientOffset());
+    console.log('target getClientOffset: ', monitor.getClientOffset());
+    console.log('target getDifferenceFromInitialOffset: ', monitor.getDifferenceFromInitialOffset());
+    console.log('target getSourceClientOffset: ', monitor.getSourceClientOffset());
     const isActive = canDrop && isOver;
 
     return connectDropTarget(
