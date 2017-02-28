@@ -49,7 +49,8 @@ function PersonRnInfo(props) {
             }
             <Upload
               name="frontId"
-              action="../service/ic/file/uploadFile"
+              action="../../service/file/uploadFile"
+              withCredentials
               showUploadList={false}
               onChange={(info) => { onFileChange(info, 'frontIdOssKey'); }}
             >
@@ -72,7 +73,8 @@ function PersonRnInfo(props) {
             }
             <Upload
               name="backId"
-              action="../service/ic/file/uploadFile"
+              action="../../service/file/uploadFile"
+              withCredentials
               showUploadList={false}
               onChange={(info) => { onFileChange(info, 'endIdOssKey'); }}
             >
