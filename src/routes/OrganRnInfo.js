@@ -17,8 +17,8 @@ function OrganRnInfo(props) {
         return null;
       } else {
         dispatch({
-          type: 'global/setRnStatus',
-          rnStatus: '4',
+          type: 'global/setStatus',
+          status: 4,
         });
         dispatch(routerRedux.push('/organRnBank'));
       }

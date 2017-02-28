@@ -53,6 +53,7 @@ export default {
       }
     },
     *authAuth({ payload }, { select, call, put }) {
+
       const personRnBankState = yield select(state => state.personRnBank);
       const { serviceId, code } = personRnBankState;
       const param = {
@@ -69,9 +70,15 @@ export default {
         message.error(response.data.msg);
       }
     },
-    *updateAccountStatus({ payload }, { call, put }) {
+    *updateAccountStatus({ payload }, { select, call, put }) {
+      const personRnBankState = yield select(state => state.personRnBank);
+      const { name, idno } = personRnBankState;
       const param = {
         status: '9',
+        person: {
+          name: name.value,
+          idNo: idno.value,
+        },
       };
       const response = yield call(updateAccountInfo, param);
       console.log('updateAccount response: ', response);

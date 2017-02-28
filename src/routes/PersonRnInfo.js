@@ -28,7 +28,9 @@ function PersonRnInfo(props) {
       if (error) {
         return null;
       } else {
-        dispatch(routerRedux.push('/personRnBank'));
+        dispatch({
+          type: 'personRnInfo/updatePersonInfo',
+        });
       }
     });
   };

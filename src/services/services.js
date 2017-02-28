@@ -2,7 +2,7 @@ import request from '../utils/request';
 
 
 export async function getAccountInfo() {
-  return request('../service/ic/account/detail', {
+  return request('../../service/account/info', {
     method: 'GET',
     credentials: 'same-origin',
   });

@@ -61,7 +61,7 @@ export default {
       const signPwdState = yield select(state => state.signPwd);
       const { pwd, question1, answer1, question2, answer2 } = signPwdState;
       const param = {
-        password: md5(pwd.value),
+        signPwd: md5(pwd.value),
         pwdAnswer: answer1.value,
         pwdAnswer2: answer2.value,
         pwdRequest: `${signPwdState.questionList[question1.value].label}？`,
