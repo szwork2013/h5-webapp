@@ -1,8 +1,9 @@
 import fetch from 'dva/fetch';
 
 function parseJSON(response) {
-  console.log('response: ', response);
-  console.log('header: ', response.headers.get('Content-Type'));
+  if (response.headers.get('Content-Type').indexOf('application/xml') > -1) {
+    return response.text();
+  }
   return response.json();
 }
 

@@ -2,20 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
 import { generateConfigID } from '../utils/signTools';
 
-const boxSource = {
+const sealSource = {
   beginDrag(props) {
     // monitor.getItem()时返回的对象
-    const { name, id, left, top } = props;
-    return {
-      name,
-      id,
-      left,
-      top,
-    };
+    const { name, id, sealId, sealType, sealWay, seal, left, top } = props;
+    return { name, id, sealId, sealType, sealWay, seal, left, top };
   },
 
   endDrag(props, monitor) {
     const item = monitor.getItem();
+    const { name, sealId, sealType, sealWay, seal, left, top } = item;
     const dropResult = monitor.getDropResult();
 
     if (dropResult) {
@@ -23,11 +19,12 @@ const boxSource = {
       // const delta = monitor.getDifferenceFromInitialOffset();
       // const left = Math.round(!item.left ? monitor.getInitialSourceClientOffset().x : item.left + delta.x);
       // const top = Math.round(!item.top ? monitor.getInitialSourceClientOffset().y : item.top + delta.y);
+      // TODO
       if (!props.added) {
         props.dispatch({
           type: 'signDoc/addSeal',
           payload: {
-            seal: { [generateConfigID()]: { top: '100px', left: '500px', name: item.name, added: true } },
+            seal: { [generateConfigID()]: { top: '100', left: '500', name, sealId, sealType, seal, sealWay, added: true } },
           },
         });
       }
@@ -55,7 +52,7 @@ class SignDocSeal extends Component {
   };
 
   render() {
-    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, key, id, name, left, top, seal, isDefault, added, dispatch } = this.props;
+    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, key, id, name, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch } = this.props;
 
     let style;
     if (isDefault) {
@@ -75,10 +72,13 @@ class SignDocSeal extends Component {
 
     return (
       connectDragSource(
-        <img draggable={false} key={key} id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }} />
+        <img
+          draggable={false} key={key} data-sealId={sealId} data-sealType={sealType} data-sealWay={sealWay}
+          id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }}
+        />
       )
     );
   }
 }
 
-export default new DragSource('signDoc', boxSource, collect)(SignDocSeal);
+export default new DragSource('signDoc', sealSource, collect)(SignDocSeal);

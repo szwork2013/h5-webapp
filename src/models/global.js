@@ -11,7 +11,15 @@ export default {
     email: '',
     type: '',
     status: 1, // 企业实名状态：资料未完成(1) 资料已完成(2) 打款中(4) 打款完成(5) 实名成功(9)
-    seals: [],
+    seals: [
+      // {
+      //   id: 8127,
+      //   sealName: 'test',
+      //   sealWay: 1,
+      //   type: 3,
+      //   url: 'https://esignoss.oss-cn-hangzhou.aliyuncs.com/1000343/seal_a6013699-7d03-4c95-84ae-b6db6b8c47f6?OSSAccessKeyId=FBzUaPMorqiiUAfb&Signature=r1bO0FItjuCrR4tSFjbtgskKPAI%3D&Expires=1488382417',
+      // },
+    ],
     person: null,
     organize: null,
   },

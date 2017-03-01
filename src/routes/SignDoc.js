@@ -12,60 +12,37 @@ import SignDocPage from '../components/SignDocPage';
 import SignDocSeal from '../components/SignDocSeal';
 import { generateConfigID } from '../utils/signTools';
 import styles from './mixins.less';
-import sealEx1 from '../assets/seal-ex1.png';
 
 function SignDoc(props) {
-  const { dispatch, page, needSeals, sealList, loading, form } = props;
+  const { dispatch, page, modelVisible, needSeals, sealList, loading, form } = props;
   const { getFieldProps, getFieldError } = form;
-  const sign = () => {
-    Modal.confirm({
-      title: (
-        <div className="modal title">签署密码</div>
-      ),
-      content: (
-        <div className="modal text">
-          <input
-            className="modal input"
-            {...getFieldProps('signPwd', {
-              rules: [
-                { required: true, message: '请输入签署密码' },
-              ],
-            })}
-            error={!!getFieldError('signPwd')}
-            errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
-          />
-          <InputWithLabel
-            hideInput
-            {...getFieldProps('signPwd', {
-              rules: [
-                { required: true, message: '请输入签署密码' },
-              ],
-            })}
-            error={!!getFieldError('signPwd')}
-            errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
-          />
-        </div>
-      ),
-      iconType: null,
-      okText: '完成',
-      onOk: () => {
-        return new Promise((resolve, reject) => {
-          form.validateFields({ force: true }, (error) => {
-            console.log('error: ', error);
-            if (error) {
-              return reject;
-            } else {
-              dispatch({
-                type: 'signDoc/validateSignPwd',
-                payload: {
-                  resolve,
-                  reject,
-                },
-              });
-            }
-          });
-        }).catch(() => console.log('Oops errors!'));
+  const cancel = (e) => {
+    console.log('e: ', e);
+    dispatch({
+      type: 'signDoc/changeVisible',
+      payload: {
+        modelVisible: false,
       },
+    });
+  };
+  const showModel = () => {
+    dispatch({
+      type: 'signDoc/changeVisible',
+      payload: {
+        modelVisible: true,
+      },
+    });
+  };
+  const sign = (e) => {
+    console.log('e: ', e);
+    form.validateFields({ force: true }, (error) => {
+      if (error) {
+        return null;
+      } else {
+        dispatch({
+          type: 'signDoc/validateSignPwd',
+        });
+      }
     });
   };
   return (
@@ -90,6 +67,7 @@ function SignDoc(props) {
                   dispatch={dispatch}
                   hideSourceOnDrag
                   isDefault
+                  sealId={seal.id} sealType={seal.type} sealWay={seal.sealWay}
                   key={generateConfigID()} id={generateConfigID()} name={seal.sealName}
                   seal={seal.url}
                 />
@@ -99,8 +77,22 @@ function SignDoc(props) {
         </div>
       </div>
       <div className={styles.sign_action}>
-        <button className="btn primary" onClick={sign}>确认签署</button>
+        <button className="btn primary" onClick={showModel}>确认签署</button>
       </div>
+      <Modal
+        title="签署密码" visible={modelVisible}
+        onOk={sign} onCancel={cancel}
+      >
+        <InputWithLabel
+          {...getFieldProps('signPwd', {
+            rules: [
+              { required: true, message: '请输入签署密码' },
+            ],
+          })}
+          error={!!getFieldError('signPwd')}
+          errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
+        />
+      </Modal>
     </MainLayout>
   );
 }

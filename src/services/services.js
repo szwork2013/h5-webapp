@@ -114,19 +114,42 @@ export async function validatePwd(values) {
     credentials: 'same-origin',
     body: postData,
     headers: {
-      'Content-Type': 'application/xml',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
 }
 
 export async function pdfSign(values) {
-  const postData = `signdocId=${values.docId}&signInfo=${JSON.stringify(values.signInfo)}&password=${values.signPwd}&signType=1&posType=0`;
+  const postData = `signdocId=${values.signdocId}&signInfo=${values.signInfo}&password=${values.password}&signType=${values.signType}&posType=${values.posType}&edit=${new Date().getTime()}`;
   return request('../../user/sign!pdfSign.xml', {
     method: 'POST',
     credentials: 'same-origin',
     body: postData,
     headers: {
-      'Content-Type': 'application/xml',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function getDocPic(values) {
+  const postData = `pageNum=${values.pageNum}&signdocId=${values.docId}&edit=${new Date().getTime()}`;
+  return request('../../user/sign!getDocPic.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function pdfSignSingle(values) {
+  return request('../../service/sign/pdfSign', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: JSON.stringify(values),
+    headers: {
+      'Content-Type': 'application/json',
     },
   });
 }

@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import update from 'react/lib/update';
 import { DropTarget } from 'react-dnd';
 import SignDocSeal from './SignDocSeal';
 import sealEx1 from '../assets/seal-ex1.png';
@@ -16,8 +15,8 @@ const pageTarget = {
   drop(props, monitor, component) {
     const item = monitor.getItem();
     const delta = monitor.getDifferenceFromInitialOffset();
-    const left = Math.round(!item.left ? monitor.getInitialSourceClientOffset().x : item.left + delta.x);
-    const top = Math.round(!item.top ? monitor.getInitialSourceClientOffset().y : item.top + delta.y);
+    const left = Math.round(!parseInt(item.left) ? monitor.getInitialSourceClientOffset().x : parseInt(item.left) + delta.x);
+    const top = Math.round(!parseInt(item.top) ? monitor.getInitialSourceClientOffset().y : parseInt(item.top) + delta.y);
 
     if (props.seals[item.id]) {
       component.moveSeal(item.id, left, top);
@@ -68,14 +67,15 @@ class SignDocPage extends Component {
     const sealComponents = (
       <div>
         {Object.keys(seals).map((key) => {
-          const { left, top, name } = seals[key];
+          const { left, top, name, sealId, sealType, seal, sealWay } = seals[key];
           return (
             <SignDocSeal
               added
               dispatch={dispatch}
               hideSourceOnDrag
+              sealId={sealId} sealType={sealType} sealWay={sealWay}
               key={key} id={key} name={name}
-              seal={sealEx1} top={top} left={left}
+              seal={seal} top={top} left={left}
             />
           );
         })}
