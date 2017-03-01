@@ -3,17 +3,20 @@ import { connect } from 'dva';
 // import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Modal } from 'antd';
-import { DragDropContextProvider } from 'react-dnd';
+import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import MainLayout from '../components/Layout/MainLayout';
+import InputWithLabel from '../components/InputWithLabel';
 import SealItem from '../components/SealItem';
 import SignDocPage from '../components/SignDocPage';
 import SignDocSeal from '../components/SignDocSeal';
+import { generateConfigID } from '../utils/signTools';
 import styles from './mixins.less';
 import sealEx1 from '../assets/seal-ex1.png';
 
 function SignDoc(props) {
-  const { page, loading } = props;
+  const { dispatch, page, needSeals, sealList, loading, form } = props;
+  const { getFieldProps, getFieldError } = form;
   const sign = () => {
     Modal.confirm({
       title: (
@@ -21,11 +24,48 @@ function SignDoc(props) {
       ),
       content: (
         <div className="modal text">
-          <input className="modal input" />
+          <input
+            className="modal input"
+            {...getFieldProps('signPwd', {
+              rules: [
+                { required: true, message: '请输入签署密码' },
+              ],
+            })}
+            error={!!getFieldError('signPwd')}
+            errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
+          />
+          <InputWithLabel
+            hideInput
+            {...getFieldProps('signPwd', {
+              rules: [
+                { required: true, message: '请输入签署密码' },
+              ],
+            })}
+            error={!!getFieldError('signPwd')}
+            errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
+          />
         </div>
       ),
       iconType: null,
       okText: '完成',
+      onOk: () => {
+        return new Promise((resolve, reject) => {
+          form.validateFields({ force: true }, (error) => {
+            console.log('error: ', error);
+            if (error) {
+              return reject;
+            } else {
+              dispatch({
+                type: 'signDoc/validateSignPwd',
+                payload: {
+                  resolve,
+                  reject,
+                },
+              });
+            }
+          });
+        }).catch(() => console.log('Oops errors!'));
+      },
     });
   };
   return (
@@ -34,21 +74,30 @@ function SignDoc(props) {
       loading={loading}
       noFooter
     >
-      <DragDropContextProvider backend={HTML5Backend}>
-        <div className={styles.sign_panel}>
-          <div className={styles.doc}>
-            <SignDocPage page={page} />
-          </div>
-          <div className={styles.seal_list}>
-            <SealItem style={{ margin: 'auto' }}>
-              <SignDocSeal name="Glass" seal={sealEx1} />
-            </SealItem>
-            <SealItem style={{ margin: 'auto' }}>
-              <SignDocSeal name="Banana" seal={sealEx1} />
-            </SealItem>
-          </div>
+      <div className={styles.sign_panel}>
+        <div className={styles.doc}>
+          <SignDocPage
+            page={page}
+            seals={needSeals}
+            dispatch={dispatch}
+          />
         </div>
-      </DragDropContextProvider>
+        <div className={styles.seal_list}>
+          {Object.values(sealList).map((seal) => {
+            return (
+              <SealItem style={{ margin: 'auto' }}>
+                <SignDocSeal
+                  dispatch={dispatch}
+                  hideSourceOnDrag
+                  isDefault
+                  key={generateConfigID()} id={generateConfigID()} name={seal.sealName}
+                  seal={seal.url}
+                />
+              </SealItem>
+            );
+          })}
+        </div>
+      </div>
       <div className={styles.sign_action}>
         <button className="btn primary" onClick={sign}>确认签署</button>
       </div>
@@ -57,7 +106,7 @@ function SignDoc(props) {
 }
 
 function mapStateToProps(state) {
-  return { ...state.signDoc, loading: state.loading.global };
+  return { sealList: state.global.seals, ...state.signDoc, loading: state.loading.global };
 }
 
 const formOpts = {
@@ -78,4 +127,4 @@ const formOpts = {
   },
 };
 
-export default connect(mapStateToProps)(createForm(formOpts)(SignDoc));
+export default connect(mapStateToProps)(createForm(formOpts)(DragDropContext(HTML5Backend)(SignDoc)));

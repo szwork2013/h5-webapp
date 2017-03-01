@@ -8,6 +8,17 @@ export async function getAccountInfo() {
   });
 }
 
+export async function getSealImgUrl(values) {
+  return request('../../service/oss/getUrl', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: JSON.stringify(values),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
+
 export async function updateAccountInfo(values) {
   return request('../../service/account/updateAccountInfo', {
     method: 'POST',
@@ -93,5 +104,29 @@ export async function uploadFile(file) {
     method: 'POST',
     credentials: 'same-origin',
     body: formData,
+  });
+}
+
+export async function validatePwd(values) {
+  const postData = `signPwd=${values.signPwd}&edit=${new Date().getTime()}`;
+  return request('../../user/account!validatePwd.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  });
+}
+
+export async function pdfSign(values) {
+  const postData = `signdocId=${values.docId}&signInfo=${JSON.stringify(values.signInfo)}&password=${values.signPwd}&signType=1&posType=0`;
+  return request('../../user/sign!pdfSign.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/xml',
+    },
   });
 }

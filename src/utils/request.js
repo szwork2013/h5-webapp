@@ -1,6 +1,8 @@
 import fetch from 'dva/fetch';
 
 function parseJSON(response) {
+  console.log('response: ', response);
+  console.log('header: ', response.headers.get('Content-Type'));
   return response.json();
 }
 

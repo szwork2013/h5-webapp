@@ -1,4 +1,5 @@
-import { getAccountInfo } from '../services/services';
+import _ from 'lodash';
+import { getAccountInfo, getSealImgUrl } from '../services/services';
 // import PathConstants from '../PathConstants';
 
 export default {
@@ -29,6 +30,23 @@ export default {
       resolve();
       return { ...state };
     },
+    updateSealImgUrl(state, { payload }) {
+      const { sealId, data, resolve } = payload;
+      if (data.data != null && data.data !== undefined) {
+        const { url } = data.data;
+        resolve();
+        const newSeals = _.cloneDeep(state.seals);
+        for (const seal of newSeals) {
+          if (seal.id === sealId) {
+            seal.url = url;
+            break;
+          }
+        }
+        return { ...state, seals: newSeals };
+      }
+      resolve();
+      return { ...state };
+    },
   },
 
   effects: {
@@ -47,6 +65,32 @@ export default {
         });
       } else {
         resolve();
+      }
+    },
+    *getSealImg({ payload }, { select, call, put }) {
+      const { resolve } = payload;
+      const globalState = yield select(state => state.global);
+      const { seals } = globalState;
+      console.log('seals: ', seals);
+      for (const seal of seals) {
+        console.log('seal: ', seal);
+        const param = {
+          ossKey: seal.imgUrl,
+        };
+        const { data } = yield call(getSealImgUrl, param);
+        console.log('getSealImg response: ', data);
+        if (data && data.success) {
+          yield put({
+            type: 'updateSealImgUrl',
+            payload: {
+              sealId: seal.id,
+              data,
+              resolve,
+            },
+          });
+        } else {
+          resolve();
+        }
       }
     },
   },

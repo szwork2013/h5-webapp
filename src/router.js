@@ -51,23 +51,55 @@ function RouterConfig({ history, app }) {
     promise.then(() => {
       const state = app._store.getState();
       const status = state.global.status;
-      console.log('state: ', state);
-      console.log('status: ', status);
-      console.log('nextState.location.pathname: ', nextState.location.pathname);
-      if (nextState.location.pathname === '/personRnBank') {
+      if (nextState.location.pathname === PathConstants.PersonRnBank) {
         if (status === 9) {
-          replace({ pathname: '/personRnFinish' });
+          replace({ pathname: PathConstants.PersonRnFinish });
         }
-      } else if (nextState.location.pathname === '/personRnInfo') {
+      } else if (nextState.location.pathname === PathConstants.PersonRnInfo) {
         if (status === 9) {
-          replace({ pathname: '/personRnFinish' });
+          replace({ pathname: PathConstants.PersonRnFinish });
         }
-      } else if (nextState.location.pathname === '/personRnFinish') {
+      } else if (nextState.location.pathname === PathConstants.PersonRnFinish) {
         if (status === 1) {
-          replace({ pathname: '/personRnInfo' });
+          replace({ pathname: PathConstants.PersonRnInfo });
         }
       }
       callback();
+    });
+  };
+
+  const validateStatus = (nextState, replace, callback) => {
+    const promise = new Promise((resolve) => {
+      app._store.dispatch({
+        type: 'global/getAccountInfo',
+        payload: {
+          resolve,
+        },
+      });
+    });
+    promise.then(() => {
+      const promise2 = new Promise((resolve) => {
+        app._store.dispatch({
+          type: 'global/getSealImg',
+          payload: {
+            resolve,
+          },
+        });
+      });
+      promise2.then(() => {
+        const state = app._store.getState();
+        const status = state.global.status;
+        const type = state.global.type;
+        console.log('state: ', state);
+        console.log('status: ', status);
+        console.log('nextState.location.pathname: ', nextState.location.pathname);
+        if (status !== 9 && type === 1) {
+          replace({ pathname: PathConstants.PersonRnInfo });
+        } else if (status !== 9 && type === 2) {
+          replace({ pathname: PathConstants.OrganRnInfo });
+        }
+        callback();
+      });
     });
   };
   return (
@@ -95,7 +127,7 @@ function RouterConfig({ history, app }) {
       <Route path={PathConstants.SealHandPreview} component={SealHandPreview} />
 
       {/* 签署文档 */}
-      <Route path={PathConstants.SignDoc} component={SignDoc} />
+      <Route path={PathConstants.SignDoc} component={SignDoc} onEnter={validateStatus} />
 
       {/* 404 */}
       <Route path="*" component={NotFound} />
