@@ -1,5 +1,6 @@
 const PathConstants = {
   Root: '/',
+  DocList: '/docList',
   OrganRnInfo: '/organRnInfo',
   OrganRnBank: '/organRnBank',
   OrganRnFinish: '/organRnFinish',

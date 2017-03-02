@@ -1,5 +1,7 @@
 import React from 'react';
 import { Router, Route } from 'dva/router';
+import { message } from 'antd';
+import DocList from './routes/DocList';
 import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
 import OrganRnFinish from './routes/OrganRnFinish';
@@ -16,6 +18,7 @@ import SealHandPreview from './routes/SealHandPreview';
 import SignDoc from './routes/SignDoc';
 import NotFound from './routes/NotFound';
 import PathConstants from './PathConstants';
+import { getCurrentUrlParams } from './utils/signTools';
 
 function RouterConfig({ history, app }) {
   const validateOrganStatus = (nextState, replace) => {
@@ -78,34 +81,50 @@ function RouterConfig({ history, app }) {
       });
     });
     promise.then(() => {
-      const promise2 = new Promise((resolve) => {
+      // 根据地址栏传的docId 调接口获取文档详情
+      const params = getCurrentUrlParams();
+      app._store.dispatch({
+        type: 'signDoc/getDocInfo',
+        payload: {
+          docId: params.docId,
+        },
+      });
+      const state = app._store.getState();
+      const status = state.global.status;
+      const type = state.global.type;
+      if (status !== 9 && type === 1) {
         app._store.dispatch({
-          type: 'global/getSealImg',
+          type: 'global/setRnRedirectUrl',
           payload: {
-            resolve,
+            afterRnRedirectUrl: PathConstants.SignDoc,
           },
         });
-      });
-      promise2.then(() => {
-        const state = app._store.getState();
-        const status = state.global.status;
-        const type = state.global.type;
-        console.log('state: ', state);
-        console.log('status: ', status);
-        console.log('nextState.location.pathname: ', nextState.location.pathname);
-        if (status !== 9 && type === 1) {
-          replace({ pathname: PathConstants.PersonRnInfo });
-        } else if (status !== 9 && type === 2) {
-          replace({ pathname: PathConstants.OrganRnInfo });
-        }
+        replace({ pathname: PathConstants.PersonRnInfo });
+        message.warning('请先进行实名认证');
         callback();
+        return;
+      } else if (status !== 9 && type === 2) {
+        app._store.dispatch({
+          type: 'global/setRnRedirectUrl',
+          payload: {
+            afterRnRedirectUrl: PathConstants.SignDoc,
+          },
+        });
+        replace({ pathname: PathConstants.OrganRnInfo });
+        message.warning('请先进行实名认证');
+        callback();
+        return;
+      }
+      app._store.dispatch({
+        type: 'global/getSealImg',
       });
+      callback();
     });
   };
   return (
     <Router history={history}>
       {/* 企业实名 */}
-      <Route path={PathConstants.Root} component={OrganRnInfo} onEnter={validateOrganStatus} onLeave={() => (console.log('leave info'))} />
+      <Route path={PathConstants.Root} component={DocList} />
       <Route path={PathConstants.OrganRnInfo} component={OrganRnInfo} onEnter={validateOrganStatus} />
       <Route path={PathConstants.OrganRnBank} component={OrganRnBank} onEnter={validateOrganStatus} />
       <Route path={PathConstants.OrganRnFinish} component={OrganRnFinish} onEnter={validateOrganStatus} />
@@ -128,6 +147,9 @@ function RouterConfig({ history, app }) {
 
       {/* 签署文档 */}
       <Route path={PathConstants.SignDoc} component={SignDoc} onEnter={validateStatus} />
+
+      {/* 列表页 */}
+      <Route path={PathConstants.DocList} component={DocList} />
 
       {/* 404 */}
       <Route path="*" component={NotFound} />

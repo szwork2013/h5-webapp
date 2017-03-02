@@ -15,7 +15,7 @@ const MainLayout = (props) => {
     >
       <div style={props.noFooter ? { minHeight: '100%', height: '100%', position: 'relative' } : { minHeight: '100%', position: 'relative' }}>
         { !props.noHeader ?
-          <Header name={props.headerName} style={props.noFooter ? { position: 'fixed' } : {}} /> :
+          <Header headerHeight={props.headerHeight} noHeaderTitle={props.noHeaderTitle} name={props.headerName} style={props.noFooter ? { position: 'fixed', height: props.headerHeight } : { height: props.headerHeight }} /> :
           null
         }
         <div className="content" style={props.noFooter ? { paddingBottom: '0' } : {}}>

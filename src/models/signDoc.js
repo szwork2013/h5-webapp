@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import md5 from 'md5';
 import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 import { getDocPic, pdfSignSingle, validatePwd, pdfSign } from '../services/services';
-import { getCurrentUrlParams } from '../utils/signTools';
-import docEx1 from '../assets/doc_1.png';
 
 export default {
 
@@ -12,7 +11,13 @@ export default {
   state: {
     signPwd: { value: '' },
     docId: '',
-    page: {},
+    docName: '',
+    pageCount: '', // 文档页数
+    pageWidth: 0,
+    pageHeight: 0,
+    payMethod: 0, // 支付类型，分开AA 一个A
+    pageType: '', // 区分待我签还是待他人签 owner:发起 receive:待我
+    page: {}, // 当前显示页属性
     modelVisible: false,
     needSeals: {},
   },
@@ -26,9 +31,12 @@ export default {
       const { page } = payload;
       return { ...state, page };
     },
+    setDocParam(state, { payload }) {
+      const { pageWidth, pageHeight, pageNum, docName } = payload;
+      return { ...state, pageWidth, pageHeight, pageNum, docName };
+    },
     changeVisible(state, { payload }) {
       const { modelVisible } = payload;
-      console.log('modelVisible: ', modelVisible);
       return { ...state, modelVisible };
     },
     addSeal(state, { payload }) {
@@ -45,30 +53,44 @@ export default {
   },
 
   effects: {
-    *calcPageCls({ payload }, { put }) {
-      // const wh = window.innerHeight;
-      const ww = window.innerWidth;
-      // const t = document.documentElement.clientHeight;
+    *calcPageCls({ payload }, { select, put }) {
+      const signDocState = yield select(state => state.signDoc);
+      const { pageWidth, pageHeight } = signDocState;
+      const screenWidth = window.innerWidth;
       const page = {
-        position: 'relative',
-        width: `${ww * 0.8 * 0.95}px`,
-        height: `${ww * 0.8 * 0.95 * 1.48}px`,
-        background: `url(${docEx1}) 0px 0px / 100% 100% no-repeat scroll rgba(0, 0, 0, 0)`,
+        width: `${screenWidth * 0.8 * 0.95}px`,
+        height: `${screenWidth * 0.8 * 0.95 * (pageHeight / pageWidth)}px`,
       };
+      let newPage = _.cloneDeep(signDocState.page);
+      newPage = _.merge(newPage, page);
       yield put({
         type: 'setPage',
-        page,
+        page: newPage,
       });
     },
-    *getDocInfo({ payload }, { call, put }) {
-      yield put({ type: 'calcPageCls' });
-      const { docId } = payload;
-      yield put({
-        type: 'setDocId',
-        payload: {
-          docId,
-        },
-      });
+    *getDocInfo({ payload }, { select, call, put }) {
+      // 地址栏传的docId
+      let { docId } = payload;
+      if (docId) {
+        yield put({
+          type: 'setDocId',
+          payload: {
+            docId,
+          },
+        });
+      } else {
+        const signDocState = yield select(state => state.signDoc);
+        docId = signDocState.docId;
+      }
+      if (!docId) {
+        message.error('docId未传');
+        return;
+      }
+      const globalState = yield select(state => state.global);
+      // 未实名不继续了
+      if (globalState.status !== 9) {
+        return;
+      }
       const param = {
         pageNum: '1-1',
         docId,
@@ -80,11 +102,22 @@ export default {
         console.log('getDocPic response: ', data);
         if (data && data.errCode === 0) {
           // 设置文档显示需要的属性
+          const { pageWidth, pageHeight, pageNum, docName } = data;
+          const url = data.keys[0].imageKey.replace(/&amp;/g, '&');
           yield put({
-            type: 'setPages',
-            payload: {
-              data: data.data,
-            },
+            type: 'setDocParam',
+            payload: { pageWidth, pageHeight, pageNum, docName },
+          });
+          const screenWidth = window.innerWidth;
+          const page = {
+            position: 'relative',
+            width: `${screenWidth * 0.8 * 0.95}px`,
+            height: `${screenWidth * 0.8 * 0.95 * (pageHeight / pageWidth)}px`,
+            background: `url(${url}) 0px 0px / 100% 100% no-repeat scroll rgba(0, 0, 0, 0)`,
+          };
+          yield put({
+            type: 'setPage',
+            page,
           });
         } else {
           message.error(data.msg);
@@ -152,6 +185,7 @@ export default {
         data = JSON.parse(data);
         console.log('pdfSign response: ', data);
         if (data && data.errCode === 0) {
+
           yield put({
             type: 'changeVisible',
             payload: {
@@ -159,7 +193,7 @@ export default {
             },
           });
           // 跳到列表页
-          // yield put(routerRedux.push('/'));
+          yield put(routerRedux.push('/docList'));
         } else {
           message.error(data.msg);
         }
@@ -173,7 +207,7 @@ export default {
           password: md5(signPwd.value),
         },
         doc: {
-          docId: 30798,
+          docId,
         },
         pos: {
           posPage: 1,
@@ -205,22 +239,10 @@ export default {
     setup({ dispatch, history }) {
       history.listen(({ pathname }) => {
         if (pathname === '/signDoc') {
-          // 根据地址栏传的docId 调接口获取文档详情
-          const params = getCurrentUrlParams();
-          if (params && params.docId) {
-            console.log('docId: ', params.docId);
-            dispatch({
-              type: 'getDocInfo',
-              payload: {
-                docId: params.docId,
-              },
-            });
-          }
-          // // 监听窗口改变事件
-          // dispatch({ type: 'calcPageCls' });
-          // window.onresize = () => {
-          //   dispatch({ type: 'calcPageCls' });
-          // };
+          // 监听窗口改变事件
+          window.onresize = () => {
+            dispatch({ type: 'calcPageCls' });
+          };
         }
       });
     },

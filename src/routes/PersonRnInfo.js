@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Upload } from 'antd';
 import MainLayout from '../components/Layout/MainLayout';
@@ -13,7 +13,6 @@ function PersonRnInfo(props) {
   const { getFieldProps, getFieldError } = form;
 
   const onFileChange = (info, fieldName) => {
-    console.log(info.file);
     dispatch({
       type: 'personRnInfo/fileUpload',
       payload: {

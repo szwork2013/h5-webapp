@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { getAccountInfo, getSealImgUrl } from '../services/services';
-// import PathConstants from '../PathConstants';
+import PathConstants from '../PathConstants';
 
 export default {
 
@@ -9,7 +9,7 @@ export default {
   state: {
     mobile: '',
     email: '',
-    type: '',
+    type: 1,
     status: 1, // 企业实名状态：资料未完成(1) 资料已完成(2) 打款中(4) 打款完成(5) 实名成功(9)
     seals: [
       // {
@@ -22,9 +22,14 @@ export default {
     ],
     person: null,
     organize: null,
+    afterRnRedirectUrl: PathConstants.Root,
   },
 
   reducers: {
+    setRnRedirectUrl(state, { payload }) {
+      const { afterRnRedirectUrl } = payload;
+      return { ...state, afterRnRedirectUrl };
+    },
     setStatus(state, { payload: status }) {
       return { ...state, status };
     },
@@ -39,10 +44,9 @@ export default {
       return { ...state };
     },
     updateSealImgUrl(state, { payload }) {
-      const { sealId, data, resolve } = payload;
+      const { sealId, data } = payload;
       if (data.data != null && data.data !== undefined) {
         const { url } = data.data;
-        resolve();
         const newSeals = _.cloneDeep(state.seals);
         for (const seal of newSeals) {
           if (seal.id === sealId) {
@@ -52,7 +56,6 @@ export default {
         }
         return { ...state, seals: newSeals };
       }
-      resolve();
       return { ...state };
     },
   },
@@ -76,7 +79,6 @@ export default {
       }
     },
     *getSealImg({ payload }, { select, call, put }) {
-      const { resolve } = payload;
       const globalState = yield select(state => state.global);
       const { seals } = globalState;
       console.log('seals: ', seals);
@@ -93,11 +95,8 @@ export default {
             payload: {
               sealId: seal.id,
               data,
-              resolve,
             },
           });
-        } else {
-          resolve();
         }
       }
     },

@@ -81,9 +81,10 @@ function SignDoc(props) {
       </div>
       <Modal
         title="签署密码" visible={modelVisible}
-        onOk={sign} onCancel={cancel}
+        onOk={sign} onCancel={cancel} closable={false}
       >
         <InputWithLabel
+          type="password"
           {...getFieldProps('signPwd', {
             rules: [
               { required: true, message: '请输入签署密码' },
