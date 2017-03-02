@@ -157,7 +157,7 @@ export default {
     },
     *pdfSign({ payload }, { select, call, put }) {
       const signDocState = yield select(state => state.signDoc);
-      const { signPwd, docId, needSeals } = signDocState;
+      const { signPwd, docId, needSeals, pageWidth } = signDocState;
       const signArray = [];
       // signInfo:[{"sealId":"8129","posX":200.6311724137931,"posY":521.6276730713818,"posPage":"1","signType":"1"}]
       Object.keys(needSeals).map((key) => {
@@ -166,8 +166,8 @@ export default {
           sealId,
           posPage: 1,
           signType: 1,
-          posX: left,
-          posY: top,
+          posX: (left * pageWidth) / (window.innerWidth * 0.8 * 0.95),
+          posY: (top * pageWidth) / (window.innerWidth * 0.8 * 0.95),
         });
         return null;
       });
@@ -185,7 +185,6 @@ export default {
         data = JSON.parse(data);
         console.log('pdfSign response: ', data);
         if (data && data.errCode === 0) {
-
           yield put({
             type: 'changeVisible',
             payload: {

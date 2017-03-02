@@ -9,6 +9,8 @@ export default {
   state: {
     frontIdOssKey: { value: '' },
     endIdOssKey: { value: '' },
+    frontIdOssKeyKey: { value: '' },
+    endIdOssKeyKey: { value: '' },
     name: { value: '' },
     idno: { value: '' },
   },
@@ -31,6 +33,7 @@ export default {
           message.success(`文件${info.file.name}上传成功`);
           const fields = {};
           fields[fieldName] = { value: info.file.response.data.downloadFileURI };
+          fields[`${fieldName}Key`] = { value: info.file.response.data.ossKey };
           yield put({
             type: 'personRnInfo/fieldsChange',
             fields,
@@ -58,13 +61,13 @@ export default {
     },
     *updatePersonInfo({ payload }, { select, call, put }) {
       const personRnInfoState = yield select(state => state.personRnInfo);
-      const { name, idno, frontIdOssKey, endIdOssKey } = personRnInfoState;
+      const { name, idno, frontIdOssKeyKey, endIdOssKeyKey } = personRnInfoState;
       const param = {
         person: {
           name: name.value,
           idNo: idno.value,
-          idPhotoPro: frontIdOssKey.value,
-          photo: endIdOssKey.value,
+          idPhotoPro: frontIdOssKeyKey.value,
+          photo: endIdOssKeyKey.value,
         },
       };
       const response = yield call(updateAccountInfo, param);

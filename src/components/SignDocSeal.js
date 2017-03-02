@@ -34,6 +34,7 @@ const sealSource = {
 
 const collect = (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging(),
   monitor,
 });
@@ -52,8 +53,11 @@ class SignDocSeal extends Component {
   };
 
   render() {
-    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, key, id, name, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch } = this.props;
+    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, connectDragPreview, key, id, name, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch } = this.props;
 
+    const img = new Image();
+    img.src = seal;
+    img.onload = () => connectDragPreview(img);
     let style;
     if (isDefault) {
       style = {

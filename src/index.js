@@ -19,7 +19,7 @@ const app = dva({
   history: useRouterHistory(createHashHistory)({ queryKey: false }),
   onError(e) {
     console.log('onError msg: ', e.msg);
-    message.error(e.msg);
+    message.error(e.msg ? e.msg : '系统错误');
   },
 });
 
