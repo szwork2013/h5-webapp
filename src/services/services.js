@@ -153,3 +153,27 @@ export async function pdfSignSingle(values) {
     },
   });
 }
+
+export async function compressSeal(values) {
+  const postData = `sealWay=${values.sealWay}&isUpload=${values.isUpload}&base64=${values.base64}&templateName=${values.templateName}&color=${values.color}&typeName=${values.typeName}&rune=${values.rune}&edit=${new Date().getTime()}`;
+  return request('../../user/seal!compressSeal.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function addSeal(values) {
+  const postData = `sealWay=${values.sealWay}&url=${values.url}&type=${values.type}&templateName=${values.templateName}&rune=${values.rune}&typeName=${values.typeName}&isDefault=${values.isDefault}&edit=${new Date().getTime()}`;
+  return request('../../user/seal!addSeal.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

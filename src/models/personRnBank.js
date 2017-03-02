@@ -74,6 +74,7 @@ export default {
       const personRnBankState = yield select(state => state.personRnBank);
       const { name, idno } = personRnBankState;
       const param = {
+        createDefaultSeal: true,
         status: '9',
         person: {
           name: name.value,
