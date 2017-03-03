@@ -1,5 +1,5 @@
 import md5 from 'md5';
-// import { routerRedux } from 'dva/router';
+import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import { updateAccountInfo } from '../services/services';
 
@@ -57,8 +57,9 @@ export default {
   },
 
   effects: {
-    *updateAccountPwd({ payload }, { select, call }) {
+    *updateAccountPwd({ payload }, { select, call, put }) {
       const signPwdState = yield select(state => state.signPwd);
+      const globalState = yield select(state => state.global);
       const { pwd, question1, answer1, question2, answer2 } = signPwdState;
       const param = {
         signPwd: md5(pwd.value),
@@ -71,6 +72,7 @@ export default {
       console.log('updateAccount response: ', response);
       if (response.data.success) {
         message.success('签署密码设置成功');
+        yield put(routerRedux.push(globalState.afterSSPRedirectUrl));
       } else {
         message.error(response.data.msg);
       }

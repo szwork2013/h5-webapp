@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-// import { routerRedux } from 'dva/router';
+import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Modal } from 'antd';
 import { DragDropContext } from 'react-dnd';
@@ -11,10 +11,11 @@ import SealItem from '../components/SealItem';
 import SignDocPage from '../components/SignDocPage';
 import SignDocSeal from '../components/SignDocSeal';
 import { generateConfigID } from '../utils/signTools';
+import PathConstants from '../PathConstants';
 import styles from './mixins.less';
 
 function SignDoc(props) {
-  const { dispatch, page, modelVisible, needSeals, sealList, loading, form } = props;
+  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, form } = props;
   const { getFieldProps, getFieldError } = form;
   const cancel = (e) => {
     console.log('e: ', e);
@@ -44,6 +45,15 @@ function SignDoc(props) {
         });
       }
     });
+  };
+  const setSignPwd = () => {
+    dispatch({
+      type: 'global/setSSPRedirectUrl',
+      payload: {
+        afterSSPRedirectUrl: PathConstants.SignDoc,
+      },
+    });
+    dispatch(routerRedux.push(PathConstants.SignPwd));
   };
   return (
     <MainLayout
@@ -79,27 +89,35 @@ function SignDoc(props) {
       <div className={styles.sign_action}>
         <button className="btn primary" onClick={showModel}>确认签署</button>
       </div>
-      <Modal
-        title="签署密码" visible={modelVisible}
-        onOk={sign} onCancel={cancel} closable={false}
-      >
-        <InputWithLabel
-          type="password"
-          {...getFieldProps('signPwd', {
-            rules: [
-              { required: true, message: '请输入签署密码' },
-            ],
-          })}
-          error={!!getFieldError('signPwd')}
-          errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
-        />
-      </Modal>
+      { hasSignPwd === 1 ?
+        <Modal
+          title="签署密码" visible={modelVisible}
+          onOk={sign} onCancel={cancel} closable={false}
+        >
+          <InputWithLabel
+            type="password"
+            {...getFieldProps('signPwd', {
+              rules: [
+                { required: true, message: '请输入签署密码' },
+              ],
+            })}
+            error={!!getFieldError('signPwd')}
+            errorMsg={!getFieldError('signPwd') ? '' : getFieldError('signPwd').join('、')}
+          />
+        </Modal> :
+        <Modal
+          visible={modelVisible} okText="立即设置"
+          onOk={setSignPwd} onCancel={cancel} closable={false}
+        >
+          <div className={styles.nopwd_text}>您还没有设置签署密码！</div>
+        </Modal>
+      }
     </MainLayout>
   );
 }
 
 function mapStateToProps(state) {
-  return { sealList: state.global.seals, ...state.signDoc, loading: state.loading.global };
+  return { sealList: state.global.seals, hasSignPwd: state.global.hasSignPwd, ...state.signDoc, loading: state.loading.global };
 }
 
 const formOpts = {

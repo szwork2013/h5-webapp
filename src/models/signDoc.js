@@ -2,7 +2,8 @@ import _ from 'lodash';
 import md5 from 'md5';
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { getDocPic, pdfSignSingle, validatePwd, pdfSign } from '../services/services';
+import { getDocPic, pdfSignSingle, validatePwd, pdfSign, getDocInfo, sendEmail } from '../services/services';
+import PathConstants from '../PathConstants';
 
 export default {
 
@@ -11,6 +12,7 @@ export default {
   state: {
     signPwd: { value: '' },
     docId: '',
+    docType: 4, // 1草稿箱 4待我签
     docName: '',
     pageCount: '', // 文档页数
     pageWidth: 0,
@@ -27,6 +29,14 @@ export default {
       const { docId } = payload;
       return { ...state, docId };
     },
+    setDocType(state, { payload }) {
+      const { docType } = payload;
+      return { ...state, docType };
+    },
+    setPayMethod(state, { payload }) {
+      const { payMethod } = payload;
+      return { ...state, payMethod };
+    },
     setPage(state, payload) {
       const { page } = payload;
       return { ...state, page };
@@ -41,7 +51,6 @@ export default {
     },
     addSeal(state, { payload }) {
       const { seal } = payload; // seal: {c: { ... }}
-      console.log('seal: ', seal);
       let newSeals = _.cloneDeep(state.needSeals);
       newSeals = _.merge(newSeals, seal);
       return { ...state, needSeals: newSeals };
@@ -69,11 +78,17 @@ export default {
       });
     },
     *getDocInfo({ payload }, { select, call, put }) {
-      // 地址栏传的docId
+      // 地址栏传的docId （如果是这样传 就查询文档类型 支付类型，其他情况应该是直接从列表页过来，docId docType payMethod应该都有了）
       let { docId } = payload;
       if (docId) {
         yield put({
           type: 'setDocId',
+          payload: {
+            docId,
+          },
+        });
+        yield put({
+          type: 'getDocType',
           payload: {
             docId,
           },
@@ -124,6 +139,28 @@ export default {
         }
       }
     },
+    *getDocType({ payload }, { call, put }) {
+      const { docId } = payload;
+      const param = {
+        docId,
+      };
+      const { data } = yield call(getDocInfo, param);
+      console.log('getDocInfo response: ', data);
+      if (data && data.success) {
+        yield put({
+          type: 'setDocType',
+          payload: {
+            docType: data.data.doc.status,
+          },
+        });
+        yield put({
+          type: 'setPayMethod',
+          payload: {
+            payMethod: data.data.doc.payMethod,
+          },
+        });
+      }
+    },
     *validateSignPwd({ payload }, { select, call, put }) {
       const signDocState = yield select(state => state.signDoc);
       const { signPwd, needSeals } = signDocState;
@@ -157,7 +194,7 @@ export default {
     },
     *pdfSign({ payload }, { select, call, put }) {
       const signDocState = yield select(state => state.signDoc);
-      const { signPwd, docId, needSeals, pageWidth } = signDocState;
+      const { signPwd, docId, docType, payMethod, needSeals, pageWidth } = signDocState;
       const signArray = [];
       // signInfo:[{"sealId":"8129","posX":200.6311724137931,"posY":521.6276730713818,"posPage":"1","signType":"1"}]
       Object.keys(needSeals).map((key) => {
@@ -185,6 +222,44 @@ export default {
         data = JSON.parse(data);
         console.log('pdfSign response: ', data);
         if (data && data.errCode === 0) {
+          // 判断要不要发送通知下面的接收者
+          if (docType === 1) {
+            yield put({
+              type: 'sendEmail',
+              payload: {
+                signdocId: docId,
+                payMethod,
+              },
+            });
+          } else {
+            message.success('您已成功完成签署');
+            yield put({
+              type: 'changeVisible',
+              payload: {
+                modelVisible: false,
+              },
+            });
+            // 跳到列表页
+            yield put(routerRedux.push(PathConstants.DocList));
+          }
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *sendEmail({ payload }, { call, put }) {
+      const { signdocId, payMethod } = payload;
+      const param = {
+        signdocId,
+        payMethod,
+      };
+      let { data } = yield call(sendEmail, param);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('sendEmail response: ', data);
+        if (data && data.errCode === 0) {
+          message.success('您已成功完成签署');
           yield put({
             type: 'changeVisible',
             payload: {
@@ -192,7 +267,7 @@ export default {
             },
           });
           // 跳到列表页
-          yield put(routerRedux.push('/docList'));
+          yield put(routerRedux.push(PathConstants.DocList));
         } else {
           message.error(data.msg);
         }

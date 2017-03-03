@@ -131,6 +131,31 @@ export async function pdfSign(values) {
   });
 }
 
+// 草稿箱中的签署（docType=1）签署完后 需要调用此接口
+export async function sendEmail(values) {
+  const postData = `signdocId=${values.signdocId}&payMethod=${values.payMethod}&edit=${new Date().getTime()}`;
+  return request('../../user/sign!sendEmail.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function getDocInfo(values) {
+  const postData = `docId=${values.docId}&edit=${new Date().getTime()}`;
+  return request('../../service/sign/getDocInfo', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
 export async function getDocPic(values) {
   const postData = `pageNum=${values.pageNum}&signdocId=${values.docId}&edit=${new Date().getTime()}`;
   return request('../../user/sign!getDocPic.xml', {
