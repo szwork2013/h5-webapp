@@ -202,3 +202,15 @@ export async function addSeal(values) {
     },
   });
 }
+
+export async function getDocCount() {
+  const postData = `edit=${new Date().getTime()}`;
+  return request('../../user/doc!getDocCount.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

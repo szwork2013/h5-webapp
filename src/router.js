@@ -1,7 +1,11 @@
 import React from 'react';
-import { Router, Route } from 'dva/router';
+import { Router, Route, IndexRoute } from 'dva/router';
 import { message } from 'antd';
 import DocList from './routes/DocList';
+import DocListWaitForMe from './components/DocList/DocListWaitForMe';
+import DocListWaitForOthers from './components/DocList/DocListWaitForOthers';
+import DocListFinished from './components/DocList/DocListFinished';
+import DocListClosed from './components/DocList/DocListClosed';
 import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
 import OrganRnFinish from './routes/OrganRnFinish';
@@ -121,6 +125,12 @@ function RouterConfig({ history, app }) {
       callback();
     });
   };
+
+  const getDocCount = () => {
+    app._store.dispatch({
+      type: 'docList/getDocCount',
+    });
+  };
   return (
     <Router history={history}>
       {/* 企业实名 */}
@@ -149,7 +159,13 @@ function RouterConfig({ history, app }) {
       <Route path={PathConstants.SignDoc} component={SignDoc} onEnter={validateStatus} />
 
       {/* 列表页 */}
-      <Route path={PathConstants.DocList} component={DocList} />
+      <Route path={PathConstants.DocList} component={DocList} onEnter={getDocCount}>
+        <IndexRoute component={DocListWaitForMe} />
+        <Route path={PathConstants.DocListWaitForMe} component={DocListWaitForMe} />
+        <Route path={PathConstants.DocListWaitForOthers} component={DocListWaitForOthers} />
+        <Route path={PathConstants.DocListFinished} component={DocListFinished} />
+        <Route path={PathConstants.DocListClosed} component={DocListClosed} />
+      </Route>
 
       {/* 404 */}
       <Route path="*" component={NotFound} />

@@ -44,6 +44,8 @@ app.model(require('./models/signDoc'));
 app.model(require('./models/signPwd'));
 app.model(require('./models/signPwdResetBySQ'));
 
+app.model(require('./models/docList'));
+
 // 4. Router
 app.router(require('./router'));
 

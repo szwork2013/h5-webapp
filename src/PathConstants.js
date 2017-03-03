@@ -1,6 +1,10 @@
 const PathConstants = {
   Root: '/',
   DocList: '/docList',
+  DocListWaitForMe: 'waitForMe',
+  DocListWaitForOthers: 'waitForOthers',
+  DocListFinished: 'finished',
+  DocListClosed: 'closed',
   OrganRnInfo: '/organRnInfo',
   OrganRnBank: '/organRnBank',
   OrganRnFinish: '/organRnFinish',
