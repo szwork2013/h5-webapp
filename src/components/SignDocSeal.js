@@ -20,11 +20,20 @@ const sealSource = {
       // const left = Math.round(!item.left ? monitor.getInitialSourceClientOffset().x : item.left + delta.x);
       // const top = Math.round(!item.top ? monitor.getInitialSourceClientOffset().y : item.top + delta.y);
       // TODO
+      console.log('monitor: ', monitor);
+      console.log('item left: ', left);
+      console.log('item top: ', top);
+      console.log('pageX: ', event.pageX);
+      console.log('pageY: ', event.pageY);
+      const scrollLeft = document.getElementById('docPanel').scrollLeft;
+      const scrollTop = document.getElementById('docPanel').scrollTop
+      console.log('docPanel scrollX: ', scrollLeft);
+      console.log('docPanel scrollY: ', scrollTop);
       if (!props.added) {
         props.dispatch({
           type: 'signDoc/addSeal',
           payload: {
-            seal: { [generateConfigID()]: { top: '100', left: '500', name, sealId, sealType, seal, sealWay, added: true } },
+            seal: { [generateConfigID()]: { top: event.pageY + scrollTop + -136, left: event.pageX + scrollLeft + -136, name, sealId, sealType, seal, sealWay, added: true } },
           },
         });
       }

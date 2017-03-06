@@ -62,7 +62,7 @@ function SignDoc(props) {
       noFooter
     >
       <div className={styles.sign_panel}>
-        <div className={styles.doc}>
+        <div id="docPanel" className={styles.doc}>
           <SignDocPage
             page={page}
             seals={needSeals}
