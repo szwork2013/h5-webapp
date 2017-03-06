@@ -214,3 +214,15 @@ export async function getDocCount() {
     },
   });
 }
+
+export async function getDocList2(values) {
+  const postData = `type=${values.type}&startIndex=${values.startIndex}&pageSize=${values.pageSize}&edit=${new Date().getTime()}`;
+  return request('../../user/doc!getDocList2.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

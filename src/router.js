@@ -2,10 +2,10 @@ import React from 'react';
 import { Router, Route, IndexRoute } from 'dva/router';
 import { message } from 'antd';
 import DocList from './routes/DocList';
-import DocListWaitForMe from './components/DocList/DocListWaitForMe';
-import DocListWaitForOthers from './components/DocList/DocListWaitForOthers';
-import DocListFinished from './components/DocList/DocListFinished';
-import DocListClosed from './components/DocList/DocListClosed';
+import DocListWaitForMe from './routes/DocList/DocListWaitForMe';
+import DocListWaitForOthers from './routes/DocList/DocListWaitForOthers';
+import DocListFinished from './routes/DocList/DocListFinished';
+import DocListClosed from './routes/DocList/DocListClosed';
 import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
 import OrganRnFinish from './routes/OrganRnFinish';
@@ -22,6 +22,7 @@ import SealHandPreview from './routes/SealHandPreview';
 import SignDoc from './routes/SignDoc';
 import NotFound from './routes/NotFound';
 import PathConstants from './PathConstants';
+import Constants from './Constants';
 import { getCurrentUrlParams } from './utils/signTools';
 
 function RouterConfig({ history, app }) {
@@ -131,6 +132,22 @@ function RouterConfig({ history, app }) {
       type: 'docList/getDocCount',
     });
   };
+  const getDocList = (docType) => {
+    console.log('docType: ', docType);
+    app._store.dispatch({
+      type: 'docList/setType',
+      payload: {
+        type: docType,
+      },
+    });
+    app._store.dispatch({
+      type: 'docList/getDocList',
+      payload: {
+        docType,
+        startIndex: 0,
+      },
+    });
+  };
   return (
     <Router history={history}>
       {/* 企业实名 */}
@@ -161,10 +178,10 @@ function RouterConfig({ history, app }) {
       {/* 列表页 */}
       <Route path={PathConstants.DocList} component={DocList} onEnter={getDocCount}>
         <IndexRoute component={DocListWaitForMe} />
-        <Route path={PathConstants.DocListWaitForMe} component={DocListWaitForMe} />
-        <Route path={PathConstants.DocListWaitForOthers} component={DocListWaitForOthers} />
-        <Route path={PathConstants.DocListFinished} component={DocListFinished} />
-        <Route path={PathConstants.DocListClosed} component={DocListClosed} />
+        <Route path={PathConstants.DocListWaitForMe} component={DocListWaitForMe} onEnter={() => { getDocList(Constants.DocType.WAITFORME); }} />
+        <Route path={PathConstants.DocListWaitForOthers} component={DocListWaitForOthers} onEnter={() => { getDocList(Constants.DocType.WAITFOROTHERS); }} />
+        <Route path={PathConstants.DocListFinished} component={DocListFinished} onEnter={() => { getDocList(Constants.DocType.FINISHED); }} />
+        <Route path={PathConstants.DocListClosed} component={DocListClosed} onEnter={() => { getDocList(Constants.DocType.CLOSED); }} />
       </Route>
 
       {/* 404 */}

@@ -1,32 +1,29 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Link } from 'dva/router';
-import { createForm } from 'rc-form';
-import { Upload } from 'antd';
 import classnames from 'classnames';
 import MainLayout from '../components/Layout/MainLayout';
-import PathConstants from '../PathConstants';
 import styles from './mixins.less';
+import Constants from '../Constants';
 
 function DocList(props) {
-  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading } = props;
+  const { dispatch, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading } = props;
   // const { getFieldProps, getFieldError } = form;
 
   const waitForMeCls = classnames({
     [styles.menu_item]: true,
-    [styles.active]: type === 4,
+    [styles.active]: type === Constants.DocType.WAITFORME,
   });
   const waitForOthersCls = classnames({
     [styles.menu_item]: true,
-    [styles.active]: type === 5,
+    [styles.active]: type === Constants.DocType.WAITFOROTHERS,
   });
   const finishedCls = classnames({
     [styles.menu_item]: true,
-    [styles.active]: type === 2,
+    [styles.active]: type === Constants.DocType.FINISHED,
   });
   const closedCls = classnames({
     [styles.menu_item]: true,
-    [styles.active]: type === 11,
+    [styles.active]: type === Constants.DocType.CLOSED,
   });
 
   const changeType = (t) => {
@@ -50,19 +47,19 @@ function DocList(props) {
           <div className={styles.sidebar}>
             <div className={styles.menu}>
               <div className={styles.menu_title}>文档</div>
-              <div className={waitForMeCls} onClick={() => { changeType(4); }} >
+              <div className={waitForMeCls} onClick={() => { changeType(Constants.DocType.WAITFORME); }} >
                 <div>待我签署</div>
                 <div>{waitForMeCount}</div>
               </div>
-              <div className={waitForOthersCls} onClick={() => { changeType(5); }} >
+              <div className={waitForOthersCls} onClick={() => { changeType(Constants.DocType.WAITFOROTHERS); }} >
                 <div>待他人签署</div>
                 <div>{waitForOthersCount}</div>
               </div>
-              <div className={finishedCls} onClick={() => { changeType(2); }} >
+              <div className={finishedCls} onClick={() => { changeType(Constants.DocType.FINISHED); }} >
                 <div>已完成</div>
                 <div>{finishedCount}</div>
               </div>
-              <div className={closedCls} onClick={() => { changeType(11); }} >
+              <div className={closedCls} onClick={() => { changeType(Constants.DocType.CLOSED); }} >
                 <div>已关闭</div>
                 <div>{closedCount}</div>
               </div>
@@ -84,10 +81,4 @@ function mapStateToProps(state) {
   return { ...state.docList, loading: state.loading.global };
 }
 
-const formOpts = {
-  mapPropsToFields(props) {
-    return props;
-  },
-};
-
-export default connect(mapStateToProps)(createForm(formOpts)(DocList));
+export default connect(mapStateToProps)(DocList);
