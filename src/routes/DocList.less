@@ -50,8 +50,26 @@
     margin-left: 240px;
     .seachbar {
       background-color: #fff;
-      height: 100px;
       margin: 30px;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      .btn_group {
+        margin-top: 18px;
+        align-self: flex-end;
+        :first-child {
+          margin-right: 15px;
+        }
+      }
+      & button {
+        width: 60px;
+        min-width: 60px;
+        height: 30px;
+        padding: 0;
+        font-size: 12px;
+      }
     }
     .table {
       background-color: #fff;

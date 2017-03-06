@@ -56,6 +56,10 @@ export default {
       const { waitForMeCount, waitForOthersCount, finishedCount, closedCount } = payload;
       return { ...state, waitForMeCount, waitForOthersCount, finishedCount, closedCount };
     },
+    selectRows(state, { payload }) {
+      const { selectedRowKeys } = payload;
+      return { ...state, selectedRowKeys };
+    },
     setDataAndPage(state, { payload }) {
       const { docs, pageInfo } = payload;
       const data = [];

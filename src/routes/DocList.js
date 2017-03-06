@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'dva';
+import { createForm } from 'rc-form';
 import classnames from 'classnames';
 import MainLayout from '../components/Layout/MainLayout';
+import InputWithLabelInLine from '../components/InputWithLabelInLine';
 import styles from './mixins.less';
 import Constants from '../Constants';
 
 function DocList(props) {
-  const { dispatch, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading } = props;
-  // const { getFieldProps, getFieldError } = form;
+  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading } = props;
+  const { getFieldProps } = form;
 
   const waitForMeCls = classnames({
     [styles.menu_item]: true,
@@ -66,7 +68,32 @@ function DocList(props) {
             </div>
           </div>
           <div className={styles.content}>
-            <div className={styles.seachbar}>搜索栏</div>
+            <div className={styles.seachbar}>
+              <InputWithLabelInLine
+                labelName="文档名称"
+                placeholder="请输入文档名称"
+                {...getFieldProps('docName')}
+              />
+              <InputWithLabelInLine
+                labelName="发件人"
+                placeholder="手机号/邮箱"
+                {...getFieldProps('senderName')}
+              />
+              <InputWithLabelInLine
+                labelName="收件人"
+                placeholder="手机号/邮箱"
+                {...getFieldProps('receiverName')}
+              />
+              <InputWithLabelInLine
+                labelName="发送时间"
+                placeholder="手机号/邮箱"
+                {...getFieldProps('receiverName')}
+              />
+              <div className={styles.btn_group}>
+                <button className="btn default" >清空</button>
+                <button className="btn primary" >查询</button>
+              </div>
+            </div>
             <div className={styles.table}>
               {children}
             </div>
@@ -81,4 +108,22 @@ function mapStateToProps(state) {
   return { ...state.docList, loading: state.loading.global };
 }
 
-export default connect(mapStateToProps)(DocList);
+const formOpts = {
+  mapPropsToFields(props) {
+    return props;
+  },
+  onFieldsChange(props, changedFields) {
+    const { dispatch } = props;
+    const fields = {};
+    for (const value of Object.values(changedFields)) {
+      fields[value.name] = { value: value.value };
+      fields[value.name].errors = value.errors;
+    }
+    dispatch({
+      type: 'signPwd/fieldsChange',
+      fields,
+    });
+  },
+};
+
+export default connect(mapStateToProps)(createForm(formOpts)(DocList));

@@ -200,6 +200,35 @@
     }
   }
 
+  .input-item-inline {
+    text-align: left;
+    & .input-label-inline {
+      margin-right: 15px;
+      font-size: 12px;
+      color: #555;
+      font-weight: bold;
+      display: inline-block;
+      // width: 50px;
+    }
+    & .input-div {
+      display: inline-block;
+    }
+    & .input {
+      height: 34px;
+      width: 170px;
+      font-size: 12px;
+      color: #555;
+      &::placeholder {
+        font-size: 12px;
+        color: #b2b2b2;
+      }
+    }
+    & .input-error {
+      font-size: 13px;
+      color: #f04134;
+    }
+  }
+
   .select {
     height: 40px;
     font-size: 16px;

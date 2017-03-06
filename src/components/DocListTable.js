@@ -5,7 +5,12 @@ const DocListTable = (props) => {
   const { dispatch, selectedRowKeys, columns, data, pageInfo } = props;
   const onSelectChange = (keys) => {
     console.log('selectedRowKeys changed: ', keys);
-    // this.setState({ selectedRowKeys });
+    dispatch({
+      type: 'docList/selectRows',
+      payload: {
+        selectedRowKeys: keys,
+      },
+    });
   };
   const rowSelection = {
     selectedRowKeys,
