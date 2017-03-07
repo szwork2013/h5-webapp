@@ -48,7 +48,7 @@ export default {
       if (data && data.data.success) {
         yield put({
           type: 'global/setStatus',
-          status: '34',
+          status: 34,
         });
       } else {
         message.error(data.data.msg);

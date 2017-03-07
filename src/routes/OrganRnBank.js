@@ -7,7 +7,7 @@ import InputWithLabel from '../components/InputWithLabel';
 import styles from './mixins.less';
 
 function OrganRnBank(props) {
-  const { dispatch, form, rnStatus, loading } = props;
+  const { dispatch, form, status, loading } = props;
   const { getFieldProps, getFieldError } = form;
   const onSubmit = (e) => {
     e.stopPropagation();
@@ -22,8 +22,8 @@ function OrganRnBank(props) {
     });
   };
   let element;
-  switch (rnStatus) {
-    case '2':
+  switch (status) {
+    case 2:
       element = () => {
         return (
           <div>
@@ -92,7 +92,7 @@ function OrganRnBank(props) {
         );
       };
       break;
-    case '34':
+    case 34:
       element = () => {
         return (
           <div>
@@ -105,7 +105,7 @@ function OrganRnBank(props) {
         );
       };
       break;
-    case '35':
+    case 35:
       element = (() => {
         return (
           <div>
