@@ -12,7 +12,7 @@ function DocListClosed(props) {
         return (
           <div className={styles.operation}>
             <a>删除</a>
-            <a>文档流程</a>
+            <a onClick={() => { dispatch({ type: 'docList/showLogModal', payload: { docId: record.docId } }); }}>文档流程</a>
           </div>
         );
       };

@@ -62,7 +62,11 @@ class SignDocSeal extends Component {
   };
 
   render() {
-    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, connectDragPreview, key, id, name, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch } = this.props;
+    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, connectDragPreview, key, id, name, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch, closable } = this.props;
+
+    const showDelIcon = (objId) => {
+      console.log('show delete icon: ', objId);
+    };
 
     const img = new Image();
     img.src = seal;
@@ -85,10 +89,17 @@ class SignDocSeal extends Component {
 
     return (
       connectDragSource(
-        <img
-          draggable={false} key={key} data-sealId={sealId} data-sealType={sealType} data-sealWay={sealWay}
-          id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }}
-        />
+        closable ?
+          <img
+            draggable={false} key={key} data-sealId={sealId} data-sealType={sealType} data-sealWay={sealWay}
+            id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }}
+            onClick={() => showDelIcon(id)}
+          />
+        :
+          <img
+            draggable={false} key={key} data-sealId={sealId} data-sealType={sealType} data-sealWay={sealWay}
+            id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }}
+          />
       )
     );
   }

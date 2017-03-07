@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { createForm } from 'rc-form';
+import { Modal, Timeline } from 'antd';
 import classnames from 'classnames';
 import MainLayout from '../components/Layout/MainLayout';
 import InputWithLabelInLine from '../components/InputWithLabelInLine';
@@ -8,7 +9,7 @@ import styles from './mixins.less';
 import Constants from '../Constants';
 
 function DocList(props) {
-  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading } = props;
+  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading, optlogs, optlogsModVisible } = props;
   const { getFieldProps } = form;
 
   const waitForMeCls = classnames({
@@ -35,6 +36,31 @@ function DocList(props) {
         type: t,
       },
     });
+  };
+
+  const cancel = (e) => {
+    dispatch({
+      type: 'docList/closeOptLogsMod',
+    });
+  };
+
+  const convertOpt = (opt) => {
+    switch (opt) {
+      case 0:
+        return '未处理';
+      case 1:
+        return '发起签署';
+      case 2:
+        return '已签署';
+      case 4:
+        return '重新发起签署';
+      case 5:
+        return '退回文件';
+      case 6:
+        return '关闭文件';
+      default:
+        return '未处理';
+    }
   };
 
   return (
@@ -100,6 +126,26 @@ function DocList(props) {
           </div>
         </div>
       </div>
+      <Modal
+        id="signlog" onCancel={cancel} width={500} wrapClassName="signlog"
+        visible={optlogsModVisible} footer={null}
+      >
+        <Timeline>
+          {Object.keys(optlogs).map((index) => {
+            const log = optlogs[index];
+            return (
+              log.createDate ?
+                <Timeline.Item color="green" key={index}>
+                  <p className={styles.signlog_title}>{log.name}({convertOpt(log.opt)})</p>
+                  <p className={styles.signlog_desc}>操作时间: {log.createDate}</p>
+                </Timeline.Item> :
+                <Timeline.Item key={index}>
+                  <p className={styles.signlog_title}>{log.name}({convertOpt(log.opt)})</p>
+                </Timeline.Item>
+            );
+          })}
+        </Timeline>
+      </Modal>
     </MainLayout>
   );
 }

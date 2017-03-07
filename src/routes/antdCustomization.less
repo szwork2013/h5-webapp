@@ -1,31 +1,41 @@
 @import './common';
 
 :global {
-  .ant-modal-header {
-    text-align: center;
-    border-bottom: 0;
+  .signlog {
+    .ant-modal-body {
+      padding: 40px;
+      padding-top: 60px;
+      display: flex;
+      justify-content: center;
+    }
   }
-  .ant-modal-title {
-    font-size: 20px;
-    color: #323232;
-    font-weight: bold;
-  }
-  .ant-modal-footer {
-    border-top: 0;
-  }
-  .ant-modal-content {
-    width: 400px;
-    height: 240px;
-    padding: 15px;
-    margin: auto;
-  }
-  .ant-modal-body {
-    padding: 16px;
-    padding-bottom: 5px;
-    .input-item {
-      width: 100%;
-      .input {
+  .signpwd {
+    .ant-modal-header {
+      text-align: center;
+      border-bottom: 0;
+    }
+    .ant-modal-title {
+      font-size: 20px;
+      color: #323232;
+      font-weight: bold;
+    }
+    .ant-modal-footer {
+      border-top: 0;
+    }
+    .ant-modal-content {
+      width: 400px;
+      height: 240px;
+      padding: 15px;
+      margin: auto;
+    }
+    .ant-modal-body {
+      padding: 16px;
+      padding-bottom: 5px;
+      .input-item {
         width: 100%;
+        .input {
+          width: 100%;
+        }
       }
     }
   }
@@ -197,5 +207,69 @@
   }
   .ant-checkbox-wrapper:hover .ant-checkbox, .ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner {
     border-color: #c1c1c1;
+  }
+
+  .closeDocPop {
+    .anticon {
+      width: 17px;
+      font-size: 17px;
+      position: relative;
+      line-height: 22px;
+    }
+    .ant-popover-content {
+      width: 380px;
+    }
+    .ant-popover-message {
+      display: flex;
+      justify-content: center;
+    }
+    .ant-popover-message-title {
+      font-size: 14px;
+      color: #323232;
+      padding-left: 5px;
+    }
+    .ant-popover-buttons {
+      display: flex;
+      justify-content: center;
+      .ant-btn {
+        height: 28px;
+        min-width: 50px;
+        width: 50px;
+        font-size: 12px;
+        padding: 0;
+      }
+    }
+  }
+  .deleteDocPop {
+    .anticon {
+      width: 17px;
+      font-size: 17px;
+      position: relative;
+      line-height: 22px;
+    }
+    .ant-popover-content {
+      width: 200px;
+    }
+    .ant-popover-message {
+      display: flex;
+      justify-content: center;
+    }
+    .ant-popover-message-title {
+      font-size: 14px;
+      color: #323232;
+      // line-height: 16px;
+      padding-left: 5px;
+    }
+    .ant-popover-buttons {
+      display: flex;
+      justify-content: center;
+      .ant-btn {
+        height: 28px;
+        min-width: 50px;
+        width: 50px;
+        font-size: 12px;
+        padding: 0;
+      }
+    }
   }
 }

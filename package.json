@@ -20,7 +20,8 @@
     "react": "^15.4.0",
     "react-dnd": "^2.2.3",
     "react-dnd-html5-backend": "^2.2.3",
-    "react-dom": "^15.4.0"
+    "react-dom": "^15.4.0",
+    "redux-persist": "^4.4.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",

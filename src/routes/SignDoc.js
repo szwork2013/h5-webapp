@@ -72,7 +72,7 @@ function SignDoc(props) {
         <div className={styles.seal_list}>
           {Object.values(sealList).map((seal) => {
             return (
-              <SealItem style={{ margin: 'auto' }}>
+              <SealItem key={seal.id} style={{ margin: 'auto' }}>
                 <SignDocSeal
                   dispatch={dispatch}
                   hideSourceOnDrag
@@ -91,7 +91,7 @@ function SignDoc(props) {
       </div>
       { hasSignPwd === 1 ?
         <Modal
-          title="签署密码" visible={modelVisible}
+          title="签署密码" visible={modelVisible} wrapClassName="signpwd"
           onOk={sign} onCancel={cancel} closable={false}
         >
           <InputWithLabel
@@ -106,7 +106,7 @@ function SignDoc(props) {
           />
         </Modal> :
         <Modal
-          visible={modelVisible} okText="立即设置"
+          visible={modelVisible} okText="立即设置" wrapClassName="signpwd"
           onOk={setSignPwd} onCancel={cancel} closable={false}
         >
           <div className={styles.nopwd_text}>您还没有设置签署密码！</div>

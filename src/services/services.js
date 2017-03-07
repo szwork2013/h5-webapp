@@ -226,3 +226,51 @@ export async function getDocList2(values) {
     },
   });
 }
+
+export async function signLog(values) {
+  const postData = `docId=${values.docId}&edit=${new Date().getTime()}`;
+  return request('../../user/sign!signLog.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function updateDoc(values) {
+  const postData = `docId=${values.docId}&optType=${values.optType}&url=${values.url}&reason=${values.reason}&edit=${new Date().getTime()}`;
+  return request('../../user/doc!updateDoc.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function downloadDoc(values) {
+  const postData = `docId=${values.docId}&accountUid=${values.accountUid}&edit=${new Date().getTime()}`;
+  return request('../../user/doc!downloadDoc.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function deleteDoc(values) {
+  const postData = `docId=${values.docId}&edit=${new Date().getTime()}`;
+  return request('../../user/doc!deleteDoc.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

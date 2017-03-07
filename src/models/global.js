@@ -23,7 +23,7 @@ export default {
     person: null,
     organize: null,
     hasSignPwd: 0,
-    afterRnRedirectUrl: PathConstants.Root, // 实名后的挑战，默认主页 可能是签署页
+    afterRnRedirectUrl: PathConstants.Root, // 实名后的跳转，默认主页 可能是签署页
     afterSSPRedirectUrl: PathConstants.Root, // 设置完签署密码后的跳转 默认主页 可能是签署页
   },
 

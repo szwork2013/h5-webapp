@@ -71,6 +71,7 @@ class SignDocPage extends Component {
           return (
             <SignDocSeal
               added
+              closable
               dispatch={dispatch}
               hideSourceOnDrag
               sealId={sealId} sealType={sealType} sealWay={sealWay}

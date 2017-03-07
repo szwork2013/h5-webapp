@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import { Popconfirm } from 'antd';
 import DocListTable from '../../components/DocListTable';
 import styles from '../mixins.less';
 
@@ -12,8 +13,10 @@ function DocListWaitForOthers(props) {
         return (
           <div className={styles.operation}>
             <a>催签</a>
-            <a>关闭</a>
-            <a>文档流程</a>
+            <Popconfirm placement="top" overlayClassName="closeDocPop" title="您确认结束此文件的签署吗？一旦关闭则无法恢复。" onConfirm={() => { dispatch({ type: 'docList/closeDoc', payload: { docId: record.docId } }); }}>
+              <a>关闭</a>
+            </Popconfirm>
+            <a onClick={() => { dispatch({ type: 'docList/showLogModal', payload: { docId: record.docId } }); }}>文档流程</a>
           </div>
         );
       };

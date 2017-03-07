@@ -17,5 +17,17 @@ export default {
   },
   'POST /service/oss/getUrl'(req, res) {
     res.json(`{"success":true,"msg":null,"total":null,"errCode":null,"data":{"url":"https://esignoss.oss-cn-hangzhou.aliyuncs.com/1000343/seal_1ed0170a-c031-4dbc-ae38-30f1cb48938d?OSSAccessKeyId=FBzUaPMorqiiUAfb&Signature=SWznYGOr1MsrlShKJFMfiYq7lFs%3D&Expires=1488801954"}}`);
-  }
+  },
+  'POST /user/sign!signLog.xml'(req, res) {
+    res.json('<result><resultMsg>{"errCode":0,"optlogs":[{"createTime":1488870172151,"name":"民办非企业单位","head":"defaulthead.png","createDate":"55分钟前","opt":1},{"createTime":1488870172710,"name":"民办非企业单位","head":"defaulthead.png","createDate":"55分钟前","opt":2},{"createTime":1488870172710,"name":"陈凯","head":"defaulthead.png","opt":0}]}</resultMsg></result>');
+  },
+  'POST /user/doc!updateDoc.xml'(req, res) {
+    res.json('<result><resultMsg>{"msg":"","waitForMeCount":0,"draftCount":0,"doneCount":0,"closeCount":0,"keys":null,"docId":0,"errShow":false,"pageNum":0,"pageHeight":0,"pageWidth":0,"sendbackCount":0,"otherSendbackCount":0,"cloudCount":0,"iSendbackCount":0,"docName":null,"downUrl":null,"waitForTaCount":0,"errCode":0}</resultMsg></result>');
+  },
+  'POST /user/doc!downloadDoc.xml'(req, res) {
+    res.json('<result><resultMsg>{"msg":"","waitForMeCount":0,"draftCount":0,"doneCount":0,"closeCount":0,"keys":null,"docId":0,"errShow":false,"pageNum":0,"pageHeight":0,"pageWidth":0,"sendbackCount":0,"otherSendbackCount":0,"cloudCount":0,"iSendbackCount":0,"docName":null,"downUrl":"https://esignoss.oss-cn-hangzhou.aliyuncs.com/1000343/PDF_7474acc9-e89d-4c56-bd68-7970b9176ad0?OSSAccessKeyId=FBzUaPMorqiiUAfb&amp;Signature=jPMqqvVx3mvbhCs81A1m%2BidHd5A%3D&amp;Expires=1488880784","waitForTaCount":0,"errCode":0}</resultMsg></result>');
+  },
+  'POST /user/doc!deleteDoc.xml'(req, res) {
+    res.json('<result><resultMsg>{"msg":"","waitForMeCount":0,"draftCount":0,"doneCount":0,"closeCount":0,"keys":null,"docId":0,"errShow":false,"pageNum":0,"pageHeight":0,"pageWidth":0,"sendbackCount":0,"otherSendbackCount":0,"cloudCount":0,"iSendbackCount":0,"docName":null,"downUrl":null,"waitForTaCount":0,"errCode":0}</resultMsg></result>');
+  },
 };

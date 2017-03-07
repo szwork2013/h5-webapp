@@ -26,26 +26,37 @@ import Constants from './Constants';
 import { getCurrentUrlParams } from './utils/signTools';
 
 function RouterConfig({ history, app }) {
-  const validateOrganStatus = (nextState, replace) => {
-    const state = app._store.getState();
-    const status = state.global.status;
-    if (nextState.location.pathname === '/' || nextState.location.pathname === '/organRnInfo') {
-      if (status === 9) {
-        replace({ pathname: '/OrganRnFinish' });
-      } else if (status !== 1) {
-        replace({ pathname: '/organRnBank' });
+  const validateOrganStatus = (nextState, replace, callback) => {
+    const promise = new Promise((resolve) => {
+      app._store.dispatch({
+        type: 'global/getAccountInfo',
+        payload: {
+          resolve,
+        },
+      });
+    });
+    promise.then(() => {
+      const state = app._store.getState();
+      const status = state.global.status;
+      if (nextState.location.pathname === '/' || nextState.location.pathname === PathConstants.OrganRnInfo) {
+        if (status === 9) {
+          replace({ pathname: PathConstants.OrganRnFinish });
+        } else if (status !== 1) {
+          replace({ pathname: PathConstants.OrganRnBank });
+        }
+      } else if (nextState.location.pathname === PathConstants.OrganRnBank) {
+        if (status === 9) {
+          replace({ pathname: PathConstants.OrganRnFinish });
+        } else if (status === 1) {
+          replace({ pathname: PathConstants.OrganRnInfo });
+        }
+      } else if (nextState.location.pathname === PathConstants.OrganRnFinish) {
+        if (status === 1) {
+          replace({ pathname: PathConstants.OrganRnInfo });
+        }
       }
-    } else if (nextState.location.pathname === '/organRnBank') {
-      if (status === 9) {
-        replace({ pathname: '/OrganRnFinish' });
-      } else if (status === 1) {
-        replace({ pathname: '/organRnInfo' });
-      }
-    } else if (nextState.location.pathname === '/organRnFinish') {
-      if (status === 1) {
-        replace({ pathname: '/organRnInfo' });
-      }
-    }
+      callback();
+    });
   };
   const validatePersonStatus = (nextState, replace, callback) => {
     const promise = new Promise((resolve) => {

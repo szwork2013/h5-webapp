@@ -17,11 +17,11 @@ function DocListWaitForMe(props) {
   for (const col of columns) {
     if (col.key === 99) {
       col.render = (text, record, index) => {
-        console.log('text: ', text, '; record: ', record, '; index: ', index);
+        console.log('record: ', record, '; index: ', index);
         return (
           <div className={styles.operation}>
             <a onClick={() => { sign(record); }}>签署</a>
-            <a>文档流程</a>
+            <a onClick={() => { dispatch({ type: 'docList/showLogModal', payload: { docId: record.docId } }); }}>文档流程</a>
           </div>
         );
       };

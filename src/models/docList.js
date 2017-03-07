@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { getDocCount, getDocList2 } from '../services/services';
+import { getDocCount, getDocList2, signLog, updateDoc, downloadDoc, deleteDoc } from '../services/services';
 import PathConstants from '../PathConstants';
 import Constants from '../Constants';
 
@@ -45,6 +45,8 @@ export default {
       startIndex: 0,
       pageSize: 5,
     },
+    optlogs: [],
+    optlogsModVisible: false,
   },
 
   reducers: {
@@ -81,6 +83,13 @@ export default {
         data.push(tmp);
       }
       return { ...state, data, pageInfo };
+    },
+    setOptLogs(state, { payload }) {
+      const { optlogs } = payload;
+      return { ...state, optlogs, optlogsModVisible: true };
+    },
+    closeOptLogsMod(state) {
+      return { ...state, optlogsModVisible: false };
     },
     fieldsChange(state, payload) {
       const { fields } = payload;
@@ -191,6 +200,80 @@ export default {
         },
       });
       yield put(routerRedux.push(PathConstants.SignDoc));
+    },
+    *showLogModal({ payload }, { call, put }) {
+      const { docId } = payload;
+      const params = {
+        docId,
+      };
+      let { data } = yield call(signLog, params);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('signLog response: ', data);
+        if (data && data.errCode === 0) {
+          yield put({
+            type: 'setOptLogs',
+            payload: {
+              optlogs: data.optlogs,
+            },
+          });
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *closeDoc({ payload }, { call, put }) {
+      const { docId } = payload;
+      const params = {
+        docId,
+        optType: 6,
+      };
+      let { data } = yield call(updateDoc, params);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('updateDoc response: ', data);
+        if (data && data.errCode === 0) {
+          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListClosed}`));
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *downloadDoc({ payload }, { call }) {
+      const { docId } = payload;
+      const params = {
+        docId,
+      };
+      let { data } = yield call(downloadDoc, params);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('downloadDoc response: ', data);
+        if (data && data.errCode === 0) {
+          window.open(data.downUrl, '_blank');
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *deleteDoc({ payload }, { call, put }) {
+      const { docId } = payload;
+      const params = {
+        docId,
+      };
+      let { data } = yield call(deleteDoc, params);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('deleteDoc response: ', data);
+        if (data && data.errCode === 0) {
+          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListFinished}`));
+        } else {
+          message.error(data.msg);
+        }
+      }
     },
   },
 
