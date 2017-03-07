@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { organToPay } from '../services/services';
 
 export default {
@@ -9,7 +10,7 @@ export default {
     cardno: { value: '' },
     bank: { value: '' },
     subbranch: { value: '' },
-    province: { value: '' },
+    provice: { value: '' },
     city: { value: '' },
     serviceId: { value: '' },
   },
@@ -31,22 +32,27 @@ export default {
 
   effects: {
     *organToPay({ payload }, { select, call, put }) {
-      const realnameOrganBankState = yield select(state => state.realnameOrganBank);
-      const { name, cardno, subbranch, bank, provice, city, serviceId } = realnameOrganBankState;
+      const organRnBankState = yield select(state => state.organRnBank);
+      const { name, cardno, subbranch, bank, provice, city, serviceId } = organRnBankState;
       const param = {
-        name,
-        cardno,
-        subbranch,
-        bank,
-        provice,
-        city,
-        serviceId,
+        name: name.value,
+        cardno: cardno.value,
+        subbranch: subbranch.value,
+        bank: bank.value,
+        provice: provice.value,
+        city: city.value,
+        serviceId: serviceId.value,
       };
-      const response = yield call(organToPay, param);
-      yield put({
-        type: 'organToPayResponse',
-        payload: response,
-      });
+      const data = yield call(organToPay, param);
+      console.log('organToPay response: ', data);
+      if (data && data.data.success) {
+        yield put({
+          type: 'global/setStatus',
+          status: '34',
+        });
+      } else {
+        message.error(data.data.msg);
+      }
     },
   },
 

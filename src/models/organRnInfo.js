@@ -1,4 +1,7 @@
+import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 import { organInfoAuth } from '../services/services';
+import PathConstants from '../PathConstants';
 
 export default {
 
@@ -7,7 +10,6 @@ export default {
   state: {
     name: { value: '2' },
     codeORG: { value: '' },
-    codeUSC: { value: '' },
     legalName: { value: '' },
     legalIdno: { value: '' },
   },
@@ -28,20 +30,37 @@ export default {
 
   effects: {
     *organInfoAuth({ payload }, { select, call, put }) {
-      const realnameOrganState = yield select(state => state.realnameOrgan);
-      const { name, codeORG, codeUSC, legalName, legalIdno } = realnameOrganState;
+      const organRnInfoState = yield select(state => state.organRnInfo);
+      const { name, codeORG, legalName, legalIdno } = organRnInfoState;
+      let ORG = ''; // 组织机构代码
+      let USC = ''; // 三证合一代码
+      if (codeORG.value.length === 18) {
+        USC = codeORG.value;
+        ORG = '';
+      } else {
+        USC = '';
+        ORG = codeORG.value;
+      }
       const param = {
-        name,
-        codeORG,
-        codeUSC,
-        legalName,
-        legalIdno,
+        name: name.value,
+        codeORG: ORG,
+        codeUSC: USC,
+        legalName: legalName.value,
+        legalIdno: legalIdno.value,
       };
-      const response = yield call(organInfoAuth, param);
-      yield put({
-        type: 'organInfoAuthResponse',
-        payload: response,
-      });
+      const data = yield call(organInfoAuth, param);
+      console.log('organInfoAuth response: ', data);
+      if (data && data.data.success) {
+        const fields = {};
+        fields.serviceId = { value: data.data.data.serviceId };
+        yield put({
+          type: 'organRnBank/fieldsChange',
+          fields,
+        });
+        yield put(routerRedux.push(PathConstants.OrganRnBank));
+      } else {
+        message.error(data.data.msg);
+      }
     },
   },
 

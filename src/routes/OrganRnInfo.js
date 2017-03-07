@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import MainLayout from '../components/Layout/MainLayout';
 import StepBar from '../components/StepBar';
@@ -17,10 +17,8 @@ function OrganRnInfo(props) {
         return null;
       } else {
         dispatch({
-          type: 'global/setStatus',
-          status: 4,
+          type: 'organRnInfo/organInfoAuth',
         });
-        dispatch(routerRedux.push('/organRnBank'));
       }
     });
   };

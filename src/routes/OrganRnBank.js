@@ -1,27 +1,98 @@
 import React from 'react';
 import { connect } from 'dva';
+import { createForm } from 'rc-form';
 import MainLayout from '../components/Layout/MainLayout';
 import StepBar from '../components/StepBar';
 import InputWithLabel from '../components/InputWithLabel';
 import styles from './mixins.less';
 
 function OrganRnBank(props) {
-  const { rnStatus, loading } = props;
+  const { dispatch, form, rnStatus, loading } = props;
+  const { getFieldProps, getFieldError } = form;
+  const onSubmit = (e) => {
+    e.stopPropagation();
+    form.validateFields({ force: true }, (error) => {
+      if (error) {
+        return null;
+      } else {
+        dispatch({
+          type: 'organRnBank/organToPay',
+        });
+      }
+    });
+  };
   let element;
   switch (rnStatus) {
-    case '1':
+    case '2':
       element = () => {
         return (
           <div>
-            <InputWithLabel labelName="对公银行名称" style={{ marginTop: '40px' }} />
-            <InputWithLabel labelName="对公银行支行名称" />
-            <InputWithLabel labelName="对公银行账号" />
-            <button className="btn primary" style={{ marginTop: '20px', marginBottom: '60px' }}>下一步</button>
+            <InputWithLabel
+              labelName="对公账户户名" style={{ marginTop: '40px' }}
+              {...getFieldProps('name', {
+                rules: [
+                  { required: true, message: '请输入对公账户名(一般来说即企业名称)' },
+                ],
+              })}
+              error={!!getFieldError('name')}
+              errorMsg={!getFieldError('name') ? '' : getFieldError('name').join('、')}
+            />
+            <InputWithLabel
+              labelName="对公银行名称"
+              {...getFieldProps('bank', {
+                rules: [
+                  { required: true, message: '请输入对公银行名称' },
+                ],
+              })}
+              error={!!getFieldError('bank')}
+              errorMsg={!getFieldError('bank') ? '' : getFieldError('bank').join('、')}
+            />
+            <InputWithLabel
+              labelName="对公银行支行全称"
+              {...getFieldProps('subbranch', {
+                rules: [
+                  { required: true, message: '请输入对公银行支行全称' },
+                ],
+              })}
+              error={!!getFieldError('subbranch')}
+              errorMsg={!getFieldError('subbranch') ? '' : getFieldError('subbranch').join('、')}
+            />
+            <InputWithLabel
+              labelName="对公银行账号"
+              {...getFieldProps('cardno', {
+                rules: [
+                  { required: true, message: '请输入对公银行账号' },
+                ],
+              })}
+              error={!!getFieldError('cardno')}
+              errorMsg={!getFieldError('cardno') ? '' : getFieldError('cardno').join('、')}
+            />
+            <InputWithLabel
+              labelName="开户行所在省份"
+              {...getFieldProps('provice', {
+                rules: [
+                  { required: true, message: '请输入开户行所在省份' },
+                ],
+              })}
+              error={!!getFieldError('provice')}
+              errorMsg={!getFieldError('provice') ? '' : getFieldError('provice').join('、')}
+            />
+            <InputWithLabel
+              labelName="开户行所在城市"
+              {...getFieldProps('city', {
+                rules: [
+                  { required: true, message: '请输入开户行所在省份' },
+                ],
+              })}
+              error={!!getFieldError('city')}
+              errorMsg={!getFieldError('city') ? '' : getFieldError('city').join('、')}
+            />
+            <button className="btn primary" style={{ marginTop: '20px', marginBottom: '60px' }} onClick={onSubmit}>下一步</button>
           </div>
         );
       };
       break;
-    case '4':
+    case '34':
       element = () => {
         return (
           <div>
@@ -34,7 +105,7 @@ function OrganRnBank(props) {
         );
       };
       break;
-    case '5':
+    case '35':
       element = (() => {
         return (
           <div>
@@ -83,4 +154,22 @@ function mapStateToProps(state) {
   return { ...state.global, ...state.organRnBank, loading: state.loading.global };
 }
 
-export default connect(mapStateToProps)(OrganRnBank);
+const formOpts = {
+  mapPropsToFields(props) {
+    return props;
+  },
+  onFieldsChange(props, changedFields) {
+    const { dispatch } = props;
+    const fields = {};
+    for (const value of Object.values(changedFields)) {
+      fields[value.name] = { value: value.value };
+      fields[value.name].errors = value.errors;
+    }
+    dispatch({
+      type: 'organRnInfo/fieldsChange',
+      fields,
+    });
+  },
+};
+
+export default connect(mapStateToProps)(createForm(formOpts)(OrganRnBank));

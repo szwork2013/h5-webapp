@@ -38,11 +38,9 @@ function RouterConfig({ history, app }) {
     promise.then(() => {
       const state = app._store.getState();
       const status = state.global.status;
-      if (nextState.location.pathname === '/' || nextState.location.pathname === PathConstants.OrganRnInfo) {
+      if (nextState.location.pathname === PathConstants.OrganRnInfo) {
         if (status === 9) {
           replace({ pathname: PathConstants.OrganRnFinish });
-        } else if (status !== 1) {
-          replace({ pathname: PathConstants.OrganRnBank });
         }
       } else if (nextState.location.pathname === PathConstants.OrganRnBank) {
         if (status === 9) {
@@ -51,7 +49,7 @@ function RouterConfig({ history, app }) {
           replace({ pathname: PathConstants.OrganRnInfo });
         }
       } else if (nextState.location.pathname === PathConstants.OrganRnFinish) {
-        if (status === 1) {
+        if (status !== 9) {
           replace({ pathname: PathConstants.OrganRnInfo });
         }
       }
