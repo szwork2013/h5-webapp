@@ -41,6 +41,8 @@ function RouterConfig({ history, app }) {
       if (nextState.location.pathname === PathConstants.OrganRnInfo) {
         if (status === 9) {
           replace({ pathname: PathConstants.OrganRnFinish });
+        } else if (status === 34 || status === 35) {
+          replace({ pathname: PathConstants.OrganRnBank });
         }
       } else if (nextState.location.pathname === PathConstants.OrganRnBank) {
         if (status === 9) {

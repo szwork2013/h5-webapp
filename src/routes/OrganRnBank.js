@@ -21,6 +21,19 @@ function OrganRnBank(props) {
       }
     });
   };
+  const receiveRemit = () => {
+    dispatch({
+      type: 'global/setStatus',
+      payload: {
+        status: 35,
+      },
+    });
+  };
+  const payAuth = () => {
+    dispatch({
+      type: 'organRnBank/organPayAuth',
+    });
+  };
   let element;
   switch (status) {
     case 2:
@@ -100,6 +113,7 @@ function OrganRnBank(props) {
             <div className={styles.waiting_desc}>
               <div>您的资料已通过审核</div>
               <div>正在安排银行打款</div>
+              <div style={{ marginTop: '10px' }}><a className={styles.waiting_hint} onClick={receiveRemit}>已经收到打款?</a></div>
             </div>
           </div>
         );
@@ -114,11 +128,17 @@ function OrganRnBank(props) {
               <div>请输入收到的金额并验证</div>
               <div className={styles.waited_input}>
                 <input defaultValue="0." maxLength="1" />
-                <input maxLength="1" />
-                <input maxLength="1" />
+                <input
+                  maxLength="1" name="number1"
+                  {...getFieldProps('number1')}
+                />
+                <input
+                  maxLength="1" name="number2"
+                  {...getFieldProps('number2')}
+                />
               </div>
               <div className={styles.waited_btn}>
-                <button className="btn primary">验证</button>
+                <button className="btn primary" onClick={payAuth}>验证</button>
               </div>
             </div>
           </div>
@@ -129,9 +149,6 @@ function OrganRnBank(props) {
       element = () => {
         return (
           <div>
-            <InputWithLabel labelName="对公银行名称" style={{ marginTop: '40px' }} />
-            <InputWithLabel labelName="对公银行支行名称" />
-            <InputWithLabel labelName="对公银行账号" />
             <button className="btn primary" style={{ marginTop: '20px', marginBottom: '60px' }}>下一步</button>
           </div>
         );
@@ -166,7 +183,7 @@ const formOpts = {
       fields[value.name].errors = value.errors;
     }
     dispatch({
-      type: 'organRnInfo/fieldsChange',
+      type: 'organRnBank/fieldsChange',
       fields,
     });
   },

@@ -37,7 +37,7 @@ export default {
       return { ...state, afterSSPRedirectUrl };
     },
     setStatus(state, { payload: status }) {
-      return { ...state, status };
+      return { ...state, ...status };
     },
     setAccountInfo(state, { payload }) {
       const { data, resolve } = payload;

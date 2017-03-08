@@ -8,7 +8,7 @@ export default {
   namespace: 'organRnInfo',
 
   state: {
-    name: { value: '2' },
+    name: { value: '' },
     codeORG: { value: '' },
     legalName: { value: '' },
     legalIdno: { value: '' },

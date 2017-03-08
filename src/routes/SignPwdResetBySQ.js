@@ -27,11 +27,11 @@ function SignPwdResetBySQ(props) {
       if (error) {
         return null;
       } else {
-        dispatch({
-          type: 'global/setStatus',
-          status: 4,
-        });
-        dispatch(routerRedux.push('/organRnBank'));
+        // dispatch({
+        //   type: 'global/setStatus',
+        //   status: 4,
+        // });
+        // dispatch(routerRedux.push('/organRnBank'));
       }
     });
   };
