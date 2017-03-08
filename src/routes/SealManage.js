@@ -5,17 +5,17 @@ import { createForm } from 'rc-form';
 import MainLayout from '../components/Layout/MainLayout';
 import SealItem from '../components/SealItem';
 import styles from './mixins.less';
-import sealEx1 from '../assets/seal-ex1.png';
 import add from '../assets/ico-add.png';
 
 function SealManage(props) {
-  const { dispatch } = props;
+  const { dispatch, loading, sealList } = props;
   const createSeal = () => {
     dispatch(routerRedux.push('/sealCreate'));
   };
   return (
     <MainLayout
       headerName="印章管理"
+      loading={loading}
     >
       <div className={`container ${styles.sealList}`}>
         <SealItem onClick={createSeal}>
@@ -30,31 +30,20 @@ function SealManage(props) {
             <div style={{ marginTop: '10px' }}>上传图片印章</div>
           </div>
         </SealItem>
-        <SealItem>
-          <img role="presentation" src={sealEx1} />
-        </SealItem>
-        <SealItem>
-          <img role="presentation" src={sealEx1} />
-        </SealItem>
-        <SealItem>
-          <img role="presentation" src={sealEx1} />
-        </SealItem>
-        <SealItem>
-          <img role="presentation" src={sealEx1} />
-        </SealItem>
-        <SealItem>
-          <img role="presentation" src={sealEx1} />
-        </SealItem>
-        <SealItem>
-          <img role="presentation" src={sealEx1} />
-        </SealItem>
+        {Object.values(sealList).map((seal) => {
+          return (
+            <SealItem key={seal.id} isDefault={seal.isDefault}>
+              <img role="presentation" src={seal.url} />
+            </SealItem>
+          );
+        })}
       </div>
     </MainLayout>
   );
 }
 
 function mapStateToProps(state) {
-  return { ...state.personRnInfo };
+  return { sealList: state.global.seals, ...state.personRnInfo, loading: state.loading.global };
 }
 
 const formOpts = {

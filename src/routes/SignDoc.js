@@ -72,7 +72,7 @@ function SignDoc(props) {
         <div className={styles.seal_list}>
           {Object.values(sealList).map((seal) => {
             return (
-              <SealItem key={seal.id} style={{ margin: 'auto' }}>
+              <SealItem key={seal.id} isDefault={seal.isDefault} style={{ margin: 'auto' }}>
                 <SignDocSeal
                   dispatch={dispatch}
                   hideSourceOnDrag

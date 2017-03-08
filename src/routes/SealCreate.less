@@ -21,6 +21,18 @@
       width: 200px;
     }
   }
+  .seal_preview_person {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 350px;
+    height: 420px;
+    border: 1px solid #dfdfdf;
+    background-color: #fff;
+    & img {
+      width: 100px;
+    }
+  }
   .seal_customize {
     display: flex;
     flex-direction: column;
@@ -68,6 +80,77 @@
           height: 93px;
           background-repeat: no-repeat;
           background-size: 140px;
+        }
+      }
+    }
+    .seal_type_person {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: 270px;
+      margin-left: 30px;
+      .seal_type_item_top {
+        margin-top: 20px;
+      }
+      .seal_type_item_person {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #dfdfdf;
+        background-color: #fff;
+        cursor: pointer;
+        position: relative;
+        &.select {
+          border: 1px solid #3598dc;
+          &::before {
+            content: '';
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            top: 80%;
+            left: 80%;
+            background-image: url(../assets/checked2.png);
+          }
+        }
+        &:first-child {
+          margin-right: 20px;
+        }
+        .seal_type_item_hwxkborder {
+          background-image: url(../assets/hwxkf.png);
+          width: 97px;
+          height: 97px;
+          background-repeat: no-repeat;
+          background-size: 97px;
+        }
+        .seal_type_item_hwxk {
+          background-image: url(../assets/hwxk.png);
+          width: 97px;
+          height: 97px;
+          background-repeat: no-repeat;
+          background-size: 97px;
+        }
+        .seal_type_item_hwls {
+          background-image: url(../assets/hwls.png);
+          width: 97px;
+          height: 97px;
+          background-repeat: no-repeat;
+          background-size: 97px;
+        }
+        .seal_type_item_ygymbxs {
+          background-image: url(../assets/ygyxs.png);
+          width: 97px;
+          height: 97px;
+          background-repeat: no-repeat;
+          background-size: 97px;
+        }
+        .seal_type_item_ygyjfcs {
+          background-image: url(../assets/ygycs.png);
+          width: 97px;
+          height: 97px;
+          background-repeat: no-repeat;
+          background-size: 97px;
         }
       }
     }

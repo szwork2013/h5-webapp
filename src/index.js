@@ -26,7 +26,7 @@ getStoredState({}).then((storageState) => {
       message.error(e.msg ? e.msg : '系统错误');
     },
     initialState: storageState,
-    extraEnhancers: [autoRehydrate({ log: true })],
+    extraEnhancers: [autoRehydrate()],
   });
 
   // 2. Plugins

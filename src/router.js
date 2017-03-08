@@ -159,6 +159,23 @@ function RouterConfig({ history, app }) {
       },
     });
   };
+
+  const getAccountInfo = (nextState, replace, callback) => {
+    const promise = new Promise((resolve) => {
+      app._store.dispatch({
+        type: 'global/getAccountInfo',
+        payload: {
+          resolve,
+        },
+      });
+    });
+    promise.then(() => {
+      app._store.dispatch({
+        type: 'global/getSealImg',
+      });
+      callback();
+    });
+  };
   return (
     <Router history={history}>
       {/* 企业实名 */}
@@ -178,7 +195,7 @@ function RouterConfig({ history, app }) {
       <Route path={PathConstants.PersonRnFinish} component={PersonRnFinish} onEnter={validatePersonStatus} />
 
       {/* 印章管理 */}
-      <Route path={PathConstants.SealManage} component={SealManage} />
+      <Route path={PathConstants.SealManage} component={SealManage} onEnter={getAccountInfo} />
       <Route path={PathConstants.SealCreate} component={SealCreate} />
       <Route path={PathConstants.SealCreateHand} component={SealCreateHand} />
       <Route path={PathConstants.SealHandPreview} component={SealHandPreview} />
