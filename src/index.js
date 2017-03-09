@@ -59,5 +59,9 @@ getStoredState({}).then((storageState) => {
   // 5. Start
   app.start('#root');
 
-  persistStore(app._store);
+  // 持久化设置
+  persistStore(app._store, {
+    keyPrefix: 'esign:',
+    whitelist: ['global', 'signDoc', 'organRnInfo', 'organRnBank'],
+  });
 });

@@ -1,0 +1,55 @@
+.receiver_item_list {
+  .receiver_item {
+    height: 56px;
+    background-color: #fbfbfb;
+    font-size: 12px;
+    color: #555;
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 10px;
+    border: 1px solid #dbdbdb;
+    border-bottom: 0;
+    position: relative;
+    &:hover {
+      background-color: #fff;
+    }
+    .delete_icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 9px;
+      position: absolute;
+      cursor: pointer;
+      right: 5%;
+      color: #fff;
+      &:hover {
+        background-color: #E74031;
+        &::after {
+          background-color: #E74031;
+        }
+      }
+      &::after {
+        content: "\2715";
+        width: 18px;
+        border-radius: 9px;
+        display: inline-block;
+        background-color: #bbb;
+      }
+    }
+    .receiver_email {
+      margin-bottom: 5px;
+    }
+    .receiver_name {
+      color: #3598dc;
+    }
+  }
+  .receiver_item:first-child {
+    margin-top: 10px;
+  }
+  .receiver_item:last-child {
+    border-bottom: 1px solid #dbdbdb;
+  }
+}

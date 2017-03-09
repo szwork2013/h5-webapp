@@ -203,6 +203,18 @@ export async function addSeal(values) {
   });
 }
 
+export async function deleteSeal(values) {
+  const postData = `sealId=${values.sealId}&edit=${new Date().getTime()}`;
+  return request('../../user/seal!deleteSeal.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
 export async function getDocCount() {
   const postData = `edit=${new Date().getTime()}`;
   return request('../../user/doc!getDocCount.xml', {
@@ -266,6 +278,18 @@ export async function downloadDoc(values) {
 export async function deleteDoc(values) {
   const postData = `docId=${values.docId}&edit=${new Date().getTime()}`;
   return request('../../user/doc!deleteDoc.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function getReceiveInfo(values) {
+  const postData = `email=${values.email}&edit=${new Date().getTime()}`;
+  return request('../../user/doc!getReceiveInfo.xml', {
     method: 'POST',
     credentials: 'same-origin',
     body: postData,

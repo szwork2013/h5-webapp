@@ -22,6 +22,17 @@ export default {
     page: {}, // 当前显示页属性
     modelVisible: false,
     needSeals: {},
+    needAddReceiver: false,
+    receivers: [
+      {
+        email: '15200850767',
+        name: '陈凯',
+      },
+      {
+        email: '1358796564@qq.com',
+        name: '天谷信息',
+      },
+    ],
   },
 
   reducers: {
@@ -36,6 +47,16 @@ export default {
     setPayMethod(state, { payload }) {
       const { payMethod } = payload;
       return { ...state, payMethod };
+    },
+    setNeedAddReceiver(state, { payload }) {
+      const { needAddReceiver } = payload;
+      return { ...state, needAddReceiver };
+    },
+    changeReceivers(state, { payload }) {
+      const { receiver } = payload;
+      const newReceivers = _.cloneDeep(state.receivers);
+      newReceivers.push(receiver);
+      return { ...state, receivers: newReceivers };
     },
     setPage(state, payload) {
       const { page } = payload;
@@ -159,6 +180,22 @@ export default {
             payMethod: data.data.doc.payMethod,
           },
         });
+        if (!data.data.doc.sends || data.data.doc.sends.length <= 0) {
+          // 需要设置签署人
+          yield put({
+            type: 'setNeedAddReceiver',
+            payload: {
+              needAddReceiver: true,
+            },
+          });
+        } else {
+          yield put({
+            type: 'setNeedAddReceiver',
+            payload: {
+              needAddReceiver: false,
+            },
+          });
+        }
       }
     },
     *validateSignPwd({ payload }, { select, call, put }) {
@@ -305,6 +342,43 @@ export default {
         // yield put(routerRedux.push('/'));
       } else {
         message.error(data.data.msg);
+      }
+    },
+    *addReceiver({ payload }, { select, put }) {
+      const { addSelf, receiverName, receiverEmail } = payload;
+      const globalState = yield select(state => state.global);
+      const { type, person, organize, mobile, email } = globalState;
+      let selfName = '';
+      let selfEmail = '';
+      if (type === 1) {
+        selfName = person.name;
+        selfEmail = !mobile ? email : mobile;
+      } else {
+        selfName = organize.name;
+        selfEmail = !mobile ? email : mobile;
+      }
+      const self = {
+        name: selfName,
+        email: selfEmail,
+      };
+      if (addSelf) {
+        yield put({
+          type: 'changeReceivers',
+          payload: {
+            receiver: self,
+          },
+        });
+      } else {
+        const receiver = {
+          name: receiverName,
+          email: receiverEmail,
+        };
+        yield put({
+          type: 'changeReceivers',
+          payload: {
+            receiver,
+          },
+        });
       }
     },
   },

@@ -24,6 +24,96 @@
       4px 0 4px rgba(0, 0, 0, 0.5),
       0 -4px 4px rgba(0, 0, 0, 0.5);
   }
+  .add_receiver_panel {
+    flex: 2;
+    margin-top: 70px;
+    background-color: #fff;
+    overflow-y: auto;
+    padding-bottom: 50px;
+    box-shadow:
+      4px 0 4px rgba(0, 0, 0, 0.5),
+      0 -4px 4px rgba(0, 0, 0, 0.5);
+    .add_receiver_title {
+      height: 50px;
+      font-size: 18px;
+      color: #323232;
+      border-bottom: 1px solid #e1e1e1;
+      display: flex;
+      align-items: center;
+      padding-left: 20px;
+    }
+    .add_receiver_self {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-top: 20px;
+      & button {
+        width: 70px;
+        min-width: 70px;
+        height: 26px;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 0;
+      }
+    }
+    .add_receiver_paymethod {
+      padding: 20px;
+      text-align: justify;
+      font-size: 14px;
+      color: #777;
+    }
+    .add {
+      text-align: left;
+      font-size: 14px;
+      color: #555;
+      margin-top: 20px;
+      padding-bottom: 30px;
+      padding-left: 20px;
+      padding-right: 20px;
+      width: 100%;
+      border-bottom: 1px solid #e1e1e1;
+      .add_input_label {
+        margin-bottom: 10px;
+      }
+      .add_input_grp {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+      .add_input {
+        height: 34px;
+        border-top: 1px solid #dbdbdb;
+        border-left: 1px solid #dbdbdb;
+        border-bottom: 1px solid #dbdbdb;
+        border-right: 0;
+        width: 100%;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+      }
+      .add_input_btn {
+        font-size: 12px;
+        font-weight: bold;
+        background-color: #fbfbfb;
+        height: 34px;
+        width: 80px;
+        border: 1px solid #dbdbdb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+        &:hover {
+          background-color: #f8f8f8;
+        }
+        &:active {
+          background-color: #d0d0d0;
+        }
+      }
+    }
+  }
 }
 
 .sign_action {

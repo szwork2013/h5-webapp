@@ -76,6 +76,7 @@ export default {
           url: doc.url,
           status: doc.status,
           createDate: doc.createDate,
+          sends: doc.sends,
           senderName: doc.sends[0].senderName,
           receiverName: doc.sends[0].receiverName,
           type: doc.sends[0].type,
@@ -199,6 +200,22 @@ export default {
           payMethod: record.payMethod,
         },
       });
+      if (!record.sends || record.sends.length <= 0) {
+        // 需要设置签署人
+        yield put({
+          type: 'signDoc/setNeedAddReceiver',
+          payload: {
+            needAddReceiver: true,
+          },
+        });
+      } else {
+        yield put({
+          type: 'signDoc/setNeedAddReceiver',
+          payload: {
+            needAddReceiver: false,
+          },
+        });
+      }
       yield put(routerRedux.push(PathConstants.SignDoc));
     },
     *showLogModal({ payload }, { call, put }) {
