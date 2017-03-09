@@ -5,6 +5,7 @@ import DocList from './routes/DocList';
 import DocListWaitForMe from './routes/DocList/DocListWaitForMe';
 import DocListWaitForOthers from './routes/DocList/DocListWaitForOthers';
 import DocListFinished from './routes/DocList/DocListFinished';
+import DocListDraft from './routes/DocList/DocListDraft';
 import DocListClosed from './routes/DocList/DocListClosed';
 import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
@@ -209,6 +210,7 @@ function RouterConfig({ history, app }) {
         <Route path={PathConstants.DocListWaitForMe} component={DocListWaitForMe} onEnter={() => { getDocList(Constants.DocType.WAITFORME); }} />
         <Route path={PathConstants.DocListWaitForOthers} component={DocListWaitForOthers} onEnter={() => { getDocList(Constants.DocType.WAITFOROTHERS); }} />
         <Route path={PathConstants.DocListFinished} component={DocListFinished} onEnter={() => { getDocList(Constants.DocType.FINISHED); }} />
+        <Route path={PathConstants.DocListDraft} component={DocListDraft} onEnter={() => { getDocList(Constants.DocType.DRAFT); }} />
         <Route path={PathConstants.DocListClosed} component={DocListClosed} onEnter={() => { getDocList(Constants.DocType.CLOSED); }} />
       </Route>
 

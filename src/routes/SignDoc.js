@@ -4,6 +4,7 @@ import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Modal, Checkbox } from 'antd';
 import { DragDropContext } from 'react-dnd';
+import classnames from 'classnames';
 import HTML5Backend from 'react-dnd-html5-backend';
 import MainLayout from '../components/Layout/MainLayout';
 import InputWithLabel from '../components/InputWithLabel';
@@ -16,7 +17,7 @@ import PathConstants from '../PathConstants';
 import styles from './mixins.less';
 
 function SignDoc(props) {
-  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, form, setNeedAddReceiver, receivers } = props;
+  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, form, needAddReceiver, receivers, payMethod } = props;
   const { getFieldProps, getFieldError } = form;
   const cancel = () => {
     dispatch({
@@ -62,6 +63,39 @@ function SignDoc(props) {
       },
     });
   };
+  const inputCls = classnames({
+    [styles.add_input]: true,
+    [styles.add_input_error]: !!getFieldError('receiverEmail'),
+  });
+  const addReceiver = () => {
+    form.validateFields(['receiverEmail'], { force: true }, (error) => {
+      if (error) {
+        return null;
+      } else {
+        dispatch({
+          type: 'signDoc/addReceiver',
+          payload: {
+            addSelf: false,
+          },
+        });
+      }
+    });
+  };
+  const changePayMethod = (e, type) => {
+    if (e.target.checked) {
+      dispatch({
+        type: 'signDoc/setPayMethod',
+        payload: {
+          payMethod: type,
+        },
+      });
+    }
+  };
+  const next = () => {
+    dispatch({
+      type: 'signDoc/next',
+    });
+  };
   return (
     <MainLayout
       headerName="签署文档"
@@ -76,7 +110,7 @@ function SignDoc(props) {
             dispatch={dispatch}
           />
         </div>
-        { !setNeedAddReceiver ?
+        { needAddReceiver ?
           <div className={styles.add_receiver_panel}>
             <div className={styles.add_receiver_title}>添加签署人</div>
             <div>
@@ -84,22 +118,30 @@ function SignDoc(props) {
                 <button className="btn cutout" onClick={addSelf}>添加自己</button>
               </div>
               <div>
-                <ReceiverItems receivers={receivers} />
+                <ReceiverItems receivers={receivers} dispatch={dispatch} />
               </div>
               <div className={styles.add}>
                 <div className={styles.add_input_label}>手机号/邮箱</div>
                 <div className={styles.add_input_grp}>
-                  <input className={styles.add_input} />
+                  <input
+                    className={inputCls}
+                    {...getFieldProps('receiverEmail', {
+                      rules: [
+                        { required: true, message: '请输入手机号/邮箱' },
+                        { pattern: /(^([a-zA-Z0-9]+[_|_|.-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|_|.-]?)*[a-zA-Z0-9]+.[a-zA-Z]{2,3}$)|(^[1][0-9]{10}$)/, message: '格式不正确' },
+                      ],
+                    })}
+                  />
                   <div className={styles.add_input_btn}>
-                    <buttn>添加</buttn>
+                    <buttn onClick={addReceiver}>添加</buttn>
                   </div>
                 </div>
               </div>
             </div>
             <div className={styles.add_receiver_title}>签署付费方</div>
             <div className={styles.add_receiver_paymethod}>
-              <Checkbox>我来承担此份文件的签署费用(待文件完成签署后，将从您的账户中扣取2次签署次数)</Checkbox>
-              <Checkbox style={{ marginTop: '20px', paddingRight: '7px' }}>由文件签署人各自承担签署费用(此次签署将从您的账户中扣取1次签署次数)</Checkbox>
+              <Checkbox checked={payMethod === 0} onChange={(e) => { changePayMethod(e, 0); }}>我来承担此份文件的签署费用(待文件完成签署后，将从您的账户中扣取2次签署次数)</Checkbox>
+              <Checkbox checked={payMethod === 1} onChange={(e) => { changePayMethod(e, 1); }} style={{ marginTop: '20px', paddingRight: '7px' }}>由文件签署人各自承担签署费用(此次签署将从您的账户中扣取1次签署次数)</Checkbox>
             </div>
           </div> :
           <div className={styles.seal_list}>
@@ -121,7 +163,10 @@ function SignDoc(props) {
         }
       </div>
       <div className={styles.sign_action}>
-        <button className="btn primary" onClick={showModel}>确认签署</button>
+        { needAddReceiver ?
+          <button className="btn primary" onClick={next}>下一步</button> :
+          <button className="btn primary" onClick={showModel}>确认签署</button>
+        }
       </div>
       { hasSignPwd === 1 ?
         <Modal

@@ -5,6 +5,7 @@ const PathConstants = {
   DocListWaitForOthers: 'waitForOthers',
   DocListFinished: 'finished',
   DocListClosed: 'closed',
+  DocListDraft: 'draft',
   OrganRnInfo: '/organRnInfo',
   OrganRnBank: '/organRnBank',
   OrganRnFinish: '/organRnFinish',

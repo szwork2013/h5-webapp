@@ -37,4 +37,7 @@ export default {
   'POST /user/seal!addSeal.xml'(req, res) {
     res.json('<result><resultMsg>{"img1Url":null,"msg":"该类型印章已存在","img3":null,"img2Url":null,"sealId":0,"seals":null,"errCode":2034,"errShow":true,"sesealId":0,"img3Url":null,"img2":null,"img1":null}</resultMsg></result>');
   },
+  'POST /user/doc!getReceiveInfo.xml'(req, res) {
+    res.json('<result><resultMsg>{"msg":"","sealId":0,"ossKey":null,"code":null,"authStatus":0,"mobile":null,"accountUUID":"0C0C07A65E9445C293DF4A8C1EFE5833","errShow":false,"type":2,"head":"defaulthead.png","accountId":0,"sealData":null,"errCode":0,"name":"杭州天谷信息科技有限公司","time":null,"email":"135***@qq.com"}</resultMsg></result>');
+  },
 };

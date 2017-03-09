@@ -4,6 +4,7 @@ const Constants = {
     WAITFOROTHERS: 5,
     FINISHED: 2,
     CLOSED: 11,
+    DRAFT: 1,
   },
 };
 

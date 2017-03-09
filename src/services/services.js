@@ -298,3 +298,15 @@ export async function getReceiveInfo(values) {
     },
   });
 }
+
+export async function addReceiver(values) {
+  const postData = `signdocId=${values.signdocId}&sends=${values.sends}&edit=${new Date().getTime()}`;
+  return request('../../user/sign!addReceiver.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

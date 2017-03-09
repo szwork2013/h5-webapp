@@ -14,6 +14,7 @@ export default {
     waitForOthersCount: 0,
     finishedCount: 0,
     closedCount: 0,
+    draftCount: 0,
     columns: [{
       key: 1,
       title: '发件人',
@@ -55,34 +56,15 @@ export default {
       return { ...state, type };
     },
     setAllCount(state, { payload }) {
-      const { waitForMeCount, waitForOthersCount, finishedCount, closedCount } = payload;
-      return { ...state, waitForMeCount, waitForOthersCount, finishedCount, closedCount };
+      const { waitForMeCount, waitForOthersCount, finishedCount, closedCount, draftCount } = payload;
+      return { ...state, waitForMeCount, waitForOthersCount, finishedCount, closedCount, draftCount };
     },
     selectRows(state, { payload }) {
       const { selectedRowKeys } = payload;
       return { ...state, selectedRowKeys };
     },
     setDataAndPage(state, { payload }) {
-      const { docs, pageInfo } = payload;
-      const data = [];
-      for (const doc of docs) {
-        console.log(doc);
-        const tmp = {
-          key: doc.docId,
-          docName: doc.docName,
-          modifyDate: doc.modifyDate,
-          docId: doc.docId,
-          payMethod: doc.payMethod,
-          url: doc.url,
-          status: doc.status,
-          createDate: doc.createDate,
-          sends: doc.sends,
-          senderName: doc.sends[0].senderName,
-          receiverName: doc.sends[0].receiverName,
-          type: doc.sends[0].type,
-        };
-        data.push(tmp);
-      }
+      const { data, pageInfo } = payload;
       return { ...state, data, pageInfo };
     },
     setOptLogs(state, { payload }) {
@@ -115,6 +97,8 @@ export default {
         yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListFinished}`));
       } else if (type === Constants.DocType.CLOSED) {
         yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListClosed}`));
+      } else if (type === Constants.DocType.DRAFT) {
+        yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListDraft}`));
       }
     },
     *getDocCount({ payload }, { call, put }) {
@@ -131,6 +115,7 @@ export default {
               waitForOthersCount: data.waitForTaCount,
               finishedCount: data.doneCount,
               closedCount: data.closeCount,
+              draftCount: data.draftCount,
             },
           });
         } else {
@@ -140,6 +125,14 @@ export default {
     },
     *getDocList({ payload }, { select, call, put }) {
       const docListState = yield select(state => state.docList);
+      const globalState = yield select(state => state.global);
+      const { type, person, organize } = globalState;
+      let currentAccountName = '';
+      if (type === 1) {
+        currentAccountName = person.name;
+      } else {
+        currentAccountName = organize.name;
+      }
       const { pageInfo } = docListState;
       const { docType, startIndex, pageSize } = payload;
       const params = {
@@ -153,10 +146,29 @@ export default {
         data = JSON.parse(data);
         console.log('getDocList2 response: ', data);
         if (data && data.errCode === 0) {
+          const list = [];
+          for (const doc of data.docs) {
+            console.log(doc);
+            const tmp = {
+              key: doc.docId,
+              docName: doc.docName,
+              modifyDate: doc.modifyDate,
+              docId: doc.docId,
+              payMethod: doc.payMethod,
+              url: doc.url,
+              status: doc.status,
+              createDate: doc.createDate,
+              sends: doc.sends,
+              senderName: doc.sends.length === 0 ? currentAccountName : doc.sends[0].senderName,
+              receiverName: doc.sends.length === 0 ? '' : doc.sends[0].receiverName,
+              type: doc.sends.length === 0 ? 0 : doc.sends[0].type,
+            };
+            list.push(tmp);
+          }
           yield put({
             type: 'setDataAndPage',
             payload: {
-              docs: data.docs,
+              data: list,
               pageInfo: data.pageInfo,
             },
           });
@@ -200,7 +212,7 @@ export default {
           payMethod: record.payMethod,
         },
       });
-      if (!record.sends || record.sends.length <= 0) {
+      if (type === Constants.DocType.DRAFT) { // 草稿箱进去 需要设置签署人
         // 需要设置签署人
         yield put({
           type: 'signDoc/setNeedAddReceiver',

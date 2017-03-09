@@ -2,13 +2,13 @@ import React from 'react';
 import styles from './ReceiverItems.less';
 
 const ReceiverItems = (props) => {
-  const { receivers } = props;
+  const { receivers, dispatch } = props;
   return (
     <div className={styles.receiver_item_list}>
       {Object.keys(receivers).map((key) => {
-        const { email, name } = receivers[key];
+        const { uuid, email, name } = receivers[key];
         return (
-          <ReceiverItem key={key} email={email} name={name} />
+          <ReceiverItem key={uuid} uuid={uuid} email={email} name={name} dispatch={dispatch} />
         );
       })}
     </div>
@@ -65,19 +65,24 @@ class ReceiverItem extends React.Component {
     }
   };
 
-  deleteItem = () => {
-
+  deleteItem = (uuid, dispatch) => {
+    dispatch({
+      type: 'signDoc/deleteReceiver',
+      payload: {
+        uuid,
+      },
+    });
   }
 
   render() {
-    const { email, name, style, ...otherProps } = this.props;
+    const { dispatch, uuid, email, name, style, ...otherProps } = this.props;
 
     return (
-      <div ref={(c) => { this.receiverItem = c; }} className={`${styles.receiver_item} ${styles.receiver_item_hover}`} style={style}>
+      <div ref={(c) => { this.receiverItem = c; }} {...otherProps} className={`${styles.receiver_item} ${styles.receiver_item_hover}`} style={style}>
         <div className={styles.receiver_email}>{email}</div>
-        <div className={styles.receiver_name} {...otherProps}>{name}</div>
+        <div className={styles.receiver_name}>{name}</div>
         { this.state.showDelete ?
-          <span className={styles.delete_icon} onClick={this.deleteItem} /> :
+          <span className={styles.delete_icon} onClick={() => this.deleteItem(uuid, dispatch)} /> :
           null
         }
       </div>

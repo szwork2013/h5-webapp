@@ -7,6 +7,8 @@ export default {
   namespace: 'global',
 
   state: {
+    id: '',
+    accountUid: '',
     mobile: '',
     email: '',
     type: 1,
@@ -42,9 +44,9 @@ export default {
     setAccountInfo(state, { payload }) {
       const { data, resolve } = payload;
       if (data.data != null && data.data !== undefined) {
-        const { mobile, email, type, status, seals, person, organize, hasSignPwd } = data.data;
+        const { id, accountUid, mobile, email, type, status, seals, person, organize, hasSignPwd } = data.data;
         resolve();
-        return { ...state, mobile, email, type, status, seals, person, organize, hasSignPwd };
+        return { ...state, id, accountUid, mobile, email, type, status, seals, person, organize, hasSignPwd };
       }
       resolve();
       return { ...state };

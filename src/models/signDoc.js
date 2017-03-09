@@ -2,7 +2,7 @@ import _ from 'lodash';
 import md5 from 'md5';
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { getDocPic, pdfSignSingle, validatePwd, pdfSign, getDocInfo, sendEmail } from '../services/services';
+import { getDocPic, pdfSignSingle, validatePwd, pdfSign, getDocInfo, sendEmail, getReceiveInfo, addReceiver } from '../services/services';
 import PathConstants from '../PathConstants';
 
 export default {
@@ -17,21 +17,24 @@ export default {
     pageCount: '', // 文档页数
     pageWidth: 0,
     pageHeight: 0,
-    payMethod: 0, // 支付类型，分开AA 一个A
+    payMethod: 0, // 支付类型，1分开AA 0一个A
     pageType: '', // 区分待我签还是待他人签 owner:发起 receive:待我
     page: {}, // 当前显示页属性
     modelVisible: false,
     needSeals: {},
     needAddReceiver: false,
+    receiverEmail: { value: '' },
     receivers: [
-      {
-        email: '15200850767',
-        name: '陈凯',
-      },
-      {
-        email: '1358796564@qq.com',
-        name: '天谷信息',
-      },
+      // {
+      //   uuid: 1,
+      //   email: '15200850767',
+      //   name: '陈凯',
+      // },
+      // {
+      //   uuid: 2,
+      //   email: '1358796564@qq.com',
+      //   name: '天谷信息',
+      // },
     ],
   },
 
@@ -53,9 +56,25 @@ export default {
       return { ...state, needAddReceiver };
     },
     changeReceivers(state, { payload }) {
-      const { receiver } = payload;
+      const { receiver, addSelf } = payload;
       const newReceivers = _.cloneDeep(state.receivers);
-      newReceivers.push(receiver);
+      if (addSelf) {
+        newReceivers.unshift(receiver);
+      } else {
+        newReceivers.push(receiver);
+      }
+      const uniqReceivers = _.uniqBy(newReceivers, 'uuid');
+      if (state.receivers.length === uniqReceivers.length) {
+        message.info('签署人已经存在');
+      }
+      return { ...state, receivers: uniqReceivers };
+    },
+    deleteReceiver(state, { payload }) {
+      const { uuid } = payload;
+      const newReceivers = _.cloneDeep(state.receivers);
+      _.remove(newReceivers, (item) => {
+        return item.uuid === uuid;
+      });
       return { ...state, receivers: newReceivers };
     },
     setPage(state, payload) {
@@ -180,22 +199,6 @@ export default {
             payMethod: data.data.doc.payMethod,
           },
         });
-        if (!data.data.doc.sends || data.data.doc.sends.length <= 0) {
-          // 需要设置签署人
-          yield put({
-            type: 'setNeedAddReceiver',
-            payload: {
-              needAddReceiver: true,
-            },
-          });
-        } else {
-          yield put({
-            type: 'setNeedAddReceiver',
-            payload: {
-              needAddReceiver: false,
-            },
-          });
-        }
       }
     },
     *validateSignPwd({ payload }, { select, call, put }) {
@@ -344,41 +347,128 @@ export default {
         message.error(data.data.msg);
       }
     },
-    *addReceiver({ payload }, { select, put }) {
-      const { addSelf, receiverName, receiverEmail } = payload;
-      const globalState = yield select(state => state.global);
-      const { type, person, organize, mobile, email } = globalState;
-      let selfName = '';
-      let selfEmail = '';
-      if (type === 1) {
-        selfName = person.name;
-        selfEmail = !mobile ? email : mobile;
-      } else {
-        selfName = organize.name;
-        selfEmail = !mobile ? email : mobile;
+    *addReceiver({ payload }, { select, call, put }) {
+      const signDocState = yield select(state => state.signDoc);
+      const { receivers, receiverEmail } = signDocState;
+      if (_.findIndex(receivers, (item) => { return item.email === receiverEmail.value; }) > -1) {
+        message.info('签署人已经存在');
+        return;
       }
-      const self = {
-        name: selfName,
-        email: selfEmail,
-      };
+      const { addSelf } = payload;
       if (addSelf) {
-        yield put({
-          type: 'changeReceivers',
-          payload: {
-            receiver: self,
-          },
-        });
-      } else {
-        const receiver = {
-          name: receiverName,
-          email: receiverEmail,
+        const globalState = yield select(state => state.global);
+        const { type, person, organize, mobile, email, accountUid } = globalState;
+        let selfName = '';
+        let selfEmail = '';
+        if (type === 1) {
+          selfName = person.name;
+          selfEmail = !mobile ? email : mobile;
+        } else {
+          selfName = organize.name;
+          selfEmail = !mobile ? email : mobile;
+        }
+        const self = {
+          uuid: accountUid,
+          name: selfName,
+          email: selfEmail,
         };
         yield put({
           type: 'changeReceivers',
           payload: {
-            receiver,
+            receiver: self,
+            addSelf: true,
           },
         });
+      } else {
+        const param = {
+          email: receiverEmail.value,
+        };
+        let { data } = yield call(getReceiveInfo, param);
+        if (Object.prototype.toString.call(data) === '[object String]') {
+          data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+          data = JSON.parse(data);
+          console.log('getReceiveInfo response: ', data);
+          if (data && data.errCode === 0) {
+            const receiver = {
+              uuid: data.accountUUID,
+              email: !data.mobile ? data.email : data.mobile,
+              name: data.name,
+            };
+            yield put({
+              type: 'changeReceivers',
+              payload: {
+                receiver,
+              },
+            });
+          } else {
+            message.error(data.msg);
+          }
+        }
+      }
+    },
+    *next({ payload }, { select, call, put }) {
+      const signDocState = yield select(state => state.signDoc);
+      const globalState = yield select(state => state.global);
+      const { receivers, docId, payMethod } = signDocState;
+      const { accountUid } = globalState;
+      const receiversWithoutSelf = _.cloneDeep(receivers);
+      // 签署人中移除自己
+      const self = _.remove(receiversWithoutSelf, (item) => {
+        return item.uuid === accountUid;
+      });
+      if (receiversWithoutSelf.length <= 0) {
+        message.error('请先添加签署人');
+        return;
+      }
+      const sends = [];
+      Object.keys(receiversWithoutSelf).map((key) => {
+        const { email } = receiversWithoutSelf[key];
+        sends.push({
+          receiver: email,
+          type: 0,
+          isSendMsg: 0,
+        });
+        return null;
+      });
+      const param = {
+        signdocId: docId,
+        sends: JSON.stringify(sends),
+      };
+      let { data } = yield call(addReceiver, param);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('addReceiver response: ', data);
+        if (data && data.errCode === 0) {
+          if (self.length > 0) { // 签署人中有自己 下一步进入签署页
+            yield put({
+              type: 'setNeedAddReceiver',
+              payload: {
+                needAddReceiver: false,
+              },
+            });
+          } else { // 否则发送通知 通知签署人
+            const sendEmailParam = {
+              signdocId: docId,
+              payMethod,
+            };
+            data = yield call(sendEmail, sendEmailParam);
+            if (Object.prototype.toString.call(data.data) === '[object String]') {
+              data = data.data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+              data = JSON.parse(data);
+              console.log('sendEmail response: ', data);
+              if (data && data.errCode === 0) {
+                message.success('邀请签章邮件已成功发送给您的好友，请耐心等待');
+                // 跳到列表页
+                yield put(routerRedux.push(PathConstants.DocList));
+              } else {
+                message.error(data.msg);
+              }
+            }
+          }
+        } else {
+          message.error(data.msg);
+        }
       }
     },
   },

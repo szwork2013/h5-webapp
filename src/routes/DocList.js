@@ -9,7 +9,7 @@ import styles from './mixins.less';
 import Constants from '../Constants';
 
 function DocList(props) {
-  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, children, loading, optlogs, optlogsModVisible } = props;
+  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, draftCount, children, loading, optlogs, optlogsModVisible } = props;
   const { getFieldProps } = form;
 
   const waitForMeCls = classnames({
@@ -27,6 +27,10 @@ function DocList(props) {
   const closedCls = classnames({
     [styles.menu_item]: true,
     [styles.active]: type === Constants.DocType.CLOSED,
+  });
+  const draftCls = classnames({
+    [styles.menu_item]: true,
+    [styles.active]: type === Constants.DocType.DRAFT,
   });
 
   const changeType = (t) => {
@@ -86,6 +90,10 @@ function DocList(props) {
               <div className={finishedCls} onClick={() => { changeType(Constants.DocType.FINISHED); }} >
                 <div>已完成</div>
                 <div>{finishedCount}</div>
+              </div>
+              <div className={draftCls} onClick={() => { changeType(Constants.DocType.DRAFT); }} >
+                <div>草稿箱</div>
+                <div>{draftCount}</div>
               </div>
               <div className={closedCls} onClick={() => { changeType(Constants.DocType.CLOSED); }} >
                 <div>已关闭</div>
