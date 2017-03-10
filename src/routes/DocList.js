@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'dva';
 import { createForm } from 'rc-form';
-import { Modal, Timeline } from 'antd';
+import { Modal, Timeline, Table, DatePicker } from 'antd';
 import classnames from 'classnames';
 import MainLayout from '../components/Layout/MainLayout';
 import InputWithLabelInLine from '../components/InputWithLabelInLine';
@@ -9,7 +9,7 @@ import styles from './mixins.less';
 import Constants from '../Constants';
 
 function DocList(props) {
-  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, draftCount, children, loading, optlogs, optlogsModVisible } = props;
+  const { dispatch, form, type, waitForMeCount, waitForOthersCount, finishedCount, closedCount, draftCount, children, loading, optlogs, optlogsModVisible, receiverList, receiversModVisible, startDate, endDate } = props;
   const { getFieldProps } = form;
 
   const waitForMeCls = classnames({
@@ -33,6 +33,40 @@ function DocList(props) {
     [styles.active]: type === Constants.DocType.DRAFT,
   });
 
+  const receiverListColumns = [
+    {
+      key: 0,
+      title: '',
+      width: '10%',
+    },
+    {
+      key: 1,
+      title: '发件人',
+      dataIndex: 'senderName',
+      width: '30%',
+    },
+    {
+      key: 2,
+      title: '收件人',
+      dataIndex: 'receiverName',
+      width: '30%',
+    },
+    {
+      key: 3,
+      title: '签署状态',
+      dataIndex: 'isRead',
+      width: '30%',
+      render: text => (
+        <span>
+          { text === 0 ?
+            '未签署' :
+            '已签署'
+          }
+        </span>
+      ),
+    },
+  ];
+
   const changeType = (t) => {
     dispatch({
       type: 'docList/changeType',
@@ -42,9 +76,15 @@ function DocList(props) {
     });
   };
 
-  const cancel = (e) => {
+  const cancel = () => {
     dispatch({
       type: 'docList/closeOptLogsMod',
+    });
+  };
+
+  const cancelReceiverList = () => {
+    dispatch({
+      type: 'docList/closeReceiversMod',
     });
   };
 
@@ -65,6 +105,52 @@ function DocList(props) {
       default:
         return '未处理';
     }
+  };
+
+  const disabledStartDate = (startValue) => {
+    const endValue = endDate;
+    if (!startValue || !endValue) {
+      return false;
+    }
+    return startValue.valueOf() > endValue.valueOf();
+  };
+
+  const disabledEndDate = (endValue) => {
+    const startValue = startDate;
+    if (!endValue || !startValue) {
+      return false;
+    }
+    return endValue.valueOf() <= startValue.valueOf();
+  };
+
+  const onStartChange = (value) => {
+    changeField('startDate', value);
+  };
+
+  const onEndChange = (value) => {
+    changeField('endDate', value);
+  };
+
+  const changeField = (fieldName, fieldValue) => {
+    dispatch({
+      type: 'docList/changeField',
+      payload: {
+        fieldName,
+        fieldValue,
+      },
+    });
+  };
+
+  const resetSeach = () => {
+    dispatch({
+      type: 'docList/resetSeach',
+    });
+  };
+
+  const seach = () => {
+    dispatch({
+      type: 'docList/seach',
+    });
   };
 
   return (
@@ -106,26 +192,43 @@ function DocList(props) {
               <InputWithLabelInLine
                 labelName="文档名称"
                 placeholder="请输入文档名称"
-                {...getFieldProps('docName')}
+                onChange={e => changeField('docName', e.target.value)}
               />
               <InputWithLabelInLine
                 labelName="发件人"
                 placeholder="手机号/邮箱"
-                {...getFieldProps('senderName')}
+                onChange={e => changeField('sender', e.target.value)}
               />
               <InputWithLabelInLine
                 labelName="收件人"
                 placeholder="手机号/邮箱"
-                {...getFieldProps('receiverName')}
+                onChange={e => changeField('receiver', e.target.value)}
               />
               <InputWithLabelInLine
+                hideInput
                 labelName="发送时间"
-                placeholder="手机号/邮箱"
-                {...getFieldProps('receiverName')}
-              />
+              >
+                <div>
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    disabledDate={disabledStartDate}
+                    placeholder="开始时间"
+                    onChange={onStartChange}
+                    value={startDate}
+                  />
+                  <span style={{ marginLeft: '5px', marginRight: '5px' }}>至</span>
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    disabledDate={disabledEndDate}
+                    placeholder="结束时间"
+                    onChange={onEndChange}
+                    value={endDate}
+                  />
+                </div>
+              </InputWithLabelInLine>
               <div className={styles.btn_group}>
-                <button className="btn default" >清空</button>
-                <button className="btn primary" >查询</button>
+                <button className="btn default" onClick={resetSeach}>清空</button>
+                <button className="btn primary" onClick={seach}>查询</button>
               </div>
             </div>
             <div className={styles.table}>
@@ -154,6 +257,12 @@ function DocList(props) {
           })}
         </Timeline>
       </Modal>
+      <Modal
+        id="receiverList" onCancel={cancelReceiverList} width={500} wrapClassName="receiverList"
+        visible={receiversModVisible} footer={null} title="收件人列表"
+      >
+        <Table columns={receiverListColumns} dataSource={receiverList} pagination={false} />
+      </Modal>
     </MainLayout>
   );
 }
@@ -174,7 +283,7 @@ const formOpts = {
       fields[value.name].errors = value.errors;
     }
     dispatch({
-      type: 'signPwd/fieldsChange',
+      type: 'docList/fieldsChange',
       fields,
     });
   },

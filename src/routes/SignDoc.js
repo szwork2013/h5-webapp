@@ -109,6 +109,7 @@ function SignDoc(props) {
             seals={needSeals}
             dispatch={dispatch}
           />
+          <div className={styles.page}>1</div>
         </div>
         { needAddReceiver ?
           <div className={styles.add_receiver_panel}>
@@ -196,7 +197,7 @@ function SignDoc(props) {
 }
 
 function mapStateToProps(state) {
-  return { sealList: state.global.seals, hasSignPwd: state.global.hasSignPwd, ...state.signDoc, loading: state.loading.global };
+  return { sealList: state.global.validSeals, hasSignPwd: state.global.hasSignPwd, ...state.signDoc, loading: state.loading.global };
 }
 
 const formOpts = {

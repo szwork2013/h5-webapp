@@ -48,9 +48,28 @@ export default {
     },
     optlogs: [],
     optlogsModVisible: false,
+    receiverList: [],
+    receiversModVisible: false,
+    receiver: '',
+    docName: '',
+    sender: '',
+    startDate: null,
+    endDate: null,
   },
 
   reducers: {
+    changeField(state, { payload }) {
+      const { fieldName, fieldValue } = payload;
+      return { ...state, [fieldName]: fieldValue };
+    },
+    resetSeach(state) {
+      const docName = '';
+      const receiver = '';
+      const sender = '';
+      const startDate = null;
+      const endDate = null;
+      return { ...state, docName, receiver, sender, startDate, endDate };
+    },
     setType(state, { payload }) {
       const { type } = payload;
       return { ...state, type };
@@ -73,6 +92,17 @@ export default {
     },
     closeOptLogsMod(state) {
       return { ...state, optlogsModVisible: false };
+    },
+    setReceiverList(state, { payload }) {
+      const { receiverList } = payload;
+      Object.keys(receiverList).map((index) => {
+        receiverList[index].key = index;
+        return null;
+      });
+      return { ...state, receiverList, receiversModVisible: true };
+    },
+    closeReceiversMod(state) {
+      return { ...state, receiversModVisible: false };
     },
     fieldsChange(state, payload) {
       const { fields } = payload;
@@ -139,6 +169,7 @@ export default {
         type: docType,
         startIndex: startIndex === undefined || startIndex == null ? pageInfo.startIndex : startIndex,
         pageSize: pageSize === undefined || pageSize == null ? pageInfo.pageSize : pageSize,
+        docBean: '',
       };
       console.log('getDocList params: ', params);
       let { data } = yield call(getDocList2, params);
@@ -147,23 +178,117 @@ export default {
         console.log('getDocList2 response: ', data);
         if (data && data.errCode === 0) {
           const list = [];
-          for (const doc of data.docs) {
-            console.log(doc);
-            const tmp = {
-              key: doc.docId,
-              docName: doc.docName,
-              modifyDate: doc.modifyDate,
-              docId: doc.docId,
-              payMethod: doc.payMethod,
-              url: doc.url,
-              status: doc.status,
-              createDate: doc.createDate,
-              sends: doc.sends,
-              senderName: doc.sends.length === 0 ? currentAccountName : doc.sends[0].senderName,
-              receiverName: doc.sends.length === 0 ? '' : doc.sends[0].receiverName,
-              type: doc.sends.length === 0 ? 0 : doc.sends[0].type,
-            };
-            list.push(tmp);
+          if (data.docs) {
+            for (const doc of data.docs) {
+              console.log(doc);
+              let tmpType = '';
+              if (docType === Constants.DocType.DRAFT) {
+                tmpType = '草稿';
+              } else {
+                tmpType = '签署';
+              }
+              let tmpReceiverName = '';
+              if (doc.sends.length === 0) {
+                tmpReceiverName = '';
+              } else if (doc.sends.length > 1) {
+                tmpReceiverName = '多人';
+              } else {
+                tmpReceiverName = doc.sends[0].receiverName;
+              }
+              const tmp = {
+                key: doc.docId,
+                docName: doc.docName,
+                modifyDate: doc.modifyDate,
+                docId: doc.docId,
+                payMethod: doc.payMethod,
+                url: doc.url,
+                status: doc.status,
+                createDate: doc.createDate,
+                sends: doc.sends,
+                senderName: doc.sends.length === 0 ? currentAccountName : doc.sends[0].senderName,
+                receiverName: tmpReceiverName,
+                type: tmpType,
+              };
+              list.push(tmp);
+            }
+          }
+          yield put({
+            type: 'setDataAndPage',
+            payload: {
+              data: list,
+              pageInfo: data.pageInfo,
+            },
+          });
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *seach({ payload }, { select, call, put }) {
+      const docListState = yield select(state => state.docList);
+      const globalState = yield select(state => state.global);
+      const { type, person, organize } = globalState;
+      let currentAccountName = '';
+      if (type === 1) {
+        currentAccountName = person.name;
+      } else {
+        currentAccountName = organize.name;
+      }
+      const { pageInfo, receiver, docName, sender, startDate, endDate } = docListState;
+      const docBean = {
+        receiver,
+        docName,
+        sender,
+        startDate: startDate ? startDate.format('L') : '',
+        endDate: endDate ? endDate.format('L') : '',
+        tag: '',
+      };
+      const docType = docListState.type;
+      const params = {
+        type: docType,
+        startIndex: 0,
+        pageSize: pageInfo.pageSize,
+        docBean: JSON.stringify(docBean),
+      };
+      console.log('getDocList params: ', params);
+      let { data } = yield call(getDocList2, params);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = JSON.parse(data);
+        console.log('getDocList2 response: ', data);
+        if (data && data.errCode === 0) {
+          const list = [];
+          if (data.docs) {
+            for (const doc of data.docs) {
+              let tmpType = '';
+              if (docType === Constants.DocType.DRAFT) {
+                tmpType = '草稿';
+              } else {
+                tmpType = '签署';
+              }
+              let tmpReceiverName = '';
+              if (doc.sends.length === 0) {
+                tmpReceiverName = '';
+              } else if (doc.sends.length > 1) {
+                tmpReceiverName = '多人';
+              } else {
+                tmpReceiverName = doc.sends[0].receiverName;
+              }
+              const tmp = {
+                key: doc.docId,
+                docName: doc.docName,
+                modifyDate: doc.modifyDate,
+                docId: doc.docId,
+                payMethod: doc.payMethod,
+                url: doc.url,
+                status: doc.status,
+                createDate: doc.createDate,
+                sends: doc.sends,
+                senderName: doc.sends.length === 0 ? currentAccountName : doc.sends[0].senderName,
+                receiverName: tmpReceiverName,
+                type: tmpType,
+              };
+              list.push(tmp);
+            }
           }
           yield put({
             type: 'setDataAndPage',

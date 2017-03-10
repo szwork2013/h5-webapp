@@ -145,19 +145,28 @@ function RouterConfig({ history, app }) {
     });
   };
   const getDocList = (docType) => {
-    console.log('docType: ', docType);
     app._store.dispatch({
       type: 'docList/setType',
       payload: {
         type: docType,
       },
     });
-    app._store.dispatch({
-      type: 'docList/getDocList',
-      payload: {
-        docType,
-        startIndex: 0,
-      },
+    const promise = new Promise((resolve) => {
+      app._store.dispatch({
+        type: 'global/getAccountInfo',
+        payload: {
+          resolve,
+        },
+      });
+    });
+    promise.then(() => {
+      app._store.dispatch({
+        type: 'docList/getDocList',
+        payload: {
+          docType,
+          startIndex: 0,
+        },
+      });
     });
   };
 

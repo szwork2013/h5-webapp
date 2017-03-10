@@ -8,12 +8,15 @@ class InputWithLabelInLine extends React.Component {
   }
 
   render() {
-    const { labelName, inputWidth, style, error, children, ...otherProps } = this.props;
+    const { hideInput, labelName, inputWidth, style, error, children, ...otherProps } = this.props;
     return (
       <div className="input-item-inline" style={style}>
         <div className="input-label-inline">{labelName}</div>
         <div className="input-div">
-          <input autoComplete="off" className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }} />
+          { hideInput ?
+            null :
+            <input autoComplete="off" className={error ? 'input error' : 'input'} {...otherProps} style={{ width: `${inputWidth}` }} />
+          }
           {children}
         </div>
       </div>

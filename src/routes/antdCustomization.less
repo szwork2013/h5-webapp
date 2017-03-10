@@ -1,6 +1,21 @@
 @import './common';
 
 :global {
+  .receiverList {
+    .ant-modal-title {
+      text-align: center;
+      font-size: 18px;
+      color: #323232;
+      font-weight: normal;
+    }
+    .ant-modal-header {
+      padding: 25px;
+      border-bottom: 0;
+    }
+    .ant-modal-body {
+      padding-top: 0;
+    }
+  }
   .signlog {
     .ant-modal-body {
       padding: 40px;
@@ -282,5 +297,15 @@
         padding: 0;
       }
     }
+  }
+
+  // 日期控件
+  .ant-calendar-picker:hover .ant-calendar-picker-input {
+    border-color: #dbdbdb;
+  }
+  .ant-input {
+    height: 34px;
+    border-radius: 2px;
+    width: 150px;
   }
 }

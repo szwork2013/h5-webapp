@@ -13,15 +13,8 @@ export default {
     email: '',
     type: 1,
     status: 1, // 企业实名状态：资料未完成(1) 资料已完成(2) 打款中(34) 打款完成(35) 实名成功(9)
-    seals: [
-      // {
-      //   id: 8127,
-      //   sealName: 'test',
-      //   sealWay: 1,
-      //   type: 3,
-      //   url: 'https://esignoss.oss-cn-hangzhou.aliyuncs.com/1000343/seal_a6013699-7d03-4c95-84ae-b6db6b8c47f6?OSSAccessKeyId=FBzUaPMorqiiUAfb&Signature=r1bO0FItjuCrR4tSFjbtgskKPAI%3D&Expires=1488382417',
-      // },
-    ],
+    seals: [],
+    validSeals: [],
     person: null,
     organize: null,
     hasSignPwd: 0,
@@ -45,8 +38,13 @@ export default {
       const { data, resolve } = payload;
       if (data.data != null && data.data !== undefined) {
         const { id, accountUid, mobile, email, type, status, seals, person, organize, hasSignPwd } = data.data;
+        const validSeals = _.cloneDeep(seals);
+        // 移除状态不等1的 剩下的是有效的印章
+        _.remove(validSeals, (item) => {
+          return item.status !== 1;
+        });
         resolve();
-        return { ...state, id, accountUid, mobile, email, type, status, seals, person, organize, hasSignPwd };
+        return { ...state, id, accountUid, mobile, email, type, status, seals, validSeals, person, organize, hasSignPwd };
       }
       resolve();
       return { ...state };
@@ -56,13 +54,20 @@ export default {
       if (data.data != null && data.data !== undefined) {
         const { url } = data.data;
         const newSeals = _.cloneDeep(state.seals);
+        const newValidSeals = _.cloneDeep(state.validSeals);
         for (const seal of newSeals) {
           if (seal.id === sealId) {
             seal.url = url;
             break;
           }
         }
-        return { ...state, seals: newSeals };
+        for (const seal of newValidSeals) {
+          if (seal.id === sealId) {
+            seal.url = url;
+            break;
+          }
+        }
+        return { ...state, seals: newSeals, validSeals: newValidSeals };
       }
       return { ...state };
     },
