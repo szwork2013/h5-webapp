@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import { Popconfirm } from 'antd';
 import DocListTable from '../../components/DocListTable';
 import styles from '../mixins.less';
 
@@ -30,7 +31,9 @@ function DocListDraft(props) {
         return (
           <div className={styles.operation}>
             <a onClick={() => { sign(record); }}>继续</a>
-            <a>删除</a>
+            <Popconfirm placement="top" overlayClassName="deleteDocPop" title="确认删除文档？" onConfirm={() => { dispatch({ type: 'docList/deleteDoc', payload: { docId: record.docId } }); }}>
+              <a>删除</a>
+            </Popconfirm>
           </div>
         );
       };

@@ -22,7 +22,7 @@ getStoredState({}).then((storageState) => {
     // history: browserHistory,
     history: useRouterHistory(createHashHistory)({ queryKey: false }),
     onError(e) {
-      console.log('onError msg: ', e.msg);
+      console.log(e);
       message.error(e.msg ? e.msg : '系统错误');
     },
     initialState: storageState,

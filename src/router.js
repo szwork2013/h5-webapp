@@ -98,14 +98,6 @@ function RouterConfig({ history, app }) {
       });
     });
     promise.then(() => {
-      // 根据地址栏传的docId 调接口获取文档详情
-      const params = getCurrentUrlParams();
-      app._store.dispatch({
-        type: 'signDoc/getDocInfo',
-        payload: {
-          docId: params.docId,
-        },
-      });
       const state = app._store.getState();
       const status = state.global.status;
       const type = state.global.type;
@@ -132,6 +124,14 @@ function RouterConfig({ history, app }) {
         callback();
         return;
       }
+      // 根据地址栏传的docId 调接口获取文档详情
+      const params = getCurrentUrlParams();
+      app._store.dispatch({
+        type: 'signDoc/getDocInfo',
+        payload: {
+          docId: params.docId,
+        },
+      });
       app._store.dispatch({
         type: 'global/getSealImg',
       });
