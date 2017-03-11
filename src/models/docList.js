@@ -50,9 +50,9 @@ export default {
     optlogsModVisible: false,
     receiverList: [],
     receiversModVisible: false,
-    receiver: '',
-    docName: '',
-    sender: '',
+    receiver: { value: '' },
+    docName: { value: '' },
+    sender: { value: '' },
     startDate: null,
     endDate: null,
   },
@@ -63,9 +63,9 @@ export default {
       return { ...state, [fieldName]: fieldValue };
     },
     resetSeach(state) {
-      const docName = '';
-      const receiver = '';
-      const sender = '';
+      const docName = { value: '' };
+      const receiver = { value: '' };
+      const sender = { value: '' };
       const startDate = null;
       const endDate = null;
       return { ...state, docName, receiver, sender, startDate, endDate };
@@ -236,9 +236,9 @@ export default {
       }
       const { pageInfo, receiver, docName, sender, startDate, endDate } = docListState;
       const docBean = {
-        receiver,
-        docName,
-        sender,
+        receiver: receiver.value,
+        docName: docName.value,
+        sender: sender.value,
         startDate: startDate ? startDate.format('L') : '',
         endDate: endDate ? endDate.format('L') : '',
         tag: '',
@@ -406,7 +406,7 @@ export default {
         data = JSON.parse(data);
         console.log('downloadDoc response: ', data);
         if (data && data.errCode === 0) {
-          window.open(data.downUrl, '_blank');
+          window.open(data.downUrl.replace(/&amp;/g, '&'), '_blank');
         } else {
           message.error(data.msg);
         }

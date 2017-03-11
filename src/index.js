@@ -1,10 +1,12 @@
+import _ from 'lodash';
 import dva from 'dva';
 import createLoading from 'dva-loading';
 // import { browserHistory } from 'dva/router';
 import { useRouterHistory } from 'dva/router';
 import { createHashHistory } from 'history';
 import { message } from 'antd';
-import { persistStore, autoRehydrate, getStoredState } from 'redux-persist';
+import { persistStore, autoRehydrate, getStoredState, createTransform } from 'redux-persist';
+import { asyncSessionStorage } from 'redux-persist/storages';
 
 // 1. Initialize
 // error约定格式：{
@@ -59,9 +61,22 @@ getStoredState({}).then((storageState) => {
   // 5. Start
   app.start('#root');
 
+  const transform = createTransform(
+    // 过滤不需要缓存的数据
+    (inboundState, key) => {
+      if (['global', 'signDoc', 'organRnInfo', 'organRnBank'].includes(key)) {
+        if (key === 'signDoc') {
+          return { ..._.omit(inboundState, ['needSeals', 'page']) };
+        } else {
+          return { ...inboundState };
+        }
+      }
+    },
+  );
   // 持久化设置
   persistStore(app._store, {
     keyPrefix: 'esign:',
-    whitelist: ['global', 'signDoc', 'organRnInfo', 'organRnBank'],
+    transforms: [transform],
+    storage: asyncSessionStorage,
   });
 });

@@ -27,7 +27,6 @@ function DocListWaitForMe(props) {
     // 操作列添加操作按钮
     if (col.key === 99) {
       col.render = (text, record, index) => {
-        console.log('record: ', record, '; index: ', index);
         return (
           <div className={styles.operation}>
             <a onClick={() => { sign(record); }}>签署</a>

@@ -192,17 +192,17 @@ function DocList(props) {
               <InputWithLabelInLine
                 labelName="文档名称"
                 placeholder="请输入文档名称"
-                onChange={e => changeField('docName', e.target.value)}
+                {...getFieldProps('docName')}
               />
               <InputWithLabelInLine
                 labelName="发件人"
                 placeholder="手机号/邮箱"
-                onChange={e => changeField('sender', e.target.value)}
+                {...getFieldProps('sender')}
               />
               <InputWithLabelInLine
                 labelName="收件人"
                 placeholder="手机号/邮箱"
-                onChange={e => changeField('receiver', e.target.value)}
+                {...getFieldProps('receiver')}
               />
               <InputWithLabelInLine
                 hideInput

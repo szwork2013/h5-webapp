@@ -199,6 +199,22 @@ export default {
             payMethod: data.data.doc.payMethod,
           },
         });
+        if (!data.data.doc.sends || data.data.doc.sends.length <= 0) {
+          // 需要设置签署人
+          yield put({
+            type: 'setNeedAddReceiver',
+            payload: {
+              needAddReceiver: true,
+            },
+          });
+        } else {
+          yield put({
+            type: 'setNeedAddReceiver',
+            payload: {
+              needAddReceiver: false,
+            },
+          });
+        }
       }
     },
     *validateSignPwd({ payload }, { select, call, put }) {
