@@ -2,6 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  position: relative;
   width: 180px;
   height: 180px;
   font-size: 16px;
@@ -29,6 +31,19 @@
       top: 0;
       left: 0;
       background-image: url(../assets/default.png);
+    }
+  }
+  .opt_btns {
+    width: 160px;
+    position: absolute;
+    bottom: -15px;
+    font-size: 14px;
+    .opt {
+      color: #e74031;
+      text-decoration: underline;
+      &:not(:first-child) {
+        margin-left: 10px;
+      }
     }
   }
 }

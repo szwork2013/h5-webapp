@@ -24,15 +24,15 @@ function SealManage(props) {
             <div style={{ marginTop: '10px' }}>创建模板印章</div>
           </div>
         </SealItem>
-        <SealItem>
+        {/* <SealItem>
           <div>
             <img style={{ width: '50px' }} role="presentation" src={add} />
             <div style={{ marginTop: '10px' }}>上传图片印章</div>
           </div>
-        </SealItem>
+        </SealItem> */}
         {Object.values(sealList).map((seal) => {
           return (
-            <SealItem key={seal.id} isDefault={seal.isDefault}>
+            <SealItem showOpts key={seal.id} sealId={seal.id} dispatch={dispatch} isDefault={seal.isDefault}>
               <img role="presentation" src={seal.url} />
             </SealItem>
           );

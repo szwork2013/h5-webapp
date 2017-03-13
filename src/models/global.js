@@ -34,6 +34,14 @@ export default {
     setStatus(state, { payload: status }) {
       return { ...state, ...status };
     },
+    removeSeal(state, { payload }) {
+      const { sealId } = payload;
+      const newSeals = _.cloneDeep(state.seals);
+      _.remove(newSeals, (seal) => {
+        return seal.id === sealId;
+      });
+      return { ...state, seals: newSeals };
+    },
     setAccountInfo(state, { payload }) {
       const { data, resolve } = payload;
       if (data.data != null && data.data !== undefined) {

@@ -1,0 +1,21 @@
+.delete_icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 9px;
+  position: absolute;
+  cursor: pointer;
+  color: #fff;
+  &:hover {
+    background-color: #e74031;
+    &::after {
+      background-color: #e74031;
+    }
+  }
+  &::after {
+    content: "\2715";
+    width: 18px;
+    border-radius: 9px;
+    display: inline-block;
+    background-color: #e74031;
+  }
+}

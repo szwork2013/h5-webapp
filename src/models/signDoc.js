@@ -14,12 +14,13 @@ export default {
     docId: '',
     docType: 4, // 1草稿箱 4待我签
     docName: '',
-    pageCount: '', // 文档页数
+    pageNum: 1, // 文档页数
     pageWidth: 0,
     pageHeight: 0,
     payMethod: 0, // 支付类型，1分开AA 0一个A
     pageType: '', // 区分待我签还是待他人签 owner:发起 receive:待我
     page: {}, // 当前显示页属性
+    curPage: { value: 1 },
     modelVisible: false,
     needSeals: {},
     needAddReceiver: false,
@@ -50,6 +51,26 @@ export default {
     setPayMethod(state, { payload }) {
       const { payMethod } = payload;
       return { ...state, payMethod };
+    },
+    setCurPage(state, { payload }) {
+      const { curPage } = payload;
+      return { ...state, curPage };
+    },
+    pageDown(state) {
+      const newCurPage = _.cloneDeep(state.curPage);
+      const newPage = newCurPage.value + 1;
+      if (newPage > state.pageNum) {
+        return { ...state };
+      }
+      return { ...state, curPage: { value: newPage } };
+    },
+    pageUp(state) {
+      const newCurPage = _.cloneDeep(state.curPage);
+      const newPage = newCurPage.value - 1;
+      if (newPage < 1) {
+        return { ...state };
+      }
+      return { ...state, curPage: { value: newPage } };
     },
     setNeedAddReceiver(state, { payload }) {
       const { needAddReceiver } = payload;
@@ -82,8 +103,8 @@ export default {
       return { ...state, page };
     },
     setDocParam(state, { payload }) {
-      const { pageWidth, pageHeight, pageNum, docName } = payload;
-      return { ...state, pageWidth, pageHeight, pageNum, docName };
+      const { pageWidth, pageHeight, pageNum, docName, curPage } = payload;
+      return { ...state, pageWidth, pageHeight, pageNum, docName, curPage: { value: curPage } };
     },
     changeVisible(state, { payload }) {
       const { modelVisible } = payload;
@@ -92,8 +113,19 @@ export default {
     addSeal(state, { payload }) {
       const { seal } = payload; // seal: {c: { ... }}
       let newSeals = _.cloneDeep(state.needSeals);
+      seal[Object.keys(seal)[0]].posPage = state.curPage.value;
+      seal[Object.keys(seal)[0]].sealDocId = state.docId;
       newSeals = _.merge(newSeals, seal);
       return { ...state, needSeals: newSeals };
+    },
+    deleteSeal(state, { payload }) {
+      const { key } = payload;
+      let newSeals = _.cloneDeep(state.needSeals);
+      newSeals = _.omit(newSeals, key);
+      return { ...state, needSeals: newSeals };
+    },
+    clearSeal(state) {
+      return { ...state, needSeals: {}, curPage: { value: 1 } };
     },
     fieldsChange(state, payload) {
       const { fields } = payload;
@@ -118,6 +150,7 @@ export default {
       });
     },
     *getDocInfo({ payload }, { select, call, put }) {
+      const signDocState = yield select(state => state.signDoc);
       // 地址栏传的docId （如果是这样传 就查询文档类型 支付类型，其他情况应该是直接从列表页过来，docId docType payMethod应该都有了）
       let { docId } = payload;
       if (docId) {
@@ -134,7 +167,6 @@ export default {
           },
         });
       } else {
-        const signDocState = yield select(state => state.signDoc);
         docId = signDocState.docId;
       }
       if (!docId) {
@@ -147,7 +179,7 @@ export default {
         return;
       }
       const param = {
-        pageNum: '1-1',
+        pageNum: `${signDocState.curPage.value}-${signDocState.curPage.value}`,
         docId,
       };
       let { data } = yield call(getDocPic, param);
@@ -161,7 +193,7 @@ export default {
           const url = data.keys[0].imageKey.replace(/&amp;/g, '&');
           yield put({
             type: 'setDocParam',
-            payload: { pageWidth, pageHeight, pageNum, docName },
+            payload: { pageWidth, pageHeight, pageNum, docName, curPage: data.keys[0].page },
           });
           const screenWidth = window.innerWidth;
           const page = {
@@ -254,10 +286,10 @@ export default {
       const signArray = [];
       // signInfo:[{"sealId":"8129","posX":200.6311724137931,"posY":521.6276730713818,"posPage":"1","signType":"1"}]
       Object.keys(needSeals).map((key) => {
-        const { left, top, sealId } = needSeals[key];
+        const { left, top, sealId, posPage } = needSeals[key];
         signArray.push({
           sealId,
-          posPage: 1,
+          posPage,
           signType: 1,
           posX: (left * pageWidth) / (window.innerWidth * 0.8 * 0.95),
           posY: (top * pageWidth) / (window.innerWidth * 0.8 * 0.95),

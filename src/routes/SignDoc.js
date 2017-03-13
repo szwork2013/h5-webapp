@@ -15,9 +15,10 @@ import ReceiverItems from '../components/ReceiverItems';
 import { generateConfigID } from '../utils/signTools';
 import PathConstants from '../PathConstants';
 import styles from './mixins.less';
+import add from '../assets/ico-add.png';
 
 function SignDoc(props) {
-  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, form, needAddReceiver, receivers, payMethod } = props;
+  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, form, needAddReceiver, receivers, payMethod, pageNum, curPage, docId } = props;
   const { getFieldProps, getFieldError } = form;
   const cancel = () => {
     dispatch({
@@ -96,6 +97,51 @@ function SignDoc(props) {
       type: 'signDoc/next',
     });
   };
+  // const changePage = (e) => {
+  //   dispatch({
+  //     type: 'signDoc/setCurPage',
+  //     payload: {
+  //       curPage: e.target.value,
+  //     },
+  //   });
+  // };
+  const getDocPage = () => {
+    dispatch({
+      type: 'signDoc/getDocInfo',
+      payload: {
+        docId: '',
+      },
+    });
+  };
+  const validatorPage = (rule, value, callback) => {
+    if (value && /^[0-9]*$/.test(value) && value >= 1 && value <= pageNum) {
+      callback();
+    } else {
+      callback(new Error('格式不正确'));
+    }
+  };
+  const up = () => {
+    dispatch({
+      type: 'signDoc/pageUp',
+    });
+    dispatch({
+      type: 'signDoc/getDocInfo',
+      payload: {
+        docId: '',
+      },
+    });
+  };
+  const down = () => {
+    dispatch({
+      type: 'signDoc/pageDown',
+    });
+    dispatch({
+      type: 'signDoc/getDocInfo',
+      payload: {
+        docId: '',
+      },
+    });
+  };
   return (
     <MainLayout
       headerName="签署文档"
@@ -106,10 +152,12 @@ function SignDoc(props) {
         <div id="docPanel" className={styles.doc}>
           <SignDocPage
             page={page}
+            curPage={curPage.value}
+            docId={docId}
             seals={needSeals}
             dispatch={dispatch}
           />
-          <div className={styles.page}>1</div>
+          {/* <div className={styles.page}>1</div> */}
         </div>
         { needAddReceiver ?
           <div className={styles.add_receiver_panel}>
@@ -146,6 +194,12 @@ function SignDoc(props) {
             </div>
           </div> :
           <div className={styles.seal_list}>
+            <SealItem style={{ margin: 'auto' }} onClick={() => dispatch(routerRedux.push(PathConstants.SealManage))}>
+              <div>
+                <img style={{ width: '50px' }} role="presentation" src={add} />
+                <div style={{ marginTop: '10px' }}>创建新印章</div>
+              </div>
+            </SealItem>
             {Object.values(sealList).map((seal) => {
               return (
                 <SealItem key={seal.id} isDefault={seal.isDefault} style={{ margin: 'auto' }}>
@@ -164,6 +218,28 @@ function SignDoc(props) {
         }
       </div>
       <div className={styles.sign_action}>
+        <div className={styles.next_page}>
+          {/* onKeyDown={e => getDocPage(e)} */}
+          {curPage.value === 1 ?
+            <span className={styles.page_up} /> :
+            <span className={styles.page_up} onClick={() => { up(); }} />
+          }
+          {curPage.value === pageNum ?
+            <span className={styles.page_down} /> :
+            <span className={styles.page_down} onClick={() => { down(); }} />
+          }
+          <span>页码：</span>
+          <input
+            {...getFieldProps('curPage', {
+              rules: [
+                { required: true, message: '请输入' },
+                { validator: validatorPage },
+              ],
+            })}
+            className={styles.page_input} onBlur={e => getDocPage(e)}
+          />
+          <span><span className={styles.page_split}> / </span><span className={styles.page_total}>{pageNum}</span></span>
+        </div>
         { needAddReceiver ?
           <button className="btn primary" onClick={next}>下一步</button> :
           <button className="btn primary" onClick={showModel}>确认签署</button>

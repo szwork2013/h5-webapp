@@ -56,7 +56,7 @@ class SignDocPage extends Component {
 
   render() {
     const { canDrop, isOver, connectDropTarget, page, monitor, dispatch } = this.props;
-    const { seals } = this.props;
+    const { seals, curPage, docId } = this.props;
 
     console.log('isOver: ', isOver);
     if (isOver) {
@@ -67,17 +67,20 @@ class SignDocPage extends Component {
     const sealComponents = (
       <div>
         {Object.keys(seals).map((key) => {
-          const { left, top, name, sealId, sealType, seal, sealWay } = seals[key];
+          const { left, top, name, sealId, sealType, seal, sealWay, posPage, sealDocId } = seals[key];
+          console.log('posPage: ', posPage, '; curPage: ', curPage);
           return (
-            <SignDocSeal
-              added
-              closable
-              dispatch={dispatch}
-              hideSourceOnDrag
-              sealId={sealId} sealType={sealType} sealWay={sealWay}
-              key={key} id={key} name={name}
-              seal={seal} top={top} left={left}
-            />
+            posPage === curPage && sealDocId === docId ?
+              <SignDocSeal
+                added
+                closable
+                dispatch={dispatch}
+                hideSourceOnDrag
+                sealId={sealId} sealType={sealType} sealWay={sealWay}
+                key={key} id={key} name={name}
+                seal={seal} top={top} left={left}
+              /> :
+              null
           );
         })}
       </div>

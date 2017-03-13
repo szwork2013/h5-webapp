@@ -20,6 +20,7 @@ const PathConstants = {
   SealCreateHand: '/sealCreateHand',
   SealHandPreview: '/sealHandPreview',
   SignDoc: '/signDoc',
+  DocView: '/docView',
 };
 
 export default PathConstants;

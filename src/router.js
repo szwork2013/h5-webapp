@@ -7,6 +7,7 @@ import DocListWaitForOthers from './routes/DocList/DocListWaitForOthers';
 import DocListFinished from './routes/DocList/DocListFinished';
 import DocListDraft from './routes/DocList/DocListDraft';
 import DocListClosed from './routes/DocList/DocListClosed';
+import DocView from './routes/DocView';
 import OrganRnInfo from './routes/OrganRnInfo';
 import OrganRnBank from './routes/OrganRnBank';
 import OrganRnFinish from './routes/OrganRnFinish';
@@ -98,6 +99,14 @@ function RouterConfig({ history, app }) {
       });
     });
     promise.then(() => {
+      // 根据地址栏传的docId 调接口获取文档详情
+      const params = getCurrentUrlParams();
+      app._store.dispatch({
+        type: 'signDoc/getDocInfo',
+        payload: {
+          docId: params.docId,
+        },
+      });
       const state = app._store.getState();
       const status = state.global.status;
       const type = state.global.type;
@@ -124,14 +133,6 @@ function RouterConfig({ history, app }) {
         callback();
         return;
       }
-      // 根据地址栏传的docId 调接口获取文档详情
-      const params = getCurrentUrlParams();
-      app._store.dispatch({
-        type: 'signDoc/getDocInfo',
-        payload: {
-          docId: params.docId,
-        },
-      });
       app._store.dispatch({
         type: 'global/getSealImg',
       });
@@ -218,6 +219,7 @@ function RouterConfig({ history, app }) {
 
       {/* 签署文档 */}
       <Route path={PathConstants.SignDoc} component={SignDoc} onEnter={validateStatus} />
+      <Route path={PathConstants.DocView} component={DocView} />
 
       {/* 列表页 */}
       <Route path={PathConstants.DocList} component={DocList} onEnter={getDocCount}>

@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { compressSeal, addSeal } from '../services/services';
+import { compressSeal, addSeal, deleteSeal } from '../services/services';
 import PathConstants from '../PathConstants';
 
 export default {
@@ -117,6 +117,35 @@ export default {
               message.error(data.msg);
             }
           }
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *deleteSeal({ payload }, { select, call, put }) {
+      const globalState = yield select(state => state.global);
+      const { validSeals } = globalState;
+      if (validSeals.length <= 1) {
+        message.info('当前只剩下一个有效印章，无法删除');
+        return;
+      }
+      const { sealId } = payload;
+      const param = {
+        sealId,
+      };
+      let { data } = yield call(deleteSeal, param);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('compressSeal response: ', data);
+        if (data && data.errCode === 0) {
+          yield put({
+            type: 'global/removeSeal',
+            payload: {
+              sealId,
+            },
+          });
+          message.success('删除成功');
         } else {
           message.error(data.msg);
         }

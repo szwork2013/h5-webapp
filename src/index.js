@@ -53,6 +53,7 @@ getStoredState({}).then((storageState) => {
   app.model(require('./models/signPwdResetBySQ'));
 
   app.model(require('./models/docList'));
+  app.model(require('./models/docView'));
 
 
   // 4. Router

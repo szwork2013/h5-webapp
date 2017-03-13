@@ -131,10 +131,52 @@
   height: 40px;
   background-color: #323232;
   position: fixed;
+  display: flex;
+  align-items: center;
   bottom: 0;
   button {
     position: absolute;
     left: 61.8%;
+  }
+  .next_page {
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    left: 32%;
+    display: flex;
+    align-items: center;
+    .page_input {
+      width: 25px;
+      color: #323232;
+      padding-left: 3px;
+    }
+    .page_split {
+      position: absolute;
+      margin-left: 4px;
+      margin-right: 4px;
+      top: 1px;
+    }
+    .page_total {
+      position: absolute;
+      margin-left: 12px;
+      top: 2px;
+    }
+    .page_up {
+      width: 16px;
+      height: 16px;
+      background-image: url(../assets/pageUp.png);
+      background-repeat: no-repeat;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .page_down {
+      width: 16px;
+      height: 16px;
+      background-image: url(../assets/pageDown.png);
+      background-repeat: no-repeat;
+      margin-right: 20px;
+      cursor: pointer;
+    }
   }
 }
 
