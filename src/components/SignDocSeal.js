@@ -82,45 +82,37 @@ class SignDocSeal extends Component {
 
   // 下面两个函数从网上copy的，目的：父元素进入子元素时，onMouseOut不执行，子元素进入父元素时，onMouseOver不执行
   // 不然父元素进入子元素时会触发onMouseOut
-  onMouseOver = (e, thisComponent) => {
-    // e = window.event || e;
-    // const s = e.fromElement || e.relatedTarget;
-    // if (document.all) {
-    //   if (!thisComponent.contains(s)) {
-    //     this.setState({ showDelete: true });
-    //   }
-    // } else {
-    //   const reg = thisComponent.compareDocumentPosition(s);
-    //   if (!(reg === 20 || reg === 0)) {
-    //     this.setState({ showDelete: true });
-    //   }
-    // }
-    this.setState({ showDelete: true });
+  onMouseOver = (e) => {
+    e = window.event || e;
+    const s = e.relatedTarget;
+    if (document.all) {
+      if (!e.target.contains(s)) {
+        this.setState({ showDelete: true });
+      }
+    } else {
+      const reg = e.target.compareDocumentPosition(s);
+      if (!(reg === 20 || reg === 0)) {
+        this.setState({ showDelete: true });
+      }
+    }
   };
 
-  onMouseOut = (e, thisComponent) => {
-    // e = window.event || e;
-    // const s = e.toElement || e.relatedTarget;
-    // if (document.all) {
-    //   if (!thisComponent.contains(s)) {
-    //     this.setState({ showDelete: false });
-    //   }
-    // } else {
-    //   const reg = thisComponent.compareDocumentPosition(s);
-    //   if (!(reg === 20 || reg === 0)) {
-    //     this.setState({ showDelete: false });
-    //   }
-    // }
-    const promise = new Promise((resolve) => {
-      setTimeout(resolve, 1500);
-    });
-    promise.then(() => {
-      this.setState({ showDelete: false });
-    });
+  onMouseOut = (e) => {
+    e = window.event || e;
+    const s = e.relatedTarget;
+    if (document.all) {
+      if (!e.target.contains(s)) {
+        this.setState({ showDelete: false });
+      }
+    } else {
+      const reg = e.target.compareDocumentPosition(s);
+      if (!(reg === 20 || reg === 0)) {
+        this.setState({ showDelete: false });
+      }
+    }
   };
 
   deleteSeal = (id, dispatch) => {
-    console.log('show delete icon: ', id);
     dispatch({
       type: 'signDoc/deleteSeal',
       payload: {
@@ -139,11 +131,17 @@ class SignDocSeal extends Component {
     if (isDefault) {
       style = {
         width: '140px',
+        height: '140px',
+        display: 'flex',
+        justifyContent: 'flex-end',
       };
     } else {
       style = {
         position: 'absolute',
         width: '140px',
+        height: '140px',
+        display: 'flex',
+        justifyContent: 'flex-end',
       };
     }
 
@@ -165,14 +163,20 @@ class SignDocSeal extends Component {
           //     null
           //   }
           // </div>
-          <img
+          <div
             ref={(c) => { this.sealRef = c; }} draggable={false} key={key} data-sealId={sealId} data-sealType={sealType} data-sealWay={sealWay}
-            id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }}
-          />
+            id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top, backgroundImage: `url(${seal})`, backgroundRepeat: 'round' }}
+            onMouseOver={e => this.onMouseOver(e)} onMouseOut={e => this.onMouseOut(e)}
+          >
+            { this.state.showDelete ?
+              <span id={`deleteIcon_${id}`} className={styles.delete_icon} style={{ marginRight: '-8px', marginTop: '-8px' }} onClick={() => this.deleteSeal(id, dispatch)} /> :
+              null
+            }
+          </div>
         :
-          <img
+          <div
             ref={(c) => { this.sealRef = c; }} draggable={false} key={key} data-sealId={sealId} data-sealType={sealType} data-sealWay={sealWay}
-            id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top }}
+            id={id} name={name} role="presentation" src={seal} style={{ ...style, left, top, backgroundImage: `url(${seal})`, backgroundRepeat: 'round' }}
           />
       )
     );

@@ -377,7 +377,9 @@ export default {
         }
       }
     },
-    *closeDoc({ payload }, { call, put }) {
+    *closeDoc({ payload }, { select, call, put }) {
+      const docListState = yield select(state => state.docList);
+      const { type } = docListState;
       const { docId } = payload;
       const params = {
         docId,
@@ -389,7 +391,16 @@ export default {
         data = JSON.parse(data);
         console.log('updateDoc response: ', data);
         if (data && data.errCode === 0) {
-          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListClosed}`));
+          yield put({
+            type: 'docList/getDocCount',
+          });
+          yield put({
+            type: 'docList/getDocList',
+            payload: {
+              docType: type,
+              startIndex: 0,
+            },
+          });
         } else {
           message.error(data.msg);
         }
@@ -435,7 +446,9 @@ export default {
         }
       }
     },
-    *deleteDoc({ payload }, { call, put }) {
+    *deleteDoc({ payload }, { select, call, put }) {
+      const docListState = yield select(state => state.docList);
+      const { type } = docListState;
       const { docId } = payload;
       const params = {
         docId,
@@ -446,7 +459,34 @@ export default {
         data = JSON.parse(data);
         console.log('deleteDoc response: ', data);
         if (data && data.errCode === 0) {
-          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListFinished}`));
+          yield put({
+            type: 'docList/getDocCount',
+          });
+          yield put({
+            type: 'docList/getDocList',
+            payload: {
+              docType: type,
+              startIndex: 0,
+            },
+          });
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *reminder({ payload }, { call }) {
+      const { docId } = payload;
+      const params = {
+        docId,
+        optType: 3,
+      };
+      let { data } = yield call(updateDoc, params);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('updateDoc response: ', data);
+        if (data && data.errCode === 0) {
+          message.success('已通过短信或邮件的方式通知对方及时完成签署。');
         } else {
           message.error(data.msg);
         }

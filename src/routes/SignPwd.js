@@ -34,6 +34,9 @@ function SignPwd(props) {
           {...getFieldProps('pwd', {
             rules: [
               { required: true, message: '请输入签署密码' },
+              { min: 6, message: '需6至15位' },
+              { max: 15, message: '需6至15位' },
+              { pattern: /[a-zA-Z]+(?=[0-9]+)|[0-9]+(?=[a-zA-Z]+)/g, message: '需数字、字母或符号组合' },
             ],
           })}
           error={!!getFieldError('pwd')}
@@ -56,6 +59,8 @@ function SignPwd(props) {
           {...getFieldProps('answer1', {
             rules: [
               { required: true, message: '请输入答案' },
+              { min: 2, message: '支持2-10个字符' },
+              { max: 10, message: '支持2-10个字符' },
             ],
           })}
           error={!!getFieldError('answer1')}
@@ -78,6 +83,8 @@ function SignPwd(props) {
           {...getFieldProps('answer2', {
             rules: [
               { required: true, message: '请输入答案' },
+              { min: 2, message: '支持2-10个字符' },
+              { max: 10, message: '支持2-10个字符' },
             ],
           })}
           error={!!getFieldError('answer2')}

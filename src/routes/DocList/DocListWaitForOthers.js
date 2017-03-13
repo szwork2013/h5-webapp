@@ -22,7 +22,7 @@ function DocListWaitForOthers(props) {
       col.render = (text, record, index) => {
         return (
           <div className={styles.operation}>
-            <a>催签</a>
+            <a onClick={() => { dispatch({ type: 'docList/reminder', payload: { docId: record.docId } }); }}>催签</a>
             <Popconfirm placement="top" overlayClassName="closeDocPop" title="您确认结束此文件的签署吗？一旦关闭则无法恢复。" onConfirm={() => { dispatch({ type: 'docList/closeDoc', payload: { docId: record.docId } }); }}>
               <a>关闭</a>
             </Popconfirm>

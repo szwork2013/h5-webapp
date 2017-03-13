@@ -42,7 +42,7 @@ export default {
   reducers: {
     setDocId(state, { payload }) {
       const { docId } = payload;
-      return { ...state, docId };
+      return { ...state, docId, curPage: { value: 1 } };
     },
     setDocType(state, { payload }) {
       const { docType } = payload;
@@ -286,14 +286,16 @@ export default {
       const signArray = [];
       // signInfo:[{"sealId":"8129","posX":200.6311724137931,"posY":521.6276730713818,"posPage":"1","signType":"1"}]
       Object.keys(needSeals).map((key) => {
-        const { left, top, sealId, posPage } = needSeals[key];
-        signArray.push({
-          sealId,
-          posPage,
-          signType: 1,
-          posX: (left * pageWidth) / (window.innerWidth * 0.8 * 0.95),
-          posY: (top * pageWidth) / (window.innerWidth * 0.8 * 0.95),
-        });
+        const { left, top, sealId, posPage, sealDocId } = needSeals[key];
+        if (sealDocId === docId) {
+          signArray.push({
+            sealId,
+            posPage,
+            signType: 1,
+            posX: (left * pageWidth) / (window.innerWidth * 0.8 * 0.95),
+            posY: (top * pageWidth) / (window.innerWidth * 0.8 * 0.95),
+          });
+        }
         return null;
       });
       const signInfo = JSON.stringify(signArray);
