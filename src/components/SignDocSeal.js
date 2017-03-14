@@ -74,6 +74,13 @@ class SignDocSeal extends Component {
   }
 
   componentDidMount = () => {
+    // const div = document.createElement('div');
+    // div.style.width = '140px';
+    // div.style.height = '140px';
+    // div.style.backgroundImage = this.props.seal;
+    // if (this.props.seal) {
+    //   div.onload = () => this.props.connectDragPreview(div);
+    // }
     // 渲染完成 获取当前dom对象，然后绑定事件
     // const thisComponent = this.sealRef;
     // thisComponent.onmouseover = e => this.onMouseOver(e, thisComponent);
@@ -122,11 +129,15 @@ class SignDocSeal extends Component {
   };
 
   render() {
-    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, connectDragPreview, key, id, name, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch, closable } = this.props;
+    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, key, id, name, connectDragPreview, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch, closable } = this.props;
 
     const img = new Image();
+    // img.width = 140;
+    // img.height = 140;
     img.src = seal;
-    img.onload = () => connectDragPreview(img);
+    if (seal) {
+      img.onload = () => connectDragPreview(img);
+    }
     let style;
     if (isDefault) {
       style = {
