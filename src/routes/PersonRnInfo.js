@@ -92,11 +92,11 @@ function PersonRnInfo(props) {
               errorMsg={!getFieldError('endIdOssKey') ? '' : getFieldError('endIdOssKey').join('、')}
             />
           </div>
-          <div className={styles.upload_divide}><span>或</span></div>
+          {/* <div className={styles.upload_divide}><span>或</span></div>
           <div className={styles.upload_phone}>
             <div className={styles.upload_phone_img} />
             <div>手机扫一扫拍照上传</div>
-          </div>
+          </div> */}
         </div>
         <button className="btn primary" style={{ marginTop: '40px', marginBottom: '60px' }} onClick={next}>下一步</button>
       </div>

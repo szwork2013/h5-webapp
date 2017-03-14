@@ -219,7 +219,7 @@ function RouterConfig({ history, app }) {
 
       {/* 签署文档 */}
       <Route path={PathConstants.SignDoc} component={SignDoc} onEnter={validateStatus} />
-      <Route path={PathConstants.DocView} component={DocView} />
+      <Route path={PathConstants.DocView} component={DocView} onEnter={validateStatus} />
 
       {/* 列表页 */}
       <Route path={PathConstants.DocList} component={DocList} onEnter={getDocCount}>

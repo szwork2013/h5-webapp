@@ -215,6 +215,30 @@ export async function deleteSeal(values) {
   });
 }
 
+export async function saveDefaultSeal(values) {
+  const postData = `sealId=${values.sealId}&edit=${new Date().getTime()}`;
+  return request('../../user/seal!saveDefaultSeal.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function getSeals() {
+  const postData = `edit=${new Date().getTime()}`;
+  return request('../../user/seal!getSeals.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
 export async function getDocCount() {
   const postData = `edit=${new Date().getTime()}`;
   return request('../../user/doc!getDocCount.xml', {

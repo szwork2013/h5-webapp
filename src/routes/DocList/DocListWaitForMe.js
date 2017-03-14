@@ -14,7 +14,7 @@ function DocListWaitForMe(props) {
     });
   };
   const docInfo = (record) => {
-    dispatch({ type: 'docList/showDocDetail', payload: { docId: record.docId } });
+    dispatch({ type: 'docList/showDocDetail', payload: { record } });
   };
   const sign = (record) => {
     dispatch({

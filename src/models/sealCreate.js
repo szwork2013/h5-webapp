@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { compressSeal, addSeal, deleteSeal } from '../services/services';
+import { compressSeal, addSeal, deleteSeal, saveDefaultSeal } from '../services/services';
 import PathConstants from '../PathConstants';
 
 export default {
@@ -137,15 +137,31 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('compressSeal response: ', data);
+        console.log('deleteSeal response: ', data);
         if (data && data.errCode === 0) {
           yield put({
-            type: 'global/removeSeal',
-            payload: {
-              sealId,
-            },
+            type: 'global/getSeals',
           });
           message.success('删除成功');
+        } else {
+          message.error(data.msg);
+        }
+      }
+    },
+    *setDefaultSeal({ payload }, { call, put }) {
+      const { sealId } = payload;
+      const param = {
+        sealId,
+      };
+      let { data } = yield call(saveDefaultSeal, param);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('saveDefaultSeal response: ', data);
+        if (data && data.errCode === 0) {
+          yield put({
+            type: 'global/getSeals',
+          });
         } else {
           message.error(data.msg);
         }

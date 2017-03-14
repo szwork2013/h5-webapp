@@ -330,7 +330,7 @@ export default {
               },
             });
             // 跳到列表页
-            yield put(routerRedux.push(PathConstants.DocList));
+            yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListWaitForMe}`));
           }
         } else {
           message.error(data.msg);
@@ -357,7 +357,7 @@ export default {
             },
           });
           // 跳到列表页
-          yield put(routerRedux.push(PathConstants.DocList));
+          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListDraft}`));
         } else {
           message.error(data.msg);
         }

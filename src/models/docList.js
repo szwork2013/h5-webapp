@@ -423,28 +423,51 @@ export default {
         }
       }
     },
-    *showDocDetail({ payload }, { call, put }) {
-      const { docId } = payload;
-      const params = {
-        docId,
-      };
-      let { data } = yield call(downloadDoc, params);
-      if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
-        data = JSON.parse(data);
-        console.log('downloadDoc response: ', data);
-        if (data && data.errCode === 0) {
-          yield put({
-            type: 'docView/setDocDetailSrc',
-            payload: {
-              docDetailSrc: data.downUrl.replace(/&amp;/g, '&'),
-            },
-          });
-          yield put(routerRedux.push(PathConstants.DocView));
-        } else {
-          message.error(data.msg);
-        }
-      }
+    *showDocDetail({ payload }, { select, call, put }) {
+      const docListState = yield select(state => state.docList);
+      const { type } = docListState;
+      const { record } = payload;
+      yield put({
+        type: 'signDoc/setDocId',
+        payload: {
+          docId: record.docId,
+        },
+      });
+      yield put({
+        type: 'signDoc/setDocType',
+        payload: {
+          docType: type,
+        },
+      });
+      yield put({
+        type: 'signDoc/setPayMethod',
+        payload: {
+          payMethod: record.payMethod,
+        },
+      });
+      debugger;
+      yield put(routerRedux.push(PathConstants.DocView));
+      // const { docId } = payload;
+      // const params = {
+      //   docId,
+      // };
+      // let { data } = yield call(downloadDoc, params);
+      // if (Object.prototype.toString.call(data) === '[object String]') {
+      //   data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+      //   data = JSON.parse(data);
+      //   console.log('downloadDoc response: ', data);
+      //   if (data && data.errCode === 0) {
+      //     yield put({
+      //       type: 'docView/setDocDetailSrc',
+      //       payload: {
+      //         docDetailSrc: data.downUrl.replace(/&amp;/g, '&'),
+      //       },
+      //     });
+      //     yield put(routerRedux.push(PathConstants.DocView));
+      //   } else {
+      //     message.error(data.msg);
+      //   }
+      // }
     },
     *deleteDoc({ payload }, { select, call, put }) {
       const docListState = yield select(state => state.docList);

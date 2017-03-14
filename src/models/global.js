@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import { getAccountInfo, getSealImgUrl } from '../services/services';
+import { message } from 'antd';
+import { getAccountInfo, getSealImgUrl, getSeals } from '../services/services';
 import PathConstants from '../PathConstants';
 
 export default {
@@ -41,6 +42,10 @@ export default {
         return seal.id === sealId;
       });
       return { ...state, seals: newSeals };
+    },
+    initSeal(state, { payload }) {
+      const { seals, validSeals } = payload;
+      return { ...state, seals, validSeals };
     },
     setAccountInfo(state, { payload }) {
       const { data, resolve } = payload;
@@ -105,19 +110,51 @@ export default {
       console.log('seals: ', seals);
       for (const seal of seals) {
         console.log('seal: ', seal);
-        const param = {
-          ossKey: seal.imgUrl,
-        };
-        const { data } = yield call(getSealImgUrl, param);
-        console.log('getSealImg response: ', data);
-        if (data && data.success) {
+        if (!seal.url) {
+          const param = {
+            ossKey: seal.imgUrl,
+          };
+          const { data } = yield call(getSealImgUrl, param);
+          console.log('getSealImg response: ', data);
+          if (data && data.success) {
+            yield put({
+              type: 'updateSealImgUrl',
+              payload: {
+                sealId: seal.id,
+                data,
+              },
+            });
+          }
+        }
+      }
+    },
+    *getSeals({ payload }, { call, put }) {
+      let { data } = yield call(getSeals);
+      if (Object.prototype.toString.call(data) === '[object String]') {
+        data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = JSON.parse(data);
+        console.log('getSeals response: ', data);
+        if (data && data.errCode === 0) {
+          const seals = data.msg;
+          Object.values(seals).map((seal) => {
+            const { imgUrl } = seal;
+            seal.url = imgUrl.replace(/&amp;/g, '&');
+            return null;
+          });
+          const validSeals = _.cloneDeep(seals);
+          // 移除状态不等1的 剩下的是有效的印章
+          _.remove(validSeals, (item) => {
+            return item.status !== 1;
+          });
           yield put({
-            type: 'updateSealImgUrl',
+            type: 'initSeal',
             payload: {
-              sealId: seal.id,
-              data,
+              seals,
+              validSeals,
             },
           });
+        } else {
+          message.error(data.msg);
         }
       }
     },

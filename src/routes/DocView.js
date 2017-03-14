@@ -1,130 +1,132 @@
 import React from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
+import { createForm } from 'rc-form';
+import MainLayout from '../components/Layout/MainLayout';
+import SignDocPage from '../components/SignDocPage';
 import styles from './mixins.less';
 
-const { PDFJS } = require('pdfjs-dist');
-PDFJS.workerSrc = require('pdfjs-dist/build/pdf.worker');
-
-class PDF extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pdf: null,
-      scale: 1.2,
-    };
-  }
-  getChildContext() {
-    return {
-      pdf: this.state.pdf,
-      scale: this.state.scale,
-    };
-  }
-  componentDidMount() {
-    PDFJS.getDocument(this.props.src).then((pdf) => {
-      console.log(pdf);
-      this.setState({ pdf });
-    });
-  }
-  render() {
-    return (<div className="pdf-context">{this.props.children}</div>);
-  }
-}
-PDF.propTypes = {
-  src: React.PropTypes.string.isRequired,
-};
-
-PDF.childContextTypes = {
-  pdf: React.PropTypes.object,
-  scale: React.PropTypes.number,
-};
-
-class Viewer extends React.Component {
-  render() {
-    const { pdf } = this.context;
-    const numPages = pdf ? pdf.pdfInfo.numPages : 0;
-    const fingerprint = pdf ? pdf.pdfInfo.fingerprint : 'none';
-    const pages = Array.from({ length: numPages }).map((v, i) => (<Page index={i + 1} key={`${fingerprint}-${i}`} />));
-    return (
-      <div className="pdf-viewer">
-        {pages}
-      </div>
-    );
-  }
-}
-Viewer.contextTypes = PDF.childContextTypes;
-
-class Page extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      status: 'N/A',
-      page: null,
-      width: 0,
-      height: 0,
-    };
-  }
-  componentDidMount() {
-    this._update(this.context.pdf);
-  }
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    return this.context.pdf !== nextContext.pdf || this.state.status !== nextState.status;
-  }
-  componentDidUpdate(nextProps, nextState, nextContext) {
-    this._update(nextContext.pdf);
-  }
-  _update(pdf) {
-    if (pdf) {
-      this._loadPage(pdf);
-    } else {
-      this.setState({ status: 'loading' });
-    }
-  }
-  _loadPage(pdf) {
-    if (this.state.status === 'rendering' || this.state.page != null) return;
-    pdf.getPage(this.props.index).then(this._renderPage.bind(this));
-    this.setState({ status: 'rendering' });
-  }
-  _renderPage(page) {
-    console.log(page);
-    const { scale } = this.context;
-    const viewport = page.getViewport(scale);
-    const { width, height } = viewport;
-    const canvas = this.ref;
-    const context = canvas.getContext('2d');
-    console.log(viewport.height, viewport.width);
-    canvas.width = width;
-    canvas.height = height;
-    page.render({
-      canvasContext: context,
-      viewport,
-    });
-    this.setState({ status: 'rendered', page, width, height });
-  }
-  render() {
-    const { width, height, status } = this.state;
-    return (
-      <div className={`pdf-page ${status}`} style={{ width, height }}>
-        <canvas ref={(c) => { this.ref = c; }} />
-      </div>
-    );
-  }
-}
-Page.propTypes = {
-  index: React.PropTypes.number.isRequired,
-};
-Page.contextTypes = PDF.childContextTypes;
-
 function DocView(props) {
-  const { docDetailSrc } = props;
+  const { dispatch, page, needSeals, loading, form, pageNum, curPage, docId } = props;
+  const { getFieldProps } = form;
+
+  const back = () => {
+    dispatch(routerRedux.go(-1));
+  };
+  // const changePage = (e) => {
+  //   dispatch({
+  //     type: 'signDoc/setCurPage',
+  //     payload: {
+  //       curPage: e.target.value,
+  //     },
+  //   });
+  // };
+  const getDocPage = () => {
+    dispatch({
+      type: 'signDoc/getDocInfo',
+      payload: {
+        docId: '',
+      },
+    });
+  };
+  const validatorPage = (rule, value, callback) => {
+    if (value && /^[0-9]*$/.test(value) && value >= 1 && value <= pageNum) {
+      callback();
+    } else {
+      callback(new Error('格式不正确'));
+    }
+  };
+  const up = () => {
+    dispatch({
+      type: 'signDoc/pageUp',
+    });
+    dispatch({
+      type: 'signDoc/getDocInfo',
+      payload: {
+        docId: '',
+      },
+    });
+  };
+  const down = () => {
+    dispatch({
+      type: 'signDoc/pageDown',
+    });
+    dispatch({
+      type: 'signDoc/getDocInfo',
+      payload: {
+        docId: '',
+      },
+    });
+  };
+
+  const style = {
+    marginTop: '17px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    border: '#bdbdbd 1px solid',
+    position: 'relative',
+  };
   return (
-    <PDF src={docDetailSrc}>
-      <Viewer />
-    </PDF>
+    <MainLayout
+      headerName="文档详情"
+      loading={loading}
+      noFooter
+    >
+      <div className={styles.sign_panel}>
+        <div id="docPanel" className={styles.doc}>
+          <div style={{ ...style, ...page }} />
+          {/* <div className={styles.page}>1</div> */}
+        </div>
+      </div>
+      <div className={styles.sign_action}>
+        <div className={styles.next_page}>
+          {/* onKeyDown={e => getDocPage(e)} */}
+          {curPage.value === 1 ?
+            <span className={styles.page_up} /> :
+            <span className={styles.page_up} onClick={() => { up(); }} />
+          }
+          {curPage.value === pageNum ?
+            <span className={styles.page_down} /> :
+            <span className={styles.page_down} onClick={() => { down(); }} />
+          }
+          <span>页码：</span>
+          <input
+            {...getFieldProps('curPage', {
+              rules: [
+                { required: true, message: '请输入' },
+                { validator: validatorPage },
+              ],
+            })}
+            className={styles.page_input} onBlur={e => getDocPage(e)}
+          />
+          <span><span className={styles.page_split}> / </span><span className={styles.page_total}>{pageNum}</span></span>
+        </div>
+        <button className="btn primary" onClick={back}>返回</button> :
+      </div>
+    </MainLayout>
   );
 }
 
 function mapStateToProps(state) {
-  return { ...state.docView, loading: state.loading.global };
+  return { sealList: state.global.validSeals, hasSignPwd: state.global.hasSignPwd, ...state.signDoc, loading: state.loading.global };
 }
 
-export default connect(mapStateToProps)(DocView);
+const formOpts = {
+  mapPropsToFields(props) {
+    return props;
+  },
+  onFieldsChange(props, changedFields) {
+    const { dispatch } = props;
+    const fields = {};
+    for (const value of Object.values(changedFields)) {
+      fields[value.name] = { value: value.value };
+      fields[value.name].errors = value.errors;
+    }
+    dispatch({
+      type: 'signDoc/fieldsChange',
+      fields,
+    });
+  },
+};
+
+export default connect(mapStateToProps)(createForm(formOpts)(DocView));

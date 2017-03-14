@@ -51,6 +51,15 @@ class SealItem extends React.Component {
     }
   };
 
+  setDefaultSeal = (sealId, dispatch) => {
+    dispatch({
+      type: 'sealCreate/setDefaultSeal',
+      payload: {
+        sealId,
+      },
+    });
+  };
+
   deleteSeal = (sealId, dispatch) => {
     dispatch({
       type: 'sealCreate/deleteSeal',
@@ -77,7 +86,7 @@ class SealItem extends React.Component {
           { this.state.showOpts ?
             <div className={styles.opt_btns}>
               <a className={styles.opt} onClick={() => this.deleteSeal(sealId, dispatch)}>删除</a>
-              {/* { isDefault ? null : <a className={styles.opt}>设为默认</a>} */}
+              { isDefault ? null : <a className={styles.opt} onClick={() => this.setDefaultSeal(sealId, dispatch)}>设为默认</a>}
             </div> :
             null
           }

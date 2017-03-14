@@ -23,6 +23,7 @@ function DocListDraft(props) {
     });
   };
   const docInfo = (record) => {
+    dispatch({ type: 'docList/showDocDetail', payload: { record } });
   };
   for (const col of columns) {
     // 操作列添加操作按钮
