@@ -443,6 +443,7 @@ export default {
               uuid: data.accountUUID,
               email: !data.mobile ? data.email : data.mobile,
               name: data.name,
+              realEmail: receiverEmail.value,
             };
             yield put({
               type: 'changeReceivers',
@@ -472,9 +473,9 @@ export default {
       }
       const sends = [];
       Object.keys(receiversWithoutSelf).map((key) => {
-        const { email } = receiversWithoutSelf[key];
+        const { realEmail } = receiversWithoutSelf[key];
         sends.push({
-          receiver: email,
+          receiver: realEmail,
           type: 0,
           isSendMsg: 0,
         });
