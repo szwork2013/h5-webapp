@@ -97,16 +97,6 @@ export async function organPayAuth(values) {
   });
 }
 
-export async function uploadFile(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-  return request('../../service/file/uploadFile', {
-    method: 'POST',
-    credentials: 'same-origin',
-    body: formData,
-  });
-}
-
 export async function validatePwd(values) {
   const postData = `signPwd=${values.signPwd}&edit=${new Date().getTime()}`;
   return request('../../user/account!validatePwd.xml', {
@@ -331,6 +321,19 @@ export async function addReceiver(values) {
     body: postData,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function uploadFile(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request('../../service/file/uploadFile', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
     },
   });
 }

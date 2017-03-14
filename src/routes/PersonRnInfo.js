@@ -8,17 +8,32 @@ import StepBar from '../components/StepBar';
 import InputWithLabel from '../components/InputWithLabel';
 import styles from './mixins.less';
 
+const lrz = require('lrz');
+
 function PersonRnInfo(props) {
   const { dispatch, form, loading, frontIdOssKey, endIdOssKey } = props;
   const { getFieldProps, getFieldError } = form;
 
   const onFileChange = (info, fieldName) => {
+    debugger;
     dispatch({
       type: 'personRnInfo/fileUpload',
       payload: {
         info,
         fieldName,
       },
+    });
+  };
+  const beforeUpload = (file) => {
+    return new Promise((resolve, reject) => {
+      lrz(file).then((rst) => {
+        debugger;
+        file = rst;
+        resolve();
+      }).catch((err) => {
+        console.log('lrz error: ', err);
+        reject();
+      });
     });
   };
   const next = (e) => {
@@ -54,6 +69,8 @@ function PersonRnInfo(props) {
               withCredentials
               showUploadList={false}
               onChange={(info) => { onFileChange(info, 'frontIdOssKey'); }}
+              beforeUpload={(file, fileList) => beforeUpload(file, fileList)}
+              // customRequest={c => customRequest(c)}
             >
               <button className="btn cutout">本地上传</button>
             </Upload>
