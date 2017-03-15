@@ -3,11 +3,11 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import MainLayout from '../components/Layout/MainLayout';
-import SignDocPage from '../components/SignDocPage';
+// import SignDocPage from '../components/SignDocPage';
 import styles from './mixins.less';
 
 function DocView(props) {
-  const { dispatch, page, needSeals, loading, form, pageNum, curPage, docId } = props;
+  const { dispatch, page, loading, form, pageNum, curPage } = props;
   const { getFieldProps } = form;
 
   const back = () => {

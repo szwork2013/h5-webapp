@@ -1,41 +1,42 @@
 import React, { Component, PropTypes } from 'react';
 import { DragSource } from 'react-dnd';
+import { createDragPreview } from 'react-dnd-text-dragpreview';
 import { generateConfigID } from '../utils/signTools';
 import styles from './SignDocSeal.less';
-import { timeout } from '../utils/commonUtils';
+// import { timeout } from '../utils/commonUtils';
 
 const sealSource = {
   beginDrag(props) {
     // monitor.getItem()时返回的对象
-    const { name, id, sealId, sealType, sealWay, seal, left, top } = props;
-    return { name, id, sealId, sealType, sealWay, seal, left, top };
+    const { name, id, sealId, sealType, sealWay, seal, left, top, width, height } = props;
+    return { name, id, sealId, sealType, sealWay, seal, left, top, width, height };
   },
 
   endDrag(props, monitor) {
     const item = monitor.getItem();
-    const { name, sealId, sealType, sealWay, seal, left, top } = item;
+    const { name, sealId, sealType, sealWay, seal, width, height } = item;
     const dropResult = monitor.getDropResult();
 
     if (dropResult) {
-      console.log('drop done');
+      // console.log('drop done');
       // const delta = monitor.getDifferenceFromInitialOffset();
       // const left = Math.round(!item.left ? monitor.getInitialSourceClientOffset().x : item.left + delta.x);
       // const top = Math.round(!item.top ? monitor.getInitialSourceClientOffset().y : item.top + delta.y);
       // TODO
-      console.log('monitor: ', monitor);
-      console.log('item left: ', left);
-      console.log('item top: ', top);
-      console.log('pageX: ', event.pageX);
-      console.log('pageY: ', event.pageY);
+      // console.log('monitor: ', monitor);
+      // console.log('item left: ', left);
+      // console.log('item top: ', top);
+      // console.log('pageX: ', event.pageX);
+      // console.log('pageY: ', event.pageY);
       const scrollLeft = document.getElementById('docPanel').scrollLeft;
-      const scrollTop = document.getElementById('docPanel').scrollTop
-      console.log('docPanel scrollX: ', scrollLeft);
-      console.log('docPanel scrollY: ', scrollTop);
+      const scrollTop = document.getElementById('docPanel').scrollTop;
+      // console.log('docPanel scrollX: ', scrollLeft);
+      // console.log('docPanel scrollY: ', scrollTop);
       if (!props.added) {
         props.dispatch({
           type: 'signDoc/addSeal',
           payload: {
-            seal: { [generateConfigID()]: { top: event.pageY + scrollTop + -136, left: event.pageX + scrollLeft + -136, name, sealId, sealType, seal, sealWay, added: true } },
+            seal: { [generateConfigID()]: { top: event.pageY + scrollTop + -136, left: event.pageX + scrollLeft + -136, width, height, name, sealId, sealType, seal, sealWay, added: true } },
           },
         });
       }
@@ -60,13 +61,26 @@ class SignDocSeal extends Component {
     key: PropTypes.any,
     id: PropTypes.any,
     dispatch: PropTypes.func,
-    added: PropTypes.bool,
+    // added: PropTypes.bool,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       showDelete: false,
+      dragPreviewStyle: {
+        width: '140px',
+        height: '140px',
+        backgroundImage: props.seal,
+        backgroundColor: '#454545',
+        borderColor: 'transparent',
+        color: 'white',
+        fontSize: 12,
+        paddingTop: 90,
+        paddingRight: 40,
+        paddingBottom: 60,
+        paddingLeft: 40,
+      },
     };
     this.onMouseOver = this.onMouseOver.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
@@ -74,6 +88,8 @@ class SignDocSeal extends Component {
   }
 
   componentDidMount = () => {
+    // this.dragPreview = createDragPreview('拖动到指定位置', this.state.dragPreviewStyle);
+    // this.props.connectDragPreview(this.dragPreview);
     // const div = document.createElement('div');
     // div.style.width = '140px';
     // div.style.height = '140px';
@@ -86,6 +102,10 @@ class SignDocSeal extends Component {
     // thisComponent.onmouseover = e => this.onMouseOver(e, thisComponent);
     // thisComponent.onmouseout = e => this.onMouseOut(e, thisComponent);
   };
+
+  // componentDidUpdate() {
+  //   this.dragPreview = createDragPreview('拖动到指定位置', this.state.dragPreviewStyle, this.dragPreview);
+  // }
 
   // 下面两个函数从网上copy的，目的：父元素进入子元素时，onMouseOut不执行，子元素进入父元素时，onMouseOver不执行
   // 不然父元素进入子元素时会触发onMouseOut
@@ -129,15 +149,17 @@ class SignDocSeal extends Component {
   };
 
   render() {
-    const { monitor, isDragging, hideSourceOnDrag, connectDragSource, key, id, name, connectDragPreview, sealId, sealType, sealWay, left, top, seal, isDefault, added, dispatch, closable } = this.props;
+    const { isDragging, hideSourceOnDrag, connectDragSource, key, id, name, connectDragPreview, sealId, sealType, sealWay, left, top, seal, isDefault, dispatch, closable } = this.props;
 
-    const img = new Image();
-    // img.width = 140;
-    // img.height = 140;
-    img.src = seal;
-    if (seal) {
-      img.onload = () => connectDragPreview(img);
-    }
+    // const img = new Image();
+    // // img.width = 140;
+    // // img.height = 140;
+    // img.src = seal;
+    // if (seal) {
+    //   img.onload = () => connectDragPreview(img);
+    // }
+    const dragPreview = createDragPreview('拖动到指定位置', this.state.dragPreviewStyle);
+    connectDragPreview(dragPreview);
     let style;
     if (isDefault) {
       style = {

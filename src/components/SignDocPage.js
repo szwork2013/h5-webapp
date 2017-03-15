@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { DropTarget } from 'react-dnd';
 import SignDocSeal from './SignDocSeal';
-import sealEx1 from '../assets/seal-ex1.png';
 
 const style = {
   marginTop: '17px',
@@ -15,8 +14,8 @@ const pageTarget = {
   drop(props, monitor, component) {
     const item = monitor.getItem();
     const delta = monitor.getDifferenceFromInitialOffset();
-    const left = Math.round(!parseInt(item.left) ? monitor.getInitialSourceClientOffset().x : parseInt(item.left) + delta.x);
-    const top = Math.round(!parseInt(item.top) ? monitor.getInitialSourceClientOffset().y : parseInt(item.top) + delta.y);
+    const left = Math.round(!parseInt(item.left, 10) ? monitor.getInitialSourceClientOffset().x : parseInt(item.left, 10) + delta.x);
+    const top = Math.round(!parseInt(item.top, 10) ? monitor.getInitialSourceClientOffset().y : parseInt(item.top, 10) + delta.y);
 
     if (props.seals[item.id]) {
       component.moveSeal(item.id, left, top);
@@ -35,7 +34,7 @@ class SignDocPage extends Component {
   static propTypes = {
     connectDropTarget: PropTypes.func.isRequired,
     isOver: PropTypes.bool.isRequired,
-    canDrop: PropTypes.bool.isRequired,
+    // canDrop: PropTypes.bool.isRequired,
     page: PropTypes.object,
     dispatch: PropTypes.func,
   };
@@ -55,20 +54,20 @@ class SignDocPage extends Component {
   }
 
   render() {
-    const { canDrop, isOver, connectDropTarget, page, monitor, dispatch } = this.props;
+    const { isOver, connectDropTarget, page, dispatch } = this.props;
     const { seals, curPage, docId } = this.props;
 
-    console.log('isOver: ', isOver);
+    // console.log('isOver: ', isOver);
     if (isOver) {
-      console.log(monitor.getItem().left);
+      // console.log(monitor.getItem().left);
     }
-    const isActive = canDrop && isOver;
+    // const isActive = canDrop && isOver;
 
     const sealComponents = (
       <div>
         {Object.keys(seals).map((key) => {
           const { left, top, name, sealId, sealType, seal, sealWay, posPage, sealDocId } = seals[key];
-          console.log('posPage: ', posPage, '; curPage: ', curPage);
+          // console.log('posPage: ', posPage, '; curPage: ', curPage);
           return (
             posPage === curPage && sealDocId === docId ?
               <SignDocSeal

@@ -71,7 +71,7 @@ export default {
         },
       };
       const response = yield call(updateAccountInfo, param);
-      console.log('updateAccount response: ', response);
+      // console.log('updateAccount response: ', response);
       if (response.data.success) {
         yield put(routerRedux.push('/personRnBank'));
       } else {

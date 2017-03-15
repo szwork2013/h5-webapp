@@ -142,6 +142,15 @@ function SignDoc(props) {
       },
     });
   };
+  const newSeal = () => {
+    dispatch({
+      type: 'global/setCSRederectUrl',
+      payload: {
+        afterCSRederectUrl: PathConstants.SignDoc,
+      },
+    });
+    dispatch(routerRedux.push(PathConstants.SealManage));
+  };
   return (
     <MainLayout
       headerName="签署文档"
@@ -194,7 +203,7 @@ function SignDoc(props) {
             </div>
           </div> :
           <div className={styles.seal_list}>
-            <SealItem style={{ margin: 'auto' }} onClick={() => dispatch(routerRedux.push(PathConstants.SealManage))}>
+            <SealItem style={{ margin: 'auto' }} onClick={() => newSeal()}>
               <div>
                 <img style={{ width: '50px' }} role="presentation" src={add} />
                 <div style={{ marginTop: '10px' }}>创建新印章</div>
@@ -209,7 +218,7 @@ function SignDoc(props) {
                     isDefault
                     sealId={seal.id} sealType={seal.type} sealWay={seal.sealWay}
                     key={generateConfigID()} id={generateConfigID()} name={seal.sealName}
-                    seal={seal.url}
+                    seal={seal.url} width={seal.width} height={seal.height}
                   />
                 </SealItem>
               );

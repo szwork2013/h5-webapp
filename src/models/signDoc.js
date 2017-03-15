@@ -186,7 +186,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('getDocPic response: ', data);
+        // console.log('getDocPic response: ', data);
         if (data && data.errCode === 0) {
           // 设置文档显示需要的属性
           const { pageWidth, pageHeight, pageNum, docName } = data;
@@ -217,7 +217,7 @@ export default {
         docId,
       };
       const { data } = yield call(getDocInfo, param);
-      console.log('getDocInfo response: ', data);
+      // console.log('getDocInfo response: ', data);
       if (data && data.success) {
         yield put({
           type: 'setDocType',
@@ -269,7 +269,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('validatePwd response: ', data);
+        // console.log('validatePwd response: ', data);
         if (data && data.errCode === 0) {
           // 密码验证成功，调用pdfSign
           yield put({
@@ -282,9 +282,10 @@ export default {
     },
     *pdfSign({ payload }, { select, call, put }) {
       const signDocState = yield select(state => state.signDoc);
-      const { signPwd, docId, docType, payMethod, needSeals, pageWidth } = signDocState;
+      const { signPwd, docId, docType, payMethod, needSeals, pageWidth, pageHeight } = signDocState;
       const signArray = [];
       // signInfo:[{"sealId":"8129","posX":200.6311724137931,"posY":521.6276730713818,"posPage":"1","signType":"1"}]
+      const scale = pageWidth / (window.innerWidth * 0.8 * 0.95);
       Object.keys(needSeals).map((key) => {
         const { left, top, sealId, posPage, sealDocId } = needSeals[key];
         if (sealDocId === docId) {
@@ -292,8 +293,8 @@ export default {
             sealId,
             posPage,
             signType: 1,
-            posX: (left * pageWidth) / (window.innerWidth * 0.8 * 0.95),
-            posY: (top * pageWidth) / (window.innerWidth * 0.8 * 0.95),
+            posX: (left + 70) * scale,
+            posY: ((window.innerWidth * 0.8 * 0.95 * (pageHeight / pageWidth)) - (top + 70)) * scale,
           });
         }
         return null;
@@ -310,7 +311,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('pdfSign response: ', data);
+        // console.log('pdfSign response: ', data);
         if (data && data.errCode === 0) {
           // 判断要不要发送通知下面的接收者
           if (docType === 1) {
@@ -328,6 +329,12 @@ export default {
               payload: {
                 modelVisible: false,
               },
+            });
+            const fields = {};
+            fields.signPwd = { value: '' };
+            yield put({
+              type: 'fieldsChange',
+              fields,
             });
             // 跳到列表页
             yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListWaitForMe}`));
@@ -347,7 +354,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('sendEmail response: ', data);
+        // console.log('sendEmail response: ', data);
         if (data && data.errCode === 0) {
           message.success('您已成功完成签署');
           yield put({
@@ -355,6 +362,12 @@ export default {
             payload: {
               modelVisible: false,
             },
+          });
+          const fields = {};
+          fields.signPwd = { value: '' };
+          yield put({
+            type: 'fieldsChange',
+            fields,
           });
           // 跳到列表页
           yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListDraft}`));
@@ -383,7 +396,7 @@ export default {
         },
       };
       const { data } = yield call(pdfSignSingle, param);
-      console.log('pdfSignSingle response: ', data);
+      // console.log('pdfSignSingle response: ', data);
       if (data && data.success) {
         yield put({
           type: 'changeVisible',
@@ -437,7 +450,7 @@ export default {
         if (Object.prototype.toString.call(data) === '[object String]') {
           data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
           data = JSON.parse(data);
-          console.log('getReceiveInfo response: ', data);
+          // console.log('getReceiveInfo response: ', data);
           if (data && data.errCode === 0) {
             const receiver = {
               uuid: data.accountUUID,
@@ -489,7 +502,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('addReceiver response: ', data);
+        // console.log('addReceiver response: ', data);
         if (data && data.errCode === 0) {
           if (self.length > 0) { // 签署人中有自己 下一步进入签署页
             yield put({
@@ -507,7 +520,7 @@ export default {
             if (Object.prototype.toString.call(data.data) === '[object String]') {
               data = data.data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
               data = JSON.parse(data);
-              console.log('sendEmail response: ', data);
+              // console.log('sendEmail response: ', data);
               if (data && data.errCode === 0) {
                 message.success('邀请签章邮件已成功发送给您的好友，请耐心等待');
                 // 跳到列表页

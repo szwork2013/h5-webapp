@@ -188,11 +188,6 @@ function RouterConfig({ history, app }) {
     });
   };
 
-  const docList = () => {
-    return (
-      <div>1111</div>
-    );
-  };
   return (
     <Router history={history}>
       {/* 企业实名 */}

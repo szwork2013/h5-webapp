@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { compressSeal, addSeal, deleteSeal, saveDefaultSeal } from '../services/services';
-import PathConstants from '../PathConstants';
+// import PathConstants from '../PathConstants';
 
 export default {
 
@@ -55,7 +55,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('compressSeal response: ', data);
+        // console.log('compressSeal response: ', data);
         if (data && data.errCode === 0) {
           const fields = {};
           fields.previewImgUrl = { value: data.img1Url.replace(/&amp;/g, '&') };
@@ -76,7 +76,7 @@ export default {
     },
     *addSeal({ payload }, { select, call, put }) {
       const globalState = yield select(state => state.global);
-      const { type } = globalState;
+      const { type, afterCSRederectUrl } = globalState;
       const sealCreateState = yield select(state => state.sealCreate);
       const { sealType, sealTypeForPerson, colorType, typeName, rune } = sealCreateState;
       let templateName = '';
@@ -97,7 +97,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('compressSeal response: ', data);
+        // console.log('compressSeal response: ', data);
         if (data && data.errCode === 0) {
           param.url = data.img1;
           if (type === 1) {
@@ -110,9 +110,9 @@ export default {
           if (Object.prototype.toString.call(data.data) === '[object String]') {
             data = data.data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
             data = JSON.parse(data);
-            console.log('addSeal response: ', data);
+            // console.log('addSeal response: ', data);
             if (data && data.errCode === 0) {
-              yield put(routerRedux.push(PathConstants.SealManage));
+              yield put(routerRedux.push(afterCSRederectUrl));
             } else {
               message.error(data.msg);
             }
@@ -137,7 +137,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('deleteSeal response: ', data);
+        // console.log('deleteSeal response: ', data);
         if (data && data.errCode === 0) {
           yield put({
             type: 'global/getSeals',
@@ -157,7 +157,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('saveDefaultSeal response: ', data);
+        // console.log('saveDefaultSeal response: ', data);
         if (data && data.errCode === 0) {
           yield put({
             type: 'global/getSeals',

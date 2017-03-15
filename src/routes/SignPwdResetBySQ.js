@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
 import { Modal } from 'antd';
 import './antdCustomization.less';
@@ -9,7 +9,7 @@ import InputWithLabel from '../components/InputWithLabel';
 import './mixins.less';
 
 function SignPwdResetBySQ(props) {
-  const { dispatch, form } = props;
+  const { form } = props;
   const { getFieldProps, getFieldError } = form;
   const onSubmit = (e) => {
     e.stopPropagation();

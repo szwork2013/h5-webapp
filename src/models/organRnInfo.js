@@ -49,7 +49,7 @@ export default {
         legalIdno: legalIdno.value,
       };
       const data = yield call(organInfoAuth, param);
-      console.log('organInfoAuth response: ', data);
+      // console.log('organInfoAuth response: ', data);
       if (data && data.data.success) {
         const fields = {};
         fields.serviceId = { value: data.data.data.serviceId };

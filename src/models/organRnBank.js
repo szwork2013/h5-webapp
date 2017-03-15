@@ -51,7 +51,7 @@ export default {
         serviceId: !serviceId.value ? remoteServiceId : serviceId.value,
       };
       const data = yield call(organToPay, param);
-      console.log('organToPay response: ', data);
+      // console.log('organToPay response: ', data);
       if (data && data.data.success) {
         yield put({
           type: 'global/setStatus',
@@ -74,7 +74,7 @@ export default {
         serviceId: !serviceId.value ? remoteServiceId : serviceId.value,
       };
       const data = yield call(organPayAuth, param);
-      console.log('organPayAuth response: ', data);
+      // console.log('organPayAuth response: ', data);
       if (data && data.data.success) {
         yield put(routerRedux.push(PathConstants.OrganRnFinish));
       } else {

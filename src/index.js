@@ -65,9 +65,11 @@ getStoredState({}).then((storageState) => {
   const transform = createTransform(
     // 过滤不需要缓存的数据
     (inboundState, key) => {
-      if (['global', 'signDoc', 'organRnInfo', 'organRnBank'].includes(key)) {
+      if (['global', 'signDoc', 'organRnInfo', 'organRnBank'].indexOf(key) > -1) {
         if (key === 'signDoc') {
           return { ..._.omit(inboundState, ['needSeals', 'page']) };
+        } else if (key === 'global') {
+          return { ..._.omit(inboundState, ['afterRnRedirectUrl', 'afterSSPRedirectUrl', 'afterCSRederectUrl']) };
         } else {
           return { ...inboundState };
         }

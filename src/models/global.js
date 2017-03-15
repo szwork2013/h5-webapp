@@ -20,7 +20,8 @@ export default {
     organize: null,
     hasSignPwd: 0,
     afterRnRedirectUrl: PathConstants.Root, // 实名后的跳转，默认主页 可能是签署页
-    afterSSPRedirectUrl: PathConstants.Root, // 设置完签署密码后的跳转 默认主页 可能是签署页
+    afterSSPRedirectUrl: PathConstants.Root, // 设置完成签署密码后的跳转 默认主页 可能是签署页
+    afterCSRederectUrl: PathConstants.SealManage, // 设置完成创建印章后的跳转 默认印章管理 可能是签署页
   },
 
   reducers: {
@@ -31,6 +32,10 @@ export default {
     setSSPRedirectUrl(state, { payload }) {
       const { afterSSPRedirectUrl } = payload;
       return { ...state, afterSSPRedirectUrl };
+    },
+    setCSRederectUrl(state, { payload }) {
+      const { afterCSRederectUrl } = payload;
+      return { ...state, afterCSRederectUrl };
     },
     setStatus(state, { payload: status }) {
       return { ...state, ...status };
@@ -91,7 +96,7 @@ export default {
     *getAccountInfo({ payload }, { call, put }) {
       const { resolve } = payload;
       const { data } = yield call(getAccountInfo);
-      console.log('getAccountInfo response: ', data);
+      // console.log('getAccountInfo response: ', data);
       if (data && data.success) {
         yield put({
           type: 'setAccountInfo',
@@ -107,15 +112,15 @@ export default {
     *getSealImg({ payload }, { select, call, put }) {
       const globalState = yield select(state => state.global);
       const { seals } = globalState;
-      console.log('seals: ', seals);
+      // console.log('seals: ', seals);
       for (const seal of seals) {
-        console.log('seal: ', seal);
+        // console.log('seal: ', seal);
         if (!seal.url) {
           const param = {
             ossKey: seal.imgUrl,
           };
           const { data } = yield call(getSealImgUrl, param);
-          console.log('getSealImg response: ', data);
+          // console.log('getSealImg response: ', data);
           if (data && data.success) {
             yield put({
               type: 'updateSealImgUrl',
@@ -133,7 +138,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('getSeals response: ', data);
+        // console.log('getSeals response: ', data);
         if (data && data.errCode === 0) {
           const seals = data.msg;
           Object.values(seals).map((seal) => {

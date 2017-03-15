@@ -136,7 +136,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('getDocCount response: ', data);
+        // console.log('getDocCount response: ', data);
         if (data && data.errCode === 0) {
           yield put({
             type: 'setAllCount',
@@ -171,16 +171,16 @@ export default {
         pageSize: pageSize === undefined || pageSize == null ? pageInfo.pageSize : pageSize,
         docBean: '',
       };
-      console.log('getDocList params: ', params);
+      // console.log('getDocList params: ', params);
       let { data } = yield call(getDocList2, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = JSON.parse(data);
-        console.log('getDocList2 response: ', data);
+        // console.log('getDocList2 response: ', data);
         if (data && data.errCode === 0) {
           const list = [];
           if (data.docs) {
             for (const doc of data.docs) {
-              console.log(doc);
+              // console.log(doc);
               let tmpType = '';
               if (docType === Constants.DocType.DRAFT) {
                 tmpType = '草稿';
@@ -250,11 +250,11 @@ export default {
         pageSize: pageInfo.pageSize,
         docBean: JSON.stringify(docBean),
       };
-      console.log('getDocList params: ', params);
+      // console.log('getDocList params: ', params);
       let { data } = yield call(getDocList2, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = JSON.parse(data);
-        console.log('getDocList2 response: ', data);
+        // console.log('getDocList2 response: ', data);
         if (data && data.errCode === 0) {
           const list = [];
           if (data.docs) {
@@ -364,7 +364,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('signLog response: ', data);
+        // console.log('signLog response: ', data);
         if (data && data.errCode === 0) {
           yield put({
             type: 'setOptLogs',
@@ -389,7 +389,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('updateDoc response: ', data);
+        // console.log('updateDoc response: ', data);
         if (data && data.errCode === 0) {
           yield put({
             type: 'docList/getDocCount',
@@ -415,7 +415,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('downloadDoc response: ', data);
+        // console.log('downloadDoc response: ', data);
         if (data && data.errCode === 0) {
           window.open(data.downUrl.replace(/&amp;/g, '&'), '_blank');
         } else {
@@ -423,7 +423,7 @@ export default {
         }
       }
     },
-    *showDocDetail({ payload }, { select, call, put }) {
+    *showDocDetail({ payload }, { select, put }) {
       const docListState = yield select(state => state.docList);
       const { type } = docListState;
       const { record } = payload;
@@ -445,7 +445,6 @@ export default {
           payMethod: record.payMethod,
         },
       });
-      debugger;
       yield put(routerRedux.push(PathConstants.DocView));
       // const { docId } = payload;
       // const params = {
@@ -480,7 +479,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('deleteDoc response: ', data);
+        // console.log('deleteDoc response: ', data);
         if (data && data.errCode === 0) {
           yield put({
             type: 'docList/getDocCount',
@@ -507,7 +506,7 @@ export default {
       if (Object.prototype.toString.call(data) === '[object String]') {
         data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
-        console.log('updateDoc response: ', data);
+        // console.log('updateDoc response: ', data);
         if (data && data.errCode === 0) {
           message.success('已通过短信或邮件的方式通知对方及时完成签署。');
         } else {

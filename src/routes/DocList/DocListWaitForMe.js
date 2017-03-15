@@ -27,7 +27,7 @@ function DocListWaitForMe(props) {
   for (const col of columns) {
     // 操作列添加操作按钮
     if (col.key === 99) {
-      col.render = (text, record, index) => {
+      col.render = (text, record) => {
         return (
           <div className={styles.operation}>
             <a onClick={() => { sign(record); }}>签署</a>
@@ -38,7 +38,7 @@ function DocListWaitForMe(props) {
     }
     // 收件人特殊处理
     if (col.key === 2) {
-      col.render = (text, record, index) => {
+      col.render = (text, record) => {
         return (
           <div className={styles.operation}>
             { text === '多人' ?
@@ -51,7 +51,7 @@ function DocListWaitForMe(props) {
     }
     // 文件名处理 增加链接到详情
     if (col.key === 3) {
-      col.render = (text, record, index) => {
+      col.render = (text, record) => {
         return (
           <div className={styles.operation}>
             <a onClick={() => { docInfo(record); }}>{text}</a>

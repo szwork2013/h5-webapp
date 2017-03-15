@@ -22,7 +22,7 @@ export default {
     },
     setServiceId(state, { payload }) {
       const { serviceId } = payload;
-      console.log('serviceId: ', serviceId);
+      // console.log('serviceId: ', serviceId);
       return { ...state, serviceId };
     },
   },
@@ -38,8 +38,8 @@ export default {
         bankReservedMobile: mobile.value,
       };
       const response = yield call(personAuthApply, param);
-      console.log('apply response: ', response);
-      console.log('apply response msg: ', response.data.msg);
+      // console.log('apply response: ', response);
+      // console.log('apply response msg: ', response.data.msg);
       if (response.data.success) {
         message.success('发送成功');
         yield put({
@@ -53,7 +53,6 @@ export default {
       }
     },
     *authAuth({ payload }, { select, call, put }) {
-
       const personRnBankState = yield select(state => state.personRnBank);
       const { serviceId, code } = personRnBankState;
       const param = {
@@ -61,7 +60,7 @@ export default {
         code: code.value,
       };
       const response = yield call(personAuthAuth, param);
-      console.log('auth response: ', response);
+      // console.log('auth response: ', response);
       if (response.data.success) {
         yield put({
           type: 'updateAccountStatus',
@@ -82,7 +81,7 @@ export default {
         },
       };
       const response = yield call(updateAccountInfo, param);
-      console.log('updateAccount response: ', response);
+      // console.log('updateAccount response: ', response);
       if (response.data.success) {
         yield put(routerRedux.push('/personRnFinish'));
       } else {

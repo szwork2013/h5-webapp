@@ -69,7 +69,7 @@ export default {
         pwdRequest2: `${signPwdState.questionList[question2.value].label}？`,
       };
       const response = yield call(updateAccountInfo, param);
-      console.log('updateAccount response: ', response);
+      // console.log('updateAccount response: ', response);
       if (response.data.success) {
         message.success('签署密码设置成功');
         yield put(routerRedux.push(globalState.afterSSPRedirectUrl));

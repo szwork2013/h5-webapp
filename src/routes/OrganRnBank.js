@@ -126,6 +126,7 @@ function OrganRnBank(props) {
             <div className={styles.waited_desc}>
               <div>已向您的对公账号打入一笔钱</div>
               <div>请输入收到的金额并验证</div>
+              <div className={styles.waiting_tips}>注意：只有3次验证机会，验证失败将回到第一步</div>
               <div className={styles.waited_input}>
                 <input defaultValue="0." maxLength="1" />
                 <input

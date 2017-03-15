@@ -4,7 +4,7 @@ import { Table } from 'antd';
 const DocListTable = (props) => {
   const { dispatch, selectedRowKeys, columns, data, pageInfo } = props;
   const onSelectChange = (keys) => {
-    console.log('selectedRowKeys changed: ', keys);
+    // console.log('selectedRowKeys changed: ', keys);
     dispatch({
       type: 'docList/selectRows',
       payload: {
