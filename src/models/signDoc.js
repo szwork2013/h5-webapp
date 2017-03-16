@@ -4,6 +4,7 @@ import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { getDocPic, pdfSignSingle, validatePwd, pdfSign, getDocInfo, sendEmail, getReceiveInfo, addReceiver } from '../services/services';
 import PathConstants from '../PathConstants';
+import { generateConfigID } from '../utils/signTools';
 
 export default {
 
@@ -370,7 +371,7 @@ export default {
             fields,
           });
           // 跳到列表页
-          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListDraft}`));
+          yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListWaitForOthers}`));
         } else {
           message.error(data.msg);
         }
@@ -464,6 +465,19 @@ export default {
                 receiver,
               },
             });
+          } else if (data && data.errCode === 1007) { // 账户不存在 不报错，照样发送
+            const receiver = {
+              uuid: generateConfigID(),
+              email: receiverEmail.value,
+              name: '',
+              realEmail: receiverEmail.value,
+            };
+            yield put({
+              type: 'changeReceivers',
+              payload: {
+                receiver,
+              },
+            });
           } else {
             message.error(data.msg);
           }
@@ -524,7 +538,7 @@ export default {
               if (data && data.errCode === 0) {
                 message.success('邀请签章邮件已成功发送给您的好友，请耐心等待');
                 // 跳到列表页
-                yield put(routerRedux.push(PathConstants.DocList));
+                yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListWaitForOthers}`));
               } else {
                 message.error(data.msg);
               }

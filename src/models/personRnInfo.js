@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { message } from 'antd';
-import { updateAccountInfo } from '../services/services';
+import { updateAccountInfo, uploadFileWithBase64 } from '../services/services';
 
 export default {
 
@@ -57,6 +57,42 @@ export default {
       } else if (info.file.status === 'error') {
         yield put({ type: '@@DVA_LOADING/HIDE', global: false });
         message.error(`文件${info.file.name}上传失败`);
+      }
+    },
+    *uploadFileWithBase64({ payload }, { put, call }) {
+      const { fileName, fileData, fieldName } = payload;
+      yield put({ type: '@@DVA_LOADING/SHOW', global: true });
+      const param = {
+        fileName,
+        fileString: fileData,
+      };
+      const response = yield call(uploadFileWithBase64, param);
+      if (response.data.success) {
+        const fields = {};
+        fields[fieldName] = { value: response.data.data.downloadFileURI };
+        fields[`${fieldName}Key`] = { value: response.data.data.ossKey };
+        yield put({
+          type: 'personRnInfo/fieldsChange',
+          fields,
+        });
+        if (fieldName === 'frontIdOssKey') {
+          const bankFields = {};
+          bankFields.name = { value: response.data.data.name };
+          bankFields.idno = { value: response.data.data.idNo };
+          yield put({
+            type: 'personRnInfo/fieldsChange',
+            fields: bankFields,
+          });
+          yield put({
+            type: 'personRnBank/fieldsChange',
+            fields: bankFields,
+          });
+        }
+        message.success('文件上传成功');
+        yield put({ type: '@@DVA_LOADING/HIDE', global: false });
+      } else {
+        message.error(response.data.msg);
+        yield put({ type: '@@DVA_LOADING/HIDE', global: false });
       }
     },
     *updatePersonInfo({ payload }, { select, call, put }) {

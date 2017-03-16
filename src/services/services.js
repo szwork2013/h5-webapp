@@ -325,15 +325,13 @@ export async function addReceiver(values) {
   });
 }
 
-export async function uploadFile(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-  return request('../../service/file/uploadFile', {
+export async function uploadFileWithBase64(file) {
+  return request('../../service/file/uploadFileWithBase64', {
     method: 'POST',
     credentials: 'same-origin',
-    body: formData,
+    body: JSON.stringify(file),
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
     },
   });
 }

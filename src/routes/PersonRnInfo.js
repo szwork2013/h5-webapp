@@ -2,27 +2,27 @@ import React from 'react';
 import { connect } from 'dva';
 // import { routerRedux } from 'dva/router';
 import { createForm } from 'rc-form';
-import { Upload } from 'antd';
 import MainLayout from '../components/Layout/MainLayout';
 import StepBar from '../components/StepBar';
+import Upload from '../components/Upload';
 import InputWithLabel from '../components/InputWithLabel';
 import styles from './mixins.less';
 
 // const lrz = require('lrz');
 
 function PersonRnInfo(props) {
-  const { dispatch, form, loading, frontIdOssKey, endIdOssKey } = props;
+  const { dispatch, form, loading } = props;
   const { getFieldProps, getFieldError } = form;
 
-  const onFileChange = (info, fieldName) => {
-    dispatch({
-      type: 'personRnInfo/fileUpload',
-      payload: {
-        info,
-        fieldName,
-      },
-    });
-  };
+  // const onFileChange = (info, fieldName) => {
+  //   dispatch({
+  //     type: 'personRnInfo/fileUpload',
+  //     payload: {
+  //       info,
+  //       fieldName,
+  //     },
+  //   });
+  // };
   // const beforeUpload = (file) => {
   //   return new Promise((resolve, reject) => {
   //     lrz(file).then((rst) => {
@@ -58,11 +58,11 @@ function PersonRnInfo(props) {
         <div className={styles.upload}>
           <div className={styles.upload_local}>
             <div className={styles.upload_local_desc}>身份证件照</div>
-            { frontIdOssKey.value ?
+            {/* { frontIdOssKey.value ?
               <div className={`${styles.upload_local_img} ${styles.img1}`} style={{ backgroundImage: `url(${frontIdOssKey.value})` }} /> :
               <div className={`${styles.upload_local_img} ${styles.img1}`} />
-            }
-            <Upload
+            } */}
+            {/* <Upload
               name="frontId"
               action="../../service/file/uploadFile"
               withCredentials
@@ -72,7 +72,8 @@ function PersonRnInfo(props) {
               // customRequest={c => customRequest(c)}
             >
               <button className="btn cutout">本地上传</button>
-            </Upload>
+            </Upload> */}
+            <Upload name="frontId" dispatch={dispatch} fieldName="frontIdOssKey" width={960} height={540} quality={0.5} />
             <InputWithLabel
               labelName="身份证件照" hideInput
               {...getFieldProps('frontIdOssKey', {
@@ -84,11 +85,11 @@ function PersonRnInfo(props) {
               errorMsg={!getFieldError('frontIdOssKey') ? '' : getFieldError('frontIdOssKey').join('、')}
             />
             <div className={styles.upload_local_desc}>手持身份证照</div>
-            { endIdOssKey.value ?
+            {/* { endIdOssKey.value ?
               <div className={`${styles.upload_local_img} ${styles.img2}`} style={{ backgroundImage: `url(${endIdOssKey.value})` }} /> :
               <div className={`${styles.upload_local_img} ${styles.img2}`} />
-            }
-            <Upload
+            } */}
+            {/* <Upload
               name="backId"
               action="../../service/file/uploadFile"
               withCredentials
@@ -96,7 +97,8 @@ function PersonRnInfo(props) {
               onChange={(info) => { onFileChange(info, 'endIdOssKey'); }}
             >
               <button className="btn cutout">本地上传</button>
-            </Upload>
+            </Upload> */}
+            <Upload name="backId" dispatch={dispatch} fieldName="endIdOssKey" width={960} height={540} quality={0.5} />
             <InputWithLabel
               labelName="手持身份证照" hideInput
               {...getFieldProps('endIdOssKey', {
