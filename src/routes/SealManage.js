@@ -8,9 +8,12 @@ import styles from './mixins.less';
 import add from '../assets/ico-add.png';
 
 function SealManage(props) {
-  const { dispatch, loading, sealList } = props;
+  const { dispatch, loading, sealList, type } = props;
   const createSeal = () => {
     dispatch(routerRedux.push('/sealCreate'));
+  };
+  const createHandSeal = () => {
+    dispatch(routerRedux.push('/sealCreateHand'));
   };
   return (
     <MainLayout
@@ -30,6 +33,15 @@ function SealManage(props) {
             <div style={{ marginTop: '10px' }}>上传图片印章</div>
           </div>
         </SealItem> */}
+        { type === 1 ?
+          <SealItem onClick={createHandSeal}>
+            <div>
+              <img style={{ width: '50px' }} role="presentation" src={add} />
+              <div style={{ marginTop: '10px' }}>创建手绘印章</div>
+            </div>
+          </SealItem> :
+          null
+        }
         {Object.values(sealList).map((seal) => {
           return (
             <SealItem showOpts key={seal.id} sealId={seal.id} dispatch={dispatch} isDefault={seal.isDefault}>
@@ -43,7 +55,7 @@ function SealManage(props) {
 }
 
 function mapStateToProps(state) {
-  return { sealList: state.global.seals, ...state.personRnInfo, loading: state.loading.global };
+  return { type: state.global.type, sealList: state.global.seals, ...state.personRnInfo, loading: state.loading.global };
 }
 
 const formOpts = {

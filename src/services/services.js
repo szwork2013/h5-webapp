@@ -335,3 +335,27 @@ export async function uploadFileWithBase64(file) {
     },
   });
 }
+
+export async function createSealKey() {
+  const postData = `edit=${new Date().getTime()}`;
+  return request('../../user/seal!createSealKey.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
+
+export async function getMobileSeal(values) {
+  const postData = `code=${values.code}&edit=${new Date().getTime()}`;
+  return request('../../user/seal!getMobileSeal.xml', {
+    method: 'POST',
+    credentials: 'same-origin',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}

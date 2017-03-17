@@ -43,4 +43,11 @@ export default {
   'POST /user/doc!getReceiveInfo.xml'(req, res) {
     res.json('<result><resultMsg>{"msg":"","sealId":0,"ossKey":null,"code":null,"authStatus":0,"mobile":null,"accountUUID":"0C0C07A65E9445C293DF4A8C1EFE5833","errShow":false,"type":2,"head":"defaulthead.png","accountId":0,"sealData":null,"errCode":0,"name":"杭州天谷信息科技有限公司","time":null,"email":"135***@qq.com"}</resultMsg></result>');
   },
+  'POST /user/seal!createSealKey.xml' (req, res) {
+    res.json('<result><resultMsg>eed0c82f-5b2e-4cc6-930c-cf2a163bec94</resultMsg></result>');
+  },
+  'POST /user/seal!getMobileSeal.xml' (req, res) {
+    // res.json('<result><resultMsg></resultMsg></result>');
+    res.json('<result><resultMsg>{"img3Url":null,"img2":null,"seals":null,"img1":"3668513/seal_a302846d-a2bd-4948-95f1-f70ebd590bd4","img2Url":null,"errCode":0,"errShow":false,"msg":"","sesealId":0,"sealId":0,"img3":null,"img1Url":"https://esign-oss-release.oss-cn-hangzhou.aliyuncs.com/3668513/seal_a302846d-a2bd-4948-95f1-f70ebd590bd4?Expires=1489743013&amp;OSSAccessKeyId=FBzUaPMorqiiUAfb&amp;Signature=%2B9vuIoBNSnJiTtitkug43ulwZ1A%3D"}</resultMsg></result>');
+  },
 };
