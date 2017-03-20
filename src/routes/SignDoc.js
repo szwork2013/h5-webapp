@@ -168,7 +168,7 @@ function SignDoc(props) {
           />
           {/* <div className={styles.page}>1</div> */}
         </div>
-        { !needAddReceiver ?
+        { needAddReceiver ?
           <div className={styles.add_receiver_panel}>
             <div className={styles.add_receiver_title}>添加签署人</div>
             <div>

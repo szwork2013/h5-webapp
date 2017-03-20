@@ -76,6 +76,7 @@ export default {
             yield put({
               type: 'sealHandPreview/setPreviewUrl',
               payload: {
+                ossKey: data.img1,
                 previewUrl: data.img1Url.replace(/&amp;/g, '&'),
               },
             });

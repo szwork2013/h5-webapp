@@ -35,7 +35,8 @@ export default {
     res.json('<result><resultMsg>{"img1Url":"https://esignoss.oss-cn-hangzhou.aliyuncs.com/1000343/seal_9e88db46-0793-4981-936a-a6d2b95bc0e3?Expires=1488965939&amp;OSSAccessKeyId=FBzUaPMorqiiUAfb&amp;Signature=umRa0egtWELhZwLjWP%2FmuQNYuKU%3D","msg":"","img3":null,"img2Url":null,"sealId":0,"seals":null,"errCode":0,"errShow":false,"sesealId":0,"img3Url":null,"img2":null,"img1":"1000343/seal_9e88db46-0793-4981-936a-a6d2b95bc0e3"}</resultMsg></result>');
   },
   'POST /user/seal!addSeal.xml'(req, res) {
-    res.json('<result><resultMsg>{"img1Url":null,"msg":"该类型印章已存在","img3":null,"img2Url":null,"sealId":0,"seals":null,"errCode":2034,"errShow":true,"sesealId":0,"img3Url":null,"img2":null,"img1":null}</resultMsg></result>');
+    // res.json('<result><resultMsg>{"img1Url":null,"msg":"该类型印章已存在","img3":null,"img2Url":null,"sealId":0,"seals":null,"errCode":2034,"errShow":true,"sesealId":0,"img3Url":null,"img2":null,"img1":null}</resultMsg></result>');
+    res.json('<result><resultMsg>{"img1Url":null,"msg":"","img3":null,"img2Url":null,"sealId":0,"seals":null,"errCode":0,"errShow":false,"sesealId":8219,"img3Url":null,"img2":null,"img1":null}</resultMsg></result>');
   },
   'POST /user/seal!deleteSeal.xml'(req, res) {
     res.json('<result><resultMsg>{"img3Url":null,"img2":null,"seals":null,"img1":null,"img2Url":null,"errCode":0,"errShow":false,"msg":"","sesealId":0,"sealId":0,"img3":null,"img1Url":null}</resultMsg></result>');

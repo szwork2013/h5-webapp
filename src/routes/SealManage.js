@@ -44,7 +44,7 @@ function SealManage(props) {
         }
         {Object.values(sealList).map((seal) => {
           return (
-            <SealItem showOpts key={seal.id} sealId={seal.id} dispatch={dispatch} isDefault={seal.isDefault}>
+            <SealItem showOpts key={seal.id} sealId={seal.id} dispatch={dispatch} isDefault={seal.isDefault} style={{ marginBottom: '20px' }}>
               <img role="presentation" src={seal.url} />
             </SealItem>
           );
