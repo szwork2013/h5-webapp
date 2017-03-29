@@ -37,8 +37,8 @@ class Upload extends React.Component {
       let w = img.width;
       let h = img.height;
       const scale = w / h;
-      w = obj.width || w;
-      h = obj.height || (w / scale);
+      w = w || obj.width;
+      h = (w / scale) || obj.height;
       let quality = 0.7;  // 默认图片质量为0.7
       // 生成canvas
       const canvas = document.createElement('canvas');
