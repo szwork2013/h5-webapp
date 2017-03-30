@@ -54,8 +54,10 @@ export default {
     },
     *authAuth({ payload }, { select, call, put }) {
       const personRnBankState = yield select(state => state.personRnBank);
-      const { serviceId, code } = personRnBankState;
+      const { name, idno, serviceId, code } = personRnBankState;
       const param = {
+        name: name.value,
+        certId: idno.value,
         serviceId,
         code: code.value,
       };

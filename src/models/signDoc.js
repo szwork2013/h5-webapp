@@ -24,6 +24,7 @@ export default {
     curPage: { value: 1 },
     modelVisible: false,
     needSeals: {},
+    confirmLoading: false,
     needAddReceiver: false,
     receiverEmail: { value: '' },
     receivers: [
@@ -41,6 +42,10 @@ export default {
   },
 
   reducers: {
+    setConfirmLoading(state, { payload }) {
+      const { confirmLoading } = payload;
+      return { ...state, confirmLoading };
+    },
     setDocId(state, { payload }) {
       const { docId } = payload;
       return { ...state, docId, curPage: { value: 1 } };
@@ -251,10 +256,22 @@ export default {
       }
     },
     *validateSignPwd({ payload }, { select, call, put }) {
+      yield put({
+        type: 'setConfirmLoading',
+        payload: {
+          confirmLoading: true,
+        },
+      });
       const signDocState = yield select(state => state.signDoc);
       const { signPwd, needSeals } = signDocState;
       if (!needSeals || Object.keys(needSeals).length === 0) {
         message.error('请先签名');
+        yield put({
+          type: 'setConfirmLoading',
+          payload: {
+            confirmLoading: false,
+          },
+        });
         yield put({
           type: 'changeVisible',
           payload: {
@@ -277,6 +294,12 @@ export default {
             type: 'pdfSign',
           });
         } else {
+          yield put({
+            type: 'setConfirmLoading',
+            payload: {
+              confirmLoading: false,
+            },
+          });
           message.error(data.msg);
         }
       }
@@ -338,6 +361,12 @@ export default {
               fields,
             });
             // 跳到列表页
+            yield put({
+              type: 'setConfirmLoading',
+              payload: {
+                confirmLoading: false,
+              },
+            });
             yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListWaitForMe}`));
           }
         } else {
@@ -371,6 +400,12 @@ export default {
             fields,
           });
           // 跳到列表页
+          yield put({
+            type: 'setConfirmLoading',
+            payload: {
+              confirmLoading: false,
+            },
+          });
           yield put(routerRedux.push(`${PathConstants.DocList}/${PathConstants.DocListWaitForOthers}`));
         } else {
           message.error(data.msg);

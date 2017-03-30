@@ -18,7 +18,7 @@ import styles from './mixins.less';
 import add from '../assets/ico-add.png';
 
 function SignDoc(props) {
-  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, form, needAddReceiver, receivers, payMethod, pageNum, curPage, docId } = props;
+  const { dispatch, page, modelVisible, needSeals, sealList, hasSignPwd, loading, confirmLoading, form, needAddReceiver, receivers, payMethod, pageNum, curPage, docId } = props;
   const { getFieldProps, getFieldError } = form;
   const cancel = () => {
     dispatch({
@@ -257,7 +257,7 @@ function SignDoc(props) {
       { hasSignPwd === 1 ?
         <Modal
           title="签署密码" visible={modelVisible} wrapClassName="signpwd"
-          onOk={sign} onCancel={cancel} closable={false} confirmLoading={loading}
+          onOk={sign} onCancel={cancel} closable={false} confirmLoading={confirmLoading}
         >
           <InputWithLabel
             type="password"
