@@ -53,7 +53,7 @@ export default {
       };
       let { data } = yield call(compressSeal, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('compressSeal response: ', data);
         if (data && data.errCode === 0) {
@@ -95,7 +95,7 @@ export default {
       };
       let { data } = yield call(compressSeal, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('compressSeal response: ', data);
         if (data && data.errCode === 0) {
@@ -108,7 +108,7 @@ export default {
           param.isDefault = 1;
           data = yield call(addSeal, param);
           if (Object.prototype.toString.call(data.data) === '[object String]') {
-            data = data.data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+            data = data.data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
             data = JSON.parse(data);
             // console.log('addSeal response: ', data);
             if (data && data.errCode === 0) {
@@ -135,7 +135,7 @@ export default {
       };
       let { data } = yield call(deleteSeal, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('deleteSeal response: ', data);
         if (data && data.errCode === 0) {
@@ -155,7 +155,7 @@ export default {
       };
       let { data } = yield call(saveDefaultSeal, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('saveDefaultSeal response: ', data);
         if (data && data.errCode === 0) {

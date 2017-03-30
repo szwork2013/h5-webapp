@@ -136,7 +136,7 @@ export default {
     *getSeals({ payload }, { call, put }) {
       let { data } = yield call(getSeals);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('getSeals response: ', data);
         if (data && data.errCode === 0) {

@@ -30,7 +30,7 @@ export default {
       const { resolve } = payload;
       let { data } = yield call(createSealKey);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         yield put({
           type: 'setCode',
           payload: {
@@ -67,7 +67,7 @@ export default {
         yield call(delay, 1000); // 1s 轮询次
         let { data } = yield call(getMobileSeal, param);
         if (Object.prototype.toString.call(data) === '[object String]') {
-          data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+          data = data.replace(/\s/g, '&nbsp;').match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
           if (!data) {
             continue; // eslint-disable-line no-continue
           }

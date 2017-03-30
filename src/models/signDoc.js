@@ -185,7 +185,7 @@ export default {
       };
       let { data } = yield call(getDocPic, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('getDocPic response: ', data);
         if (data && data.errCode === 0) {
@@ -268,7 +268,7 @@ export default {
       };
       let { data } = yield call(validatePwd, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('validatePwd response: ', data);
         if (data && data.errCode === 0) {
@@ -310,7 +310,7 @@ export default {
       };
       let { data } = yield call(pdfSign, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('pdfSign response: ', data);
         if (data && data.errCode === 0) {
@@ -353,7 +353,7 @@ export default {
       };
       let { data } = yield call(sendEmail, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('sendEmail response: ', data);
         if (data && data.errCode === 0) {
@@ -449,7 +449,7 @@ export default {
         };
         let { data } = yield call(getReceiveInfo, param);
         if (Object.prototype.toString.call(data) === '[object String]') {
-          data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+          data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
           data = JSON.parse(data);
           // console.log('getReceiveInfo response: ', data);
           if (data && data.errCode === 0) {
@@ -514,7 +514,7 @@ export default {
       };
       let { data } = yield call(addReceiver, param);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('addReceiver response: ', data);
         if (data && data.errCode === 0) {
@@ -532,7 +532,7 @@ export default {
             };
             data = yield call(sendEmail, sendEmailParam);
             if (Object.prototype.toString.call(data.data) === '[object String]') {
-              data = data.data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+              data = data.data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
               data = JSON.parse(data);
               // console.log('sendEmail response: ', data);
               if (data && data.errCode === 0) {

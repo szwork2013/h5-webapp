@@ -37,7 +37,7 @@ export default {
       };
       let data = yield call(addSeal, param);
       if (Object.prototype.toString.call(data.data) === '[object String]') {
-        data = data.data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('addSeal response: ', data);
         if (data && data.errCode === 0) {

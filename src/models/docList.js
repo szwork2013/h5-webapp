@@ -134,7 +134,7 @@ export default {
     *getDocCount({ payload }, { call, put }) {
       let { data } = yield call(getDocCount);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('getDocCount response: ', data);
         if (data && data.errCode === 0) {
@@ -362,7 +362,7 @@ export default {
       };
       let { data } = yield call(signLog, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('signLog response: ', data);
         if (data && data.errCode === 0) {
@@ -387,7 +387,7 @@ export default {
       };
       let { data } = yield call(updateDoc, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('updateDoc response: ', data);
         if (data && data.errCode === 0) {
@@ -413,7 +413,7 @@ export default {
       };
       let { data } = yield call(downloadDoc, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('downloadDoc response: ', data);
         if (data && data.errCode === 0) {
@@ -452,7 +452,7 @@ export default {
       // };
       // let { data } = yield call(downloadDoc, params);
       // if (Object.prototype.toString.call(data) === '[object String]') {
-      //   data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+      //   data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
       //   data = JSON.parse(data);
       //   console.log('downloadDoc response: ', data);
       //   if (data && data.errCode === 0) {
@@ -477,7 +477,7 @@ export default {
       };
       let { data } = yield call(deleteDoc, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('deleteDoc response: ', data);
         if (data && data.errCode === 0) {
@@ -504,7 +504,7 @@ export default {
       };
       let { data } = yield call(updateDoc, params);
       if (Object.prototype.toString.call(data) === '[object String]') {
-        data = data.match(/<result><resultMsg>(\S*)<\/resultMsg><\/result>/)[1];
+        data = data.match(/<result><resultMsg>([\s\S]*)<\/resultMsg><\/result>/)[1];
         data = JSON.parse(data);
         // console.log('updateDoc response: ', data);
         if (data && data.errCode === 0) {
