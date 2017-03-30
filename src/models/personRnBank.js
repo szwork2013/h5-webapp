@@ -69,16 +69,12 @@ export default {
         message.error(response.data.msg);
       }
     },
-    *updateAccountStatus({ payload }, { select, call, put }) {
-      const personRnBankState = yield select(state => state.personRnBank);
-      const { name, idno } = personRnBankState;
+    *updateAccountStatus({ payload }, { call, put }) {
+      // const personRnBankState = yield select(state => state.personRnBank);
+      // const { name, idno } = personRnBankState;
       const param = {
         createDefaultSeal: true,
         status: '9',
-        person: {
-          name: name.value,
-          idNo: idno.value,
-        },
       };
       const response = yield call(updateAccountInfo, param);
       // console.log('updateAccount response: ', response);

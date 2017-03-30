@@ -257,7 +257,7 @@ function SignDoc(props) {
       { hasSignPwd === 1 ?
         <Modal
           title="签署密码" visible={modelVisible} wrapClassName="signpwd"
-          onOk={sign} onCancel={cancel} closable={false}
+          onOk={sign} onCancel={cancel} closable={false} confirmLoading={loading}
         >
           <InputWithLabel
             type="password"
